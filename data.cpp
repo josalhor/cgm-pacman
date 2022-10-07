@@ -2,10 +2,20 @@
 #include <time.h>
 #include <stdlib.h>
 #include <queue>
+#include <stack>
+#include <functional>
+#include <optional>
 
 using namespace std;
 
 enum MapCell { Wall, Corridor };
+enum MapCellVisit { Unvisited, Visited };
+enum Direction {
+    Up = 0,
+    Down = 1,
+    Left = 2,
+    Right = 3
+};
 
 class Cell {
     public:
@@ -19,6 +29,25 @@ class Cell {
     bool operator==(const Cell &other) const
     { return (x == other.x && y == other.y); }
 
+    Cell move(Direction d) {
+        switch (d)
+        {
+        case Direction::Up:
+            return Cell(x, y + 1);
+        case Direction::Down:
+            return Cell(x, y - 1);
+        case Direction::Left:
+            return Cell(x - 1, y);
+        case Direction::Right:
+            return Cell(x + 1, y);
+        default:
+            return *this;
+        }
+    }
+
+    bool validInBounds(int width, int height){
+        return 0 <= x && x < width && 0 <= y && y < height;
+    }
 };
 
 class Map {
@@ -50,23 +79,66 @@ class Map {
     }
 
     void generateRandom() {
-        // Randomly select a node (or cell) N.
+        MapCellVisit ** matrixVisit = new MapCellVisit*[height];
+        for (int i = 0; i < height; i++) {
+            matrixVisit[i] = new MapCellVisit[width];
+                for (int j = 0; j < width; j++){
+                    matrixVisit[i][j] = MapCellVisit::Unvisited;
+            }
+        }
+        // Choose the initial cell
 
         srand(time(NULL));   // Initialization, should only be called once.
         Cell randomCell(rand() % width, rand() % height);
-        queue<Cell> first;
-        // Push the node N onto a queue Q.
-        first.push(randomCell);
+        //srand(1);
+        //Cell randomCell(4, 4);
+        matrix[randomCell.y][randomCell.x] = MapCell::Corridor;
+        stack<Cell> stackCells;
+        matrixVisit[randomCell.y][randomCell.x] = MapCellVisit::Visited; // mark it as visited
+        stackCells.push(randomCell); // push it to the stack
+        while (!stackCells.empty()){ // While the stack is not empty 
+            Cell currentCell = stackCells.top(); // Pop a cell from the stack and make it a current cell
+            stackCells.pop();
+            // If the current cell has any neighbours which have not been visited
+            int initialRandomIntDir = rand() % 4;
+            Direction randomDirection = (Direction) (initialRandomIntDir);
+            Cell wall = currentCell.move(randomDirection);
+            Cell corridor = wall.move(randomDirection);
+            int nextRandomIntDir = -1;
+            while ( nextRandomIntDir != initialRandomIntDir &&
+                    !(corridor.validInBounds(width, height) &&
+                    matrixVisit[corridor.y][corridor.x] == MapCellVisit::Unvisited)
+            ){
+                if (!corridor.validInBounds(width, height) &&
+                    wall.validInBounds(width, height))
+                {
+                    matrixVisit[wall.y][wall.x] = MapCellVisit::Visited;
+                }
+                nextRandomIntDir = nextRandomIntDir == -1 ? initialRandomIntDir + 1: nextRandomIntDir + 1;
+                nextRandomIntDir = nextRandomIntDir % 4;
+                randomDirection = (Direction) (nextRandomIntDir);
+                wall = currentCell.move(randomDirection);
+                corridor = wall.move(randomDirection);
+            }
 
-        // Mark the cell N as visited.
 
-        // Randomly select an adjacent cell A of node N that has not been visited. If all the neighbors of N have been visited:
-            // Continue to pop items off the queue Q until a node is encountered with at least one non-visited neighbor - assign this node to N and go to step 4.
-            // If no nodes exist: stop.
-        // Break the wall between N and A.
-        // Assign the value A to N.
-        // Go to step 2.
+            if (nextRandomIntDir == initialRandomIntDir) {
+                continue; // all nodes visited
+                // Continue to pop items off the stack
+            }
 
+            // Push the current cell to the stack
+            stackCells.push(currentCell);
+
+            // Choose one of the unvisited neighbours
+            // Remove the wall between the current cell and the chosen cell
+            matrix[corridor.y][corridor.x] = MapCell::Corridor;
+            matrix[wall.y][wall.x] = MapCell::Corridor;
+            // Mark the chosen cell as visited and push it to the stack
+            matrixVisit[wall.y][wall.x] = MapCellVisit::Visited;
+            matrixVisit[corridor.y][corridor.x] = MapCellVisit::Visited;
+            stackCells.push(corridor);
+        }
     }
 
     private:
@@ -81,8 +153,8 @@ class Map {
 };
 
 int main(int argc, char** argv) {
-    Map map(5, 10);
+    Map map(20, 20);
 
-    map.print();
     map.generateRandom();
+    map.print();
 }
