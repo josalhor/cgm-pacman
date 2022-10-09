@@ -76,8 +76,12 @@ class MatrixValue {
         delete matrix;
     }
 
+    bool validInBounds(Cell cell){
+        return cell.validInBounds(width, height);
+    }
+
     T& operator[](Cell cell) {
-        return &(matrix[cell.y][cell.x]);
+        return matrix[cell.y][cell.x];
     }
 };
 
@@ -107,12 +111,12 @@ class Map {
         // Choose the initial cell
 
         srand(time(NULL));   // Initialization, should only be called once.
-        Cell randomCell(rand() % width, rand() % height);
+        Cell randomCell(rand() % map.width, rand() % map.height);
         //srand(1);
         //Cell randomCell(4, 4);
-        matrix[randomCell.y][randomCell.x] = MapCell::Corridor;
+        map[randomCell] = MapCell::Corridor;
         stack<Cell> stackCells;
-        matrixVisit[randomCell.y][randomCell.x] = MapCellVisit::Visited; // mark it as visited
+        visited[randomCell] = MapCellVisit::Visited; // mark it as visited
         stackCells.push(randomCell); // push it to the stack
         while (!stackCells.empty()){ // While the stack is not empty 
             Cell currentCell = stackCells.top(); // Pop a cell from the stack and make it a current cell
@@ -124,13 +128,13 @@ class Map {
             Cell corridor = wall.move(randomDirection);
             int nextRandomIntDir = -1;
             while ( nextRandomIntDir != initialRandomIntDir &&
-                    !(corridor.validInBounds(width, height) &&
-                    matrixVisit[corridor.y][corridor.x] == MapCellVisit::Unvisited)
+                    !(map.validInBounds(corridor) &&
+                    visited[corridor] == MapCellVisit::Unvisited)
             ){
-                if (!corridor.validInBounds(width, height) &&
-                    wall.validInBounds(width, height))
+                if (!map.validInBounds(corridor) &&
+                    map.validInBounds(wall))
                 {
-                    matrixVisit[wall.y][wall.x] = MapCellVisit::Visited;
+                    visited[wall] = MapCellVisit::Visited;
                 }
                 nextRandomIntDir = nextRandomIntDir == -1 ? initialRandomIntDir + 1: nextRandomIntDir + 1;
                 nextRandomIntDir = nextRandomIntDir % 4;
@@ -150,61 +154,44 @@ class Map {
 
             // Choose one of the unvisited neighbours
             // Remove the wall between the current cell and the chosen cell
-            matrix[corridor.y][corridor.x] = MapCell::Corridor;
-            matrix[wall.y][wall.x] = MapCell::Corridor;
+            map[corridor] = MapCell::Corridor;
+            map[wall] = MapCell::Corridor;
             // Mark the chosen cell as visited and push it to the stack
-            matrixVisit[wall.y][wall.x] = MapCellVisit::Visited;
-            matrixVisit[corridor.y][corridor.x] = MapCellVisit::Visited;
+            visited[wall] = MapCellVisit::Visited;
+            visited[corridor] = MapCellVisit::Visited;
             stackCells.push(corridor);
         }
-
-        for (int i = 0; i < height; i++) {
-            delete matrixVisit[i];
-        }
-        delete matrixVisit;
     }
 
     void generateRandomRec() {
-        MapCellVisit ** matrixVisit = new MapCellVisit*[height];
-        for (int i = 0; i < height; i++) {
-            matrixVisit[i] = new MapCellVisit[width];
-                for (int j = 0; j < width; j++){
-                    matrixVisit[i][j] = MapCellVisit::Unvisited;
-            }
-        }
+        MatrixValue<MapCellVisit> visited(map.width, map.height, MapCellVisit::Unvisited);
         // Choose the initial cell
 
-        srand(time(NULL));   // Initialization, should only be called once.
-        Cell randomCell(rand() % width, rand() % height);
-        //srand(1);
-        //Cell randomCell(4, 4);
-        matrix[randomCell.y][randomCell.x] = MapCell::Corridor;
-        matrixVisit[randomCell.y][randomCell.x] = MapCellVisit::Visited; // mark it as visited
-        generateRandomRecInner(randomCell, matrixVisit);
+        srand(time(NULL));
+        Cell randomCell(rand() % map.width, rand() % map.height);
 
-        for (int i = 0; i < height; i++) {
-            delete matrixVisit[i];
-        }
-        delete matrixVisit;
+        map[randomCell] = MapCell::Corridor;
+        visited[randomCell] = MapCellVisit::Visited; // mark it as visited
+        generateRandomRecInner(randomCell, visited);
     }
 
-    void generateRandomRecInner(Cell currentCell, MapCellVisit ** matrixVisit) {
+    void generateRandomRecInner(Cell currentCell, MatrixValue<MapCellVisit>& visited) {
         while (true) {
             // If the current cell has any neighbours which have not been visited
-            matrixVisit[currentCell.y][currentCell.x] = MapCellVisit::Visited; // mark it as visited
+            visited[currentCell] = MapCellVisit::Visited; // mark it as visited
             int initialRandomIntDir = rand() % 4;
             Direction randomDirection = (Direction) (initialRandomIntDir);
             Cell wall = currentCell.move(randomDirection);
             Cell corridor = wall.move(randomDirection);
             int nextRandomIntDir = -1;
             while ( nextRandomIntDir != initialRandomIntDir &&
-                    !(corridor.validInBounds(width, height) &&
-                    matrixVisit[corridor.y][corridor.x] == MapCellVisit::Unvisited)
+                    !(map.validInBounds(corridor) &&
+                    visited[corridor] == MapCellVisit::Unvisited)
             ){
-                if (!corridor.validInBounds(width, height) &&
-                    wall.validInBounds(width, height))
+                if (!map.validInBounds(corridor) &&
+                    map.validInBounds(wall))
                 {
-                    matrixVisit[wall.y][wall.x] = MapCellVisit::Visited;
+                    visited[wall] = MapCellVisit::Visited;
                 }
                 nextRandomIntDir = nextRandomIntDir == -1 ? initialRandomIntDir + 1: nextRandomIntDir + 1;
                 nextRandomIntDir = nextRandomIntDir % 4;
@@ -220,32 +207,32 @@ class Map {
 
             // Choose one of the unvisited neighbours
             // Remove the wall between the current cell and the chosen cell
-            matrix[corridor.y][corridor.x] = MapCell::Corridor;
-            matrix[wall.y][wall.x] = MapCell::Corridor;
+            map[corridor] = MapCell::Corridor;
+            map[wall] = MapCell::Corridor;
             // Mark the chosen cell as visited and push it to the stack
-            matrixVisit[wall.y][wall.x] = MapCellVisit::Visited;
-            matrixVisit[corridor.y][corridor.x] = MapCellVisit::Visited;
-            generateRandomRecInner(corridor, matrixVisit);
+            visited[wall] = MapCellVisit::Visited;
+            visited[corridor] = MapCellVisit::Visited;
+            generateRandomRecInner(corridor, visited);
         }
     }
 
     void postProcessGenerator() {
-        for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++){
-                    Cell current(x, y);
-                    if (matrix[y][x] == MapCell::Corridor){
-                        int numWallsAround = 0;
-                        for (int i = 0; i < 4; i++){
-                            Direction d = (Direction) (i);
-                            Cell next = current.move(d);
-                            if (next.validInBounds(width, height) && matrix[next.y][next.x] == MapCell::Wall) {
-                                numWallsAround++;
-                                if (numWallsAround == 3) {
-                                    matrix[next.y][next.x] = MapCell::Corridor;
-                                }
+        for (int y = 0; y < map.height; y++) {
+            for (int x = 0; x < map.width; x++){
+                Cell current(x, y);
+                if (map[current] == MapCell::Corridor){
+                    int numWallsAround = 0;
+                    for (int i = 0; i < 4; i++){
+                        Direction d = (Direction) (i);
+                        Cell next = current.move(d);
+                        if (map.validInBounds(next) && map[next] == MapCell::Wall) {
+                            numWallsAround++;
+                            if (numWallsAround == 3) {
+                                map[next] = MapCell::Corridor;
                             }
                         }
                     }
+                }
             }
         }
     }

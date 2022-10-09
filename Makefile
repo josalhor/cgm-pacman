@@ -1,4 +1,4 @@
 chess: data.cpp
-	g++ data.cpp -o pacman # -lglut -lGLU -lGL -lm 
+	g++ data.cpp -o pacman -g -ggdb
 clean:
 	rm pacman
