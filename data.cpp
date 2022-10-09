@@ -50,24 +50,48 @@ class Cell {
     }
 };
 
-class Map {
+template <typename T>
+class MatrixValue {
     public:
-    MapCell ** matrix;
+    T ** matrix;
     int width;
     int height;
 
-    Map(int width, int height) {
+    MatrixValue(int width, int height, T def) {
         this->width = width;
         this->height = height;
-        this->matrix = new MapCell*[height];
-        preGenerateMap();
+        this->matrix = new T*[height];
+        for (int i = 0; i < height; i++) {
+            matrix[i] = new T[width];
+            for (int j = 0; j < width; j++){
+                matrix[i][j] = def;
+            }
+        }
     }
 
-    void print() {
+    ~MatrixValue() {
         for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++){
+            delete matrix[i];
+        }
+        delete matrix;
+    }
+
+    T& operator[](Cell cell) {
+        return &(matrix[cell.y][cell.x]);
+    }
+};
+
+class Map {
+    public:
+    MatrixValue<MapCell> map;
+
+    Map(int width, int height) : map(MatrixValue<MapCell>(width, height, MapCell::Wall)) {}
+
+    void print() {
+        for (int i = 0; i < map.height; i++) {
+            for (int j = 0; j < map.width; j++){
                 char c;
-                if (matrix[i][j] == MapCell::Wall){
+                if (map.matrix[i][j] == MapCell::Wall){
                     c = '0';
                 }  else {
                     c = ' ';
@@ -79,13 +103,7 @@ class Map {
     }
 
     void generateRandom() {
-        MapCellVisit ** matrixVisit = new MapCellVisit*[height];
-        for (int i = 0; i < height; i++) {
-            matrixVisit[i] = new MapCellVisit[width];
-                for (int j = 0; j < width; j++){
-                    matrixVisit[i][j] = MapCellVisit::Unvisited;
-            }
-        }
+        MatrixValue<MapCellVisit> visited(map.width, map.height, MapCellVisit::Unvisited);
         // Choose the initial cell
 
         srand(time(NULL));   // Initialization, should only be called once.
@@ -222,23 +240,12 @@ class Map {
                             Cell next = current.move(d);
                             if (next.validInBounds(width, height) && matrix[next.y][next.x] == MapCell::Wall) {
                                 numWallsAround++;
-
                                 if (numWallsAround == 3) {
                                     matrix[next.y][next.x] = MapCell::Corridor;
                                 }
                             }
                         }
                     }
-            }
-        }
-    }
-
-    private:
-    void preGenerateMap() {
-        for (int i = 0; i < height; i++) {
-            matrix[i] = new MapCell[width];
-                for (int j = 0; j < width; j++){
-                    matrix[i][j] = MapCell::Wall;
             }
         }
     }
