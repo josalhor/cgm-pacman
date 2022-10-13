@@ -6,6 +6,16 @@
 #include <functional>
 #include <optional>
 
+#include <GL/glut.h>
+
+#define COLUMNS 8
+#define ROWS 8
+#define SIZE_CELL 50
+#define WIDTH 1000
+#define HEIGHT 1000
+
+void displayOpenGL();
+
 using namespace std;
 
 enum MapCell { Wall, Corridor };
@@ -258,7 +268,71 @@ class MapBuilder {
     }
 };
 
+class MapPrinter {
+    public:
+    MapPrinter() {
+    }
+
+    void initOpenGL() {
+        int argc = 0;
+        glutInit(&argc, NULL);
+        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+        glutInitWindowPosition(50, 50);
+        glutInitWindowSize(1000, 1000);
+        glutCreateWindow("Amazing Pacman Game");
+
+        glutDisplayFunc(displayOpenGL);
+        // glutKeyboardFunc(keyboard);
+
+        glMatrixMode(GL_PROJECTION);
+        gluOrtho2D(0,WIDTH-1,0,HEIGHT-1);
+
+        glutMainLoop();
+    }
+
+    void display() {
+        int i,j;
+        int keyflag = 0;
+
+        glClearColor(0.0,0.0,0.0,0.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        for(i=0;i<ROWS;i++)
+            for(j=0;j<HEIGHT;j++)
+            if( (keyflag==0 && (i+j)%2==0) || (keyflag==1 && (i+j)%2==1) ) 
+            {
+            glColor3f(0.8,0.8,0.8);
+            glBegin(GL_QUADS);
+
+            glVertex2i(i*WIDTH/COLUMNS,j*HEIGHT/ROWS); 
+            glVertex2i((i+1)*WIDTH/COLUMNS,j*HEIGHT/ROWS); 
+            glVertex2i((i+1)*WIDTH/COLUMNS,(j+1)*HEIGHT/ROWS); 
+            glVertex2i(i*WIDTH/COLUMNS,(j+1)*HEIGHT/ROWS); 
+
+            glEnd();
+            }
+
+        glutSwapBuffers();
+    }
+
+    
+};
+
+MapPrinter* mapPrinter;
+
+void displayOpenGL()
+{
+  mapPrinter->display();
+
+}
+
 int main(int argc, char** argv) {
+
+    MapPrinter* mpPrinter = new MapPrinter();
+
+    mapPrinter = mpPrinter;
+
+    mpPrinter->initOpenGL();
 
     int rows = stoi(argv[1]);
     int columns = stoi(argv[2]);
@@ -275,5 +349,6 @@ int main(int argc, char** argv) {
     MapBuilder sym = map.symmetric();
     sym.print();
 
-    
+    delete mpPrinter;
+
 }

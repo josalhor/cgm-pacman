@@ -46,8 +46,8 @@ void display()
   glClearColor(0.0,0.0,0.0,0.0);
   glClear(GL_COLOR_BUFFER_BIT);
 
-  for(i=0;i<WIDTH;i++)
-    for(j=0;j<HEIGHT;j++)
+  for(i=0;i<ROWS;i++)
+    for(j=0;j<COLUMNS;j++)
       if( (keyflag==0 && (i+j)%2==0) || (keyflag==1 && (i+j)%2==1) ) 
 	{
 	  glColor3f(0.8,0.8,0.8);
