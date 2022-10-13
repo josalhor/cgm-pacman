@@ -85,11 +85,11 @@ class MatrixValue {
     }
 };
 
-class Map {
+class MapBuilder {
     public:
     MatrixValue<MapCell> map;
 
-    Map(int width, int height) : map(MatrixValue<MapCell>(width, height, MapCell::Wall)) {}
+    MapBuilder(int width, int height) : map(MatrixValue<MapCell>(width, height, MapCell::Wall)) {}
 
     void print() {
         for (int i = 0; i < map.height; i++) {
@@ -236,12 +236,44 @@ class Map {
             }
         }
     }
+
+    MapBuilder symmetric() {
+        bool isOdd = (map.width % 2) == 1;
+        int newWidth = map.width * 2 - (isOdd ? 1 : 0);
+        MapBuilder r = MapBuilder(newWidth, map.height);
+
+        for (int y = 0; y < map.height; y++) {
+            for (int x = 0; x < map.width; x++){
+                if (x == map.width - 1 && isOdd) {
+                    continue;
+                }
+                Cell current = Cell(x, y);
+                Cell sym = Cell(r.map.width - x - 1, y);
+                r.map[current] = map[current];
+                r.map[sym] = map[current];
+            }
+        }
+
+        return r;
+    }
 };
 
 int main(int argc, char** argv) {
-    Map map(20, 20);
+
+    int rows = stoi(argv[1]);
+    int columns = stoi(argv[2]);
+
+    bool isEven = (columns % 2) == 0;
+    int regionColumns = (columns / 2) + (isEven ? 0 : 1);
+
+    MapBuilder map(regionColumns, rows);
 
     map.generateRandomRec();
-    map.postProcessGenerator();
-    map.print();
+    //map.postProcessGenerator();
+    // map.print();
+
+    MapBuilder sym = map.symmetric();
+    sym.print();
+
+    
 }
