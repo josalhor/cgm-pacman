@@ -8,8 +8,6 @@
 
 #include <GL/glut.h>
 
-#define COLUMNS 8
-#define ROWS 8
 #define SIZE_CELL 50
 #define WIDTH 1000
 #define HEIGHT 1000
@@ -270,7 +268,8 @@ class MapBuilder {
 
 class MapPrinter {
     public:
-    MapPrinter() {
+    MatrixValue<MapCell>& map;
+    MapPrinter(MatrixValue<MapCell>& generatedMap) : map(generatedMap) {
     }
 
     void initOpenGL() {
@@ -278,7 +277,7 @@ class MapPrinter {
         glutInit(&argc, NULL);
         glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
         glutInitWindowPosition(50, 50);
-        glutInitWindowSize(1000, 1000);
+        glutInitWindowSize(SIZE_CELL * map.width, SIZE_CELL * map.height);
         glutCreateWindow("Amazing Pacman Game");
 
         glutDisplayFunc(displayOpenGL);
@@ -297,20 +296,25 @@ class MapPrinter {
         glClearColor(0.0,0.0,0.0,0.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        for(i=0;i<ROWS;i++)
-            for(j=0;j<HEIGHT;j++)
-            if( (keyflag==0 && (i+j)%2==0) || (keyflag==1 && (i+j)%2==1) ) 
-            {
-            glColor3f(0.8,0.8,0.8);
-            glBegin(GL_QUADS);
+        for(i=0;i<map.width;i++){
+            for(j=0;j<map.height;j++){
+                Cell current(i,j);
+                bool printBlue = map[current] == MapCell::Wall;
+                if (printBlue) {
+                    glColor3f(0,0,1);
+                } else {
+                    glColor3f(1,1,1);
+                }
+                glBegin(GL_QUADS);
 
-            glVertex2i(i*WIDTH/COLUMNS,j*HEIGHT/ROWS); 
-            glVertex2i((i+1)*WIDTH/COLUMNS,j*HEIGHT/ROWS); 
-            glVertex2i((i+1)*WIDTH/COLUMNS,(j+1)*HEIGHT/ROWS); 
-            glVertex2i(i*WIDTH/COLUMNS,(j+1)*HEIGHT/ROWS); 
+                glVertex2i(i*WIDTH/map.width,j*HEIGHT/map.height); 
+                glVertex2i((i+1)*WIDTH/map.width,j*HEIGHT/map.height); 
+                glVertex2i((i+1)*WIDTH/map.width,(j+1)*HEIGHT/map.height); 
+                glVertex2i(i*WIDTH/map.width,(j+1)*HEIGHT/map.height); 
 
-            glEnd();
+                glEnd();
             }
+        }
 
         glutSwapBuffers();
     }
@@ -328,11 +332,6 @@ void displayOpenGL()
 
 int main(int argc, char** argv) {
 
-    MapPrinter* mpPrinter = new MapPrinter();
-
-    mapPrinter = mpPrinter;
-
-    mpPrinter->initOpenGL();
 
     int rows = stoi(argv[1]);
     int columns = stoi(argv[2]);
@@ -348,7 +347,9 @@ int main(int argc, char** argv) {
 
     MapBuilder sym = map.symmetric();
     sym.print();
+    MapPrinter mpPrinter(sym.map);
 
-    delete mpPrinter;
+    mapPrinter = &mpPrinter;
+    mpPrinter.initOpenGL();
 
 }
