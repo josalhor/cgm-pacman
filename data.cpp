@@ -88,6 +88,10 @@ class MatrixValue {
         return cell.validInBounds(width, height);
     }
 
+    bool isPerimeter(Cell cell) {
+        return cell.x == 0 || cell.x == width - 1 || cell.y == 0 || cell.y == height - 1;
+    }
+
     T& operator[](Cell cell) {
         return matrix[cell.y][cell.x];
     }
@@ -100,10 +104,10 @@ class MapBuilder {
     MapBuilder(int width, int height) : map(MatrixValue<MapCell>(width, height, MapCell::Wall)) {}
 
     void print() {
-        for (int i = 0; i < map.height; i++) {
-            for (int j = 0; j < map.width; j++){
+        for (int y = 0; y < map.height; y++){
+            for (int x = 0; x < map.width; x++) {
                 char c;
-                if (map.matrix[i][j] == MapCell::Wall){
+                if (map.matrix[y][x] == MapCell::Wall){
                     c = '0';
                 }  else {
                     c = ' ';
@@ -119,7 +123,7 @@ class MapBuilder {
         // Choose the initial cell
 
         srand(time(NULL));   // Initialization, should only be called once.
-        Cell randomCell(rand() % map.width, rand() % map.height);
+        Cell randomCell(1, 1);
         //srand(1);
         //Cell randomCell(4, 4);
         map[randomCell] = MapCell::Corridor;
@@ -175,8 +179,22 @@ class MapBuilder {
         MatrixValue<MapCellVisit> visited(map.width, map.height, MapCellVisit::Unvisited);
         // Choose the initial cell
 
+        for (int x = 0; x < map.width; x++) {
+            Cell up(x, 0);
+            Cell down(x, map.height - 1);
+            visited[up] = MapCellVisit::Visited;
+            visited[down] = MapCellVisit::Visited;
+        }
+
+        for (int y = 0; y < map.height; y++) {
+            Cell left(0, y);
+            Cell right(map.width - 1, y);
+            visited[left] = MapCellVisit::Visited;
+            //visited[right] = MapCellVisit::Visited;
+        }
+
         srand(time(NULL));
-        Cell randomCell(rand() % map.width, rand() % map.height);
+        Cell randomCell(1, 1);
 
         map[randomCell] = MapCell::Corridor;
         visited[randomCell] = MapCellVisit::Visited; // mark it as visited
@@ -235,9 +253,19 @@ class MapBuilder {
                         Cell next = current.move(d);
                         if (map.validInBounds(next) && map[next] == MapCell::Wall) {
                             numWallsAround++;
-                            if (numWallsAround == 3) {
-                                map[next] = MapCell::Corridor;
-                            }
+                        }
+                    }
+
+                    if (numWallsAround < 3) {
+                        continue;
+                    }
+
+                    for (int i = 0; i < 4; i++){
+                        Direction d = (Direction) (i);
+                        Cell next = current.move(d);
+                        if (map.validInBounds(next) && map[next] == MapCell::Wall && !map.isPerimeter(next)) {
+                            map[next] = MapCell::Corridor;
+                            break;
                         }
                     }
                 }
@@ -290,15 +318,13 @@ class MapPrinter {
     }
 
     void display() {
-        int i,j;
-        int keyflag = 0;
 
         glClearColor(0.0,0.0,0.0,0.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        for(i=0;i<map.width;i++){
-            for(j=0;j<map.height;j++){
-                Cell current(i,j);
+        for(int y=0; y < map.height; y++){
+            for(int x=0; x < map.width; x++){
+                Cell current(x,y);
                 bool printBlue = map[current] == MapCell::Wall;
                 if (printBlue) {
                     glColor3f(0,0,1);
@@ -306,11 +332,11 @@ class MapPrinter {
                     glColor3f(1,1,1);
                 }
                 glBegin(GL_QUADS);
-
-                glVertex2i(i*WIDTH/map.width,j*HEIGHT/map.height); 
-                glVertex2i((i+1)*WIDTH/map.width,j*HEIGHT/map.height); 
-                glVertex2i((i+1)*WIDTH/map.width,(j+1)*HEIGHT/map.height); 
-                glVertex2i(i*WIDTH/map.width,(j+1)*HEIGHT/map.height); 
+                
+                glVertex2i(x*WIDTH/map.width,y*HEIGHT/map.height); 
+                glVertex2i((x+1)*WIDTH/map.width,y*HEIGHT/map.height); 
+                glVertex2i((x+1)*WIDTH/map.width,(y+1)*HEIGHT/map.height); 
+                glVertex2i(x*WIDTH/map.width,(y+1)*HEIGHT/map.height); 
 
                 glEnd();
             }
@@ -332,20 +358,37 @@ void displayOpenGL()
 
 int main(int argc, char** argv) {
 
-
+    if (argc < 3) {
+        cout << "Use with: " << argv[0] << " <rows> <columns>" << "\n";
+        exit(-1);
+    }
     int rows = stoi(argv[1]);
     int columns = stoi(argv[2]);
 
+    if (columns <= 10 || rows <= 10) {
+        cout << "Minimum columns and rows is 11x11" << "\n";
+        exit(-1);
+    }
+
+    if ((rows %2) == 0) {
+        cout << "Rows must be an odd number" << "\n";
+        exit(-1);
+    }
+
+    if ((columns %2) == 1) {
+        cout << "Rows must be an even number" << "\n";
+        exit(-1);
+    }
+    
     bool isEven = (columns % 2) == 0;
     int regionColumns = (columns / 2) + (isEven ? 0 : 1);
 
     MapBuilder map(regionColumns, rows);
 
     map.generateRandomRec();
-    //map.postProcessGenerator();
-    // map.print();
 
     MapBuilder sym = map.symmetric();
+    sym.postProcessGenerator();
     sym.print();
     MapPrinter mpPrinter(sym.map);
 
