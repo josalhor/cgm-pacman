@@ -25,6 +25,9 @@ enum Direction {
     Right = 3
 };
 
+#define HOUSE_WIDTH 4
+#define HOUSE_HEIGHT 6
+
 class Cell {
     public:
     int x;
@@ -104,7 +107,7 @@ class MapBuilder {
     MapBuilder(int width, int height) : map(MatrixValue<MapCell>(width, height, MapCell::Wall)) {}
 
     void print() {
-        for (int y = 0; y < map.height; y++){
+        for (int y = map.height - 1; y >= 0; y--){
             for (int x = 0; x < map.width; x++) {
                 char c;
                 MapCell m = map.matrix[y][x]; 
@@ -129,15 +132,15 @@ class MapBuilder {
             Cell up(x, 0);
             Cell down(x, map.height - 1);
             
-            map[up] = MapCell::FixedWall;
-            map[down] = MapCell::FixedWall;
+            setSymetric(up, MapCell::FixedWall, visited);
+            setSymetric(down, MapCell::FixedWall, visited);
         }
 
         for (int y = 0; y < map.height; y++) {
             Cell left(0, y);
             Cell right(map.width - 1, y);
-            map[left] = MapCell::FixedWall;
-            map[right] = MapCell::FixedWall;
+            setSymetric(left, MapCell::FixedWall, visited);
+            setSymetric(right, MapCell::FixedWall, visited);
         }
 
         for (int x = 0; x < map.width; x++) {
@@ -148,31 +151,45 @@ class MapBuilder {
                 }
             }
         }
-        const int startHeight = (map.height / 2) + (6/2);
+        const int startHeight = (map.height / 2) + (HOUSE_HEIGHT/2);
         const int startWidth = (map.width/2);
         srand(time(NULL));
-        Cell randomCell(startWidth, startHeight);
-        printf("A %d %d\n", startHeight, startWidth);
+        Cell openingHouse(startWidth, startHeight);
 
-        map[randomCell] = MapCell::Corridor;
-        visited[randomCell] = MapCellVisit::Visited; // mark it as visited
-        generateRandomRecInner(randomCell, visited);
+        map[openingHouse] = MapCell::Corridor;
+        visited[openingHouse] = MapCellVisit::Visited; // mark it as visited
+        generateRandomRecInner(openingHouse, visited);
     }
 
-    void makeHouse() {
-        const int width = 4;
-        const int height = 6;
-        
-        const int startHeight = (map.height / 2) + (height / 2);
+    Cell getSymmetricCell(Cell& cell){
+        return Cell(map.width - cell.x - 1, cell.y);
+    }
+
+    void setSymetric(Cell& cell, MapCell value, MatrixValue<MapCellVisit>& visited){
+        Cell sym = getSymmetricCell(cell);
+        setSymetric(cell, value);
+        visited[cell] = MapCellVisit::Visited;
+        visited[sym] = MapCellVisit::Visited;
+
+    }
+
+    void setSymetric(Cell& cell, MapCell value){
+        Cell sym = getSymmetricCell(cell);
+        map[cell] = value;
+        map[sym] = value;
+    }
+
+    void makeHouse() {        
+        const int startHeight = (map.height / 2) + (HOUSE_HEIGHT / 2);
         const int startWidth = (map.width/2);
 
         Cell opening(startWidth, startHeight);
         map[opening] = MapCell::Corridor;
         int i = startHeight;
         int j = startWidth - 1;
-        int leftLimit = startWidth - width;
-        int downLimit = startHeight - height;
-        int rightLimit = startWidth + width;
+        int leftLimit = startWidth - HOUSE_WIDTH;
+        int downLimit = startHeight - HOUSE_HEIGHT;
+        int rightLimit = startWidth + HOUSE_WIDTH;
         int upLimit = startHeight;
         for(; j > leftLimit; j--) {
             Cell current(j, i);
@@ -235,11 +252,8 @@ class MapBuilder {
 
             // Choose one of the unvisited neighbours
             // Remove the wall between the current cell and the chosen cell
-            map[corridor] = MapCell::Corridor;
-            map[wall] = MapCell::Corridor;
-            // Mark the chosen cell as visited and push it to the stack
-            visited[wall] = MapCellVisit::Visited;
-            visited[corridor] = MapCellVisit::Visited;
+            setSymetric(corridor, MapCell::Corridor, visited);
+            setSymetric(wall, MapCell::Corridor, visited);
             generateRandomRecInner(corridor, visited);
             // This implementation could be done in two ways:
             // call generateRandomRecInner again with the currentCell, or loop in a while True
@@ -278,7 +292,7 @@ class MapBuilder {
                         Direction d = (Direction) (i);
                         Cell next = current.move(d);
                         if (map.validInBounds(next) && map[next] == MapCell::Wall && !map.isPerimeter(next)) {
-                            map[next] = MapCell::Corridor;
+                            setSymetric(next, MapCell::Corridor);
                             changedWall = true;
                             break;
                         }
@@ -288,21 +302,6 @@ class MapBuilder {
         }
 
         return changedWall;
-    }
-
-    MapBuilder symmetric() {
-        MapBuilder r = MapBuilder(map.width, map.height);
-
-        for (int y = 0; y < map.height; y++) {
-            for (int x = 0; x < (map.width + 1) / 2; x++){
-                Cell current = Cell(x, y);
-                Cell sym = Cell(r.map.width - x - 1, y);
-                r.map[current] = map[current];
-                r.map[sym] = map[current];
-            }
-        }
-
-        return r;
     }
 };
 
@@ -402,9 +401,8 @@ int main(int argc, char** argv) {
     map.generateRandomRec();
 
     map.postProcessGenerator();
-    MapBuilder sym = map.symmetric();
-    sym.print();
-    MapPrinter mpPrinter(sym.map);
+    map.print();
+    MapPrinter mpPrinter(map.map);
 
     mapPrinter = &mpPrinter;
     mpPrinter.initOpenGL();
