@@ -16,7 +16,7 @@ void displayOpenGL();
 
 using namespace std;
 
-enum MapCell { Wall, Corridor };
+enum MapCell { Wall, Corridor, FixedWall, Debug };
 enum MapCellVisit { Unvisited, Visited };
 enum Direction {
     Up = 0,
@@ -107,10 +107,13 @@ class MapBuilder {
         for (int y = 0; y < map.height; y++){
             for (int x = 0; x < map.width; x++) {
                 char c;
-                if (map.matrix[y][x] == MapCell::Wall){
+                MapCell m = map.matrix[y][x]; 
+                if (m == MapCell::Wall || m == MapCell::FixedWall){
                     c = '0';
-                }  else {
+                } else if (m == MapCell::Corridor) {
                     c = ' ';
+                } else {
+                    c = 'X';
                 }
                 cout << c;
             }
@@ -182,23 +185,79 @@ class MapBuilder {
         for (int x = 0; x < map.width; x++) {
             Cell up(x, 0);
             Cell down(x, map.height - 1);
-            visited[up] = MapCellVisit::Visited;
-            visited[down] = MapCellVisit::Visited;
+            
+            map[up] = MapCell::FixedWall;
+            map[down] = MapCell::FixedWall;
         }
 
         for (int y = 0; y < map.height; y++) {
             Cell left(0, y);
             Cell right(map.width - 1, y);
-            visited[left] = MapCellVisit::Visited;
-            //visited[right] = MapCellVisit::Visited;
+            map[left] = MapCell::FixedWall;
+            map[right] = MapCell::FixedWall;
         }
 
+        for (int x = 0; x < map.width; x++) {
+            for (int y = 0; y < map.height; y++) {
+                Cell current(x, y);
+                if (map[current] == MapCell::FixedWall) {
+                    visited[current] = MapCellVisit::Visited;
+                }
+            }
+        }
+        const int startHeight = (map.height / 2) + (6/2);
+        const int startWidth = (map.width/2);
         srand(time(NULL));
-        Cell randomCell(1, 1);
+        Cell randomCell(startWidth, startHeight);
+        printf("A %d %d\n", startHeight, startWidth);
 
         map[randomCell] = MapCell::Corridor;
         visited[randomCell] = MapCellVisit::Visited; // mark it as visited
         generateRandomRecInner(randomCell, visited);
+    }
+
+    void makeHouse() {
+        const int width = 4;
+        const int height = 6;
+        
+        const int startHeight = (map.height / 2) + (height / 2);
+        const int startWidth = (map.width/2);
+
+        Cell opening(startWidth, startHeight);
+        map[opening] = MapCell::Corridor;
+        int i = startHeight;
+        int j = startWidth - 1;
+        int leftLimit = startWidth - width;
+        int downLimit = startHeight - height;
+        int rightLimit = startWidth + width;
+        int upLimit = startHeight;
+        for(; j > leftLimit; j--) {
+            Cell current(j, i);
+            map[current] = MapCell::FixedWall;
+        }
+        for(; i > downLimit; i--){
+            Cell current(j, i);
+            map[current] = MapCell::FixedWall;
+        }
+        for(; j < rightLimit; j++) {
+            Cell current(j, i);
+            map[current] = MapCell::FixedWall;
+        }
+        for(; i < upLimit; i++){
+            Cell current(j, i);
+            map[current] = MapCell::FixedWall;
+        }
+        for(; j > startWidth; j--){
+            Cell current(j, i);
+            map[current] = MapCell::FixedWall;
+        }
+
+        for (j = leftLimit + 1; j < rightLimit; j++){
+            for(i = downLimit + 1; i < upLimit; i++){
+                Cell current(j, i);
+                map[current] = MapCell::Corridor;
+            }
+        }
     }
 
     void generateRandomRecInner(Cell currentCell, MatrixValue<MapCellVisit>& visited) {
@@ -239,10 +298,21 @@ class MapBuilder {
             visited[wall] = MapCellVisit::Visited;
             visited[corridor] = MapCellVisit::Visited;
             generateRandomRecInner(corridor, visited);
+            // This implementation could be done in two ways:
+            // call generateRandomRecInner again with the currentCell, or loop in a while True
+            // both implementations are correct and should compile to the same machine code
         }
     }
 
     void postProcessGenerator() {
+        bool changed = true;
+        while(changed){
+            changed = postProcessGeneratorPass();
+        }
+    }
+
+    bool postProcessGeneratorPass(){
+        bool changedWall = false;
         for (int y = 0; y < map.height; y++) {
             for (int x = 0; x < map.width; x++){
                 Cell current(x, y);
@@ -251,7 +321,8 @@ class MapBuilder {
                     for (int i = 0; i < 4; i++){
                         Direction d = (Direction) (i);
                         Cell next = current.move(d);
-                        if (map.validInBounds(next) && map[next] == MapCell::Wall) {
+                        MapCell mc = map[next];
+                        if (map.validInBounds(next) && mc == MapCell::Wall || mc == MapCell::FixedWall) {
                             numWallsAround++;
                         }
                     }
@@ -265,24 +336,22 @@ class MapBuilder {
                         Cell next = current.move(d);
                         if (map.validInBounds(next) && map[next] == MapCell::Wall && !map.isPerimeter(next)) {
                             map[next] = MapCell::Corridor;
+                            changedWall = true;
                             break;
                         }
                     }
                 }
             }
         }
+
+        return changedWall;
     }
 
     MapBuilder symmetric() {
-        bool isOdd = (map.width % 2) == 1;
-        int newWidth = map.width * 2 - (isOdd ? 1 : 0);
-        MapBuilder r = MapBuilder(newWidth, map.height);
+        MapBuilder r = MapBuilder(map.width, map.height);
 
         for (int y = 0; y < map.height; y++) {
-            for (int x = 0; x < map.width; x++){
-                if (x == map.width - 1 && isOdd) {
-                    continue;
-                }
+            for (int x = 0; x < (map.width + 1) / 2; x++){
                 Cell current = Cell(x, y);
                 Cell sym = Cell(r.map.width - x - 1, y);
                 r.map[current] = map[current];
@@ -325,7 +394,8 @@ class MapPrinter {
         for(int y=0; y < map.height; y++){
             for(int x=0; x < map.width; x++){
                 Cell current(x,y);
-                bool printBlue = map[current] == MapCell::Wall;
+                MapCell mCell = map[current];
+                bool printBlue = mCell == MapCell::Wall || mCell == MapCell::FixedWall;
                 if (printBlue) {
                     glColor3f(0,0,1);
                 } else {
@@ -375,20 +445,21 @@ int main(int argc, char** argv) {
         exit(-1);
     }
 
-    if ((columns %2) == 1) {
-        cout << "Rows must be an even number" << "\n";
+    if ((columns %2) == 0) {
+        cout << "Columns must be an odd number" << "\n";
         exit(-1);
     }
     
-    bool isEven = (columns % 2) == 0;
-    int regionColumns = (columns / 2) + (isEven ? 0 : 1);
+    //bool isEven = (columns % 2) == 0;
+    //int regionColumns = (columns / 2) + (isEven ? 0 : 1);
 
-    MapBuilder map(regionColumns, rows);
+    MapBuilder map(columns, rows);
 
+    map.makeHouse();
     map.generateRandomRec();
 
+    map.postProcessGenerator();
     MapBuilder sym = map.symmetric();
-    sym.postProcessGenerator();
     sym.print();
     MapPrinter mpPrinter(sym.map);
 
