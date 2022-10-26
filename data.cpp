@@ -121,63 +121,6 @@ class MapBuilder {
         }
     }
 
-    void generateRandom() {
-        MatrixValue<MapCellVisit> visited(map.width, map.height, MapCellVisit::Unvisited);
-        // Choose the initial cell
-
-        srand(time(NULL));   // Initialization, should only be called once.
-        Cell randomCell(1, 1);
-        //srand(1);
-        //Cell randomCell(4, 4);
-        map[randomCell] = MapCell::Corridor;
-        stack<Cell> stackCells;
-        visited[randomCell] = MapCellVisit::Visited; // mark it as visited
-        stackCells.push(randomCell); // push it to the stack
-        while (!stackCells.empty()){ // While the stack is not empty 
-            Cell currentCell = stackCells.top(); // Pop a cell from the stack and make it a current cell
-            stackCells.pop();
-            // If the current cell has any neighbours which have not been visited
-            int initialRandomIntDir = rand() % 4;
-            Direction randomDirection = (Direction) (initialRandomIntDir);
-            Cell wall = currentCell.move(randomDirection);
-            Cell corridor = wall.move(randomDirection);
-            int nextRandomIntDir = -1;
-            while ( nextRandomIntDir != initialRandomIntDir &&
-                    !(map.validInBounds(corridor) &&
-                    visited[corridor] == MapCellVisit::Unvisited)
-            ){
-                if (!map.validInBounds(corridor) &&
-                    map.validInBounds(wall))
-                {
-                    visited[wall] = MapCellVisit::Visited;
-                }
-                nextRandomIntDir = nextRandomIntDir == -1 ? initialRandomIntDir + 1: nextRandomIntDir + 1;
-                nextRandomIntDir = nextRandomIntDir % 4;
-                randomDirection = (Direction) (nextRandomIntDir);
-                wall = currentCell.move(randomDirection);
-                corridor = wall.move(randomDirection);
-            }
-
-
-            if (nextRandomIntDir == initialRandomIntDir) {
-                continue; // all nodes visited
-                // Continue to pop items off the stack
-            }
-
-            // Push the current cell to the stack
-            stackCells.push(currentCell);
-
-            // Choose one of the unvisited neighbours
-            // Remove the wall between the current cell and the chosen cell
-            map[corridor] = MapCell::Corridor;
-            map[wall] = MapCell::Corridor;
-            // Mark the chosen cell as visited and push it to the stack
-            visited[wall] = MapCellVisit::Visited;
-            visited[corridor] = MapCellVisit::Visited;
-            stackCells.push(corridor);
-        }
-    }
-
     void generateRandomRec() {
         MatrixValue<MapCellVisit> visited(map.width, map.height, MapCellVisit::Unvisited);
         // Choose the initial cell
