@@ -153,7 +153,7 @@ public:
                 }
                 else
                 {
-                    c = 'X';
+                    c = 'X'; // for debug case
                 }
                 cout << c;
             }
