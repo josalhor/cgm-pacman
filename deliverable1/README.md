@@ -21,7 +21,7 @@ In order to execute the code, use the following command:
 
 ## Map generator limitations
 The map generation has the following constraints:
-- The grid **MUST** be at least 11x11.
+- The grid **MUST** be at least 17x23.
 - **Both, rows and columns** need to be an **odd number**
 
 ## First delivery
