@@ -21,7 +21,7 @@ In order to execute the code, use the following command:
 
 ## Map generator limitations
 The map generation has the following constraints:
-- The grid **MUST** be at least 17x23.
+- The grid **MUST** be at least 17x23. Although the real minimum size is 11x11 for our algorithm, we have detected that it produces much better quality maps after 17x23, so we have set that as the minimum.
 - **Both, rows and columns** need to be an **odd number**
 
 ## First delivery
