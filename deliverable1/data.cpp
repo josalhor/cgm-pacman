@@ -381,7 +381,7 @@ public:
                     {
                         Direction d = (Direction)(i);
                         Cell next = current.move(d);
-                        if (map.validInBounds(next) && map[next] == MapCell::Wall && !map.isPerimeter(next))
+                        if (map.validInBounds(next) && map[next] == MapCell::Wall)
                         {
                             setSymetric(next, MapCell::Corridor);
                             changedWall = true;
