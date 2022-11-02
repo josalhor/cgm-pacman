@@ -18,7 +18,7 @@ using namespace std;
     Wall,
     Corridor
 };
-class Cell {
+class GameCell {
     private:
         CellType type;
          // Absolute position in the matrix ex: [0, 0] can only be ints in this case
@@ -27,7 +27,7 @@ class Cell {
         vector<Vector2D> region;
         vector<GameEntity> entities;
 
-    public: Cell(CellType type, Vector2D logicPosition);
+    public: GameCell(CellType type, Vector2D logicPosition);
     void draw();
     void update();
     void detectCollision();

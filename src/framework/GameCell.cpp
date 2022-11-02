@@ -1,10 +1,10 @@
-#include "Cell.hpp"
+#include "GameCell.hpp"
 
-Cell::Cell(CellType type, Vector2D logicPosition) : type(type), logicPosition(logicPosition){
+GameCell::GameCell(CellType type, Vector2D logicPosition) : type(type), logicPosition(logicPosition){
 
 }
 
-void Cell::draw()
+void GameCell::draw()
 {
     if (type == CellType::Wall){
         // todo
@@ -17,14 +17,14 @@ void Cell::draw()
     }
 }
 
-void Cell::update()
+void GameCell::update()
 {
     for(int i = 0; i < this->entities.size(); i++){
         this->entities[i].update();
     }
 }
 
-void Cell::detectCollision()
+void GameCell::detectCollision()
 {
     for(int i = 0; i < this->entities.size(); i++){
         for(int j = 0; j < this->entities.size(); j++){
