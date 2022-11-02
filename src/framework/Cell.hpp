@@ -1,3 +1,5 @@
+#ifndef CELL
+#define CELL
 /*
  * 3 Types of cell { WALL, CORRIDOR }
  * position
@@ -22,7 +24,6 @@ class Cell {
         Vector2D logicPosition;
         // Vertices to paint
         vector<Vector2D> region;
-        
 
     public: Cell(CellType type, Vector2D logicPosition) : type(type), logicPosition(logicPosition) {
 
@@ -31,3 +32,5 @@ class Cell {
     void draw(){}
     void detectCollision(){}
 };
+
+#endif

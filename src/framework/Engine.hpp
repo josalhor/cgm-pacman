@@ -2,6 +2,9 @@
 #define ENGINE
 
 #include "utils/Matrix.hpp"
+class GameEntity;
+#include "GameEntity.hpp"
+
 
 class Engine {
     private:
@@ -10,6 +13,7 @@ class Engine {
         void display();
         void setup();
         void run();
+        void destroy(GameEntity entity);
 };
 
 #endif
