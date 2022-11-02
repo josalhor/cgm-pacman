@@ -1,11 +1,17 @@
 #ifndef VECT2D
 #define VECT2D
+
 class Vector2D {
     private:
         float x;
         float y;
         
     public:
+    Vector2D(){
+        this->x = 0;
+        this->y = 0;
+    }
+
     Vector2D(float x, float y) {
         this->x + x;
         this->y = y;

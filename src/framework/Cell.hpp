@@ -9,6 +9,7 @@
  */
 
 #include "utils/Vector2D.hpp"
+#include "GameEntity.hpp"
 #include <vector>
 using namespace std;
 
@@ -24,13 +25,12 @@ class Cell {
         Vector2D logicPosition;
         // Vertices to paint
         vector<Vector2D> region;
+        vector<GameEntity> entities;
 
-    public: Cell(CellType type, Vector2D logicPosition) : type(type), logicPosition(logicPosition) {
-
-    }
-
-    void draw(){}
-    void detectCollision(){}
+    public: Cell(CellType type, Vector2D logicPosition);
+    void draw();
+    void update();
+    void detectCollision();
 };
 
 #endif

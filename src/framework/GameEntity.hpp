@@ -22,8 +22,10 @@ class GameEntity {
         Vector2D speed;
         map<string, void(*)()> collisionResolver;
     public:
+        GameEntity(Engine& engine);
         static const string typeName;
         void update();
+        void draw();
         Vector2D getPosition() {
             return this->logicPosition;
         }
