@@ -1,3 +1,5 @@
+#ifndef MAPBUILDER
+#define MAPBUILDER
 #include <iostream>
 #include "utils/Matrix.hpp"
 #include "framework/CellType.hpp"
@@ -283,3 +285,5 @@ public:
         return changedWall;
     }
 };
+
+#endif

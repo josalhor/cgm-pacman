@@ -27,6 +27,9 @@ class GameCell {
     public:
     GameCell();
     GameCell(CellType type, Vector2D logicPosition);
+    CellType getCellType() {
+        return type;
+    }
     void draw();
     void update();
     void detectCollision();

@@ -3,6 +3,21 @@
 #include "scenario/MapBuilder.hpp"
 #include "utils/Matrix.hpp"
 #include "framework/GameCell.hpp"
+#include <GL/glut.h>
+
+#define SIZE_CELL 50
+#define WIDTH 1000
+#define HEIGHT 1000
+
+/*
+This trick allows us to encapsulate all OpenGL
+code in a class and map C API class to C++ methods
+*/
+Engine *engine;
+void displayOpenGL()
+{
+    engine->display();
+}
 
 Engine::Engine() {
 
@@ -18,9 +33,9 @@ void Engine::setup(int columns, int rows){
 
     this->matrix = new Matrix<GameCell>(columns, rows);
     
-    for (int i = 0; i < map.map.height; i++)
+    for (int i = 0; i < this->matrix->height; i++)
     {
-        for (int j = 0; j < map.map.width; j++)
+        for (int j = 0; j < this->matrix->width; j++)
         {
             CellType t = CellType::Corridor;
             Cell c = Cell(i, j);
@@ -34,11 +49,55 @@ void Engine::setup(int columns, int rows){
 }
 
 void Engine::run(){
-    
+    int argc = 0;
+    glutInit(&argc, NULL);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitWindowPosition(50, 50);
+    glutInitWindowSize(SIZE_CELL * this->matrix->width, SIZE_CELL * this->matrix->height);
+    glutCreateWindow("Amazing Pacman Game");
+
+    glutDisplayFunc(displayOpenGL);
+    // glutKeyboardFunc(keyboard);
+
+    glMatrixMode(GL_PROJECTION);
+    gluOrtho2D(0, WIDTH - 1, 0, HEIGHT - 1);
+
+    glutMainLoop();
 }
 
 void Engine::display(){
-    
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    Matrix<GameCell>& matrix = *(this->matrix);
+
+    for (int y = 0; y < this->matrix->height; y++)
+    {
+        for (int x = 0; x < this->matrix->width; x++)
+        {
+            Cell current(x, y);
+            
+            CellType mCell = matrix[current].getCellType();
+            bool printBlue = mCell == CellType::Wall || mCell == CellType::FixedWall;
+            if (printBlue)
+            {
+                glColor3f(0, 0, 1);
+            }
+            else
+            {
+                glColor3f(1, 1, 1);
+            }
+            glBegin(GL_QUADS);
+
+            glVertex2i(x * WIDTH / this->matrix->width, y * HEIGHT / this->matrix->height);
+            glVertex2i((x + 1) * WIDTH / this->matrix->width, y * HEIGHT / this->matrix->height);
+            glVertex2i((x + 1) * WIDTH / this->matrix->width, (y + 1) * HEIGHT / this->matrix->height);
+            glVertex2i(x * WIDTH / this->matrix->width, (y + 1) * HEIGHT / this->matrix->height);
+
+            glEnd();
+        }
+    }
+
+    glutSwapBuffers();
 }
 
 void Engine::destroy(GameEntity entity){
