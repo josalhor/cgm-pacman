@@ -32,10 +32,10 @@ void Engine::setup(int columns, int rows){
     map.print();                // print the map in the console
 
     this->matrix = new Matrix<GameCell>(columns, rows);
-    
-    for (int i = 0; i < this->matrix->height; i++)
+        
+    for (int i = 0; i < columns; i++)
     {
-        for (int j = 0; j < this->matrix->width; j++)
+        for (int j = 0; j < rows; j++)
         {
             CellType t = CellType::Corridor;
             Cell c = Cell(i, j);
@@ -54,7 +54,7 @@ void Engine::run(){
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowPosition(50, 50);
     glutInitWindowSize(SIZE_CELL * this->matrix->width, SIZE_CELL * this->matrix->height);
-    glutCreateWindow("Amazing Pacman Game");
+    glutCreateWindow("Amazing Pacman Game v2");
 
     glutDisplayFunc(displayOpenGL);
     // glutKeyboardFunc(keyboard);
