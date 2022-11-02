@@ -1,5 +1,9 @@
 #include "GameCell.hpp"
 
+GameCell::GameCell() : type(CellType::Debug), logicPosition(Vector2D()){
+
+}
+
 GameCell::GameCell(CellType type, Vector2D logicPosition) : type(type), logicPosition(logicPosition){
 
 }

@@ -1,16 +1,10 @@
 #include <iostream>
 #include "utils/Matrix.hpp"
+#include "framework/CellType.hpp"
 
 using namespace std;
 
-enum MapCell
-{
-    Wall,
-    Corridor,
-    FixedWall,
-    Debug
-};
-enum MapCellVisit
+enum CellTypeVisit
 {
     Unvisited,
     Visited
@@ -25,9 +19,9 @@ enum MapCellVisit
 class MapBuilder
 {
 public:
-    Matrix<MapCell> map;
+    Matrix<CellType> map;
 
-    MapBuilder(int width, int height) : map(Matrix<MapCell>(width, height, MapCell::Wall)) {}
+    MapBuilder(int width, int height) : map(Matrix<CellType>(width, height, CellType::Wall)) {}
 
     void print()
     {
@@ -36,12 +30,12 @@ public:
             for (int x = 0; x < map.width; x++)
             {
                 char c;
-                MapCell m = map.matrix[y][x];
-                if (m == MapCell::Wall || m == MapCell::FixedWall)
+                CellType m = map.matrix[y][x];
+                if (m == CellType::Wall || m == CellType::FixedWall)
                 {
                     c = '0';
                 }
-                else if (m == MapCell::Corridor)
+                else if (m == CellType::Corridor)
                 {
                     c = ' ';
                 }
@@ -57,7 +51,7 @@ public:
 
     void generateRandomRec()
     {
-        Matrix<MapCellVisit> visited(map.width, map.height, MapCellVisit::Unvisited);
+        Matrix<CellTypeVisit> visited(map.width, map.height, CellTypeVisit::Unvisited);
         /*
         Mark the external walls as "fixed"
         */
@@ -66,16 +60,16 @@ public:
             Cell up(x, 0);
             Cell down(x, map.height - 1);
 
-            setSymetric(up, MapCell::FixedWall, visited);
-            setSymetric(down, MapCell::FixedWall, visited);
+            setSymetric(up, CellType::FixedWall, visited);
+            setSymetric(down, CellType::FixedWall, visited);
         }
 
         for (int y = 0; y < map.height; y++)
         {
             Cell left(0, y);
             Cell right(map.width - 1, y);
-            setSymetric(left, MapCell::FixedWall, visited);
-            setSymetric(right, MapCell::FixedWall, visited);
+            setSymetric(left, CellType::FixedWall, visited);
+            setSymetric(right, CellType::FixedWall, visited);
         }
         
         /*
@@ -87,9 +81,9 @@ public:
             for (int y = 0; y < map.height; y++)
             {
                 Cell current(x, y);
-                if (map[current] == MapCell::FixedWall)
+                if (map[current] == CellType::FixedWall)
                 {
-                    visited[current] = MapCellVisit::Visited;
+                    visited[current] = CellTypeVisit::Visited;
                 }
             }
         }
@@ -99,8 +93,8 @@ public:
         const int startWidth = (map.width / 2);
         
         Cell openingHouse(startWidth, startHeight);
-        map[openingHouse] = MapCell::Corridor;
-        visited[openingHouse] = MapCellVisit::Visited;
+        map[openingHouse] = CellType::Corridor;
+        visited[openingHouse] = CellTypeVisit::Visited;
 
         // generate recursively!
         srand(time(NULL));
@@ -112,15 +106,15 @@ public:
         return Cell(map.width - cell.x - 1, cell.y);
     }
 
-    void setSymetric(Cell &cell, MapCell value, Matrix<MapCellVisit> &visited)
+    void setSymetric(Cell &cell, CellType value, Matrix<CellTypeVisit> &visited)
     {
         Cell sym = getSymmetricCell(cell);
         setSymetric(cell, value);
-        visited[cell] = MapCellVisit::Visited;
-        visited[sym] = MapCellVisit::Visited;
+        visited[cell] = CellTypeVisit::Visited;
+        visited[sym] = CellTypeVisit::Visited;
     }
 
-    void setSymetric(Cell &cell, MapCell value)
+    void setSymetric(Cell &cell, CellType value)
     {
         Cell sym = getSymmetricCell(cell);
         map[cell] = value;
@@ -134,7 +128,7 @@ public:
         const int startWidth = (map.width / 2);
 
         Cell opening(startWidth, startHeight);
-        map[opening] = MapCell::Corridor;
+        map[opening] = CellType::Corridor;
         int i = startHeight;
         int j = startWidth - 1;
         int leftLimit = startWidth - HOUSE_WIDTH;
@@ -150,27 +144,27 @@ public:
         for (; j > leftLimit; j--)
         {
             Cell current(j, i);
-            map[current] = MapCell::FixedWall;
+            map[current] = CellType::FixedWall;
         }
         for (; i > downLimit; i--)
         {
             Cell current(j, i);
-            map[current] = MapCell::FixedWall;
+            map[current] = CellType::FixedWall;
         }
         for (; j < rightLimit; j++)
         {
             Cell current(j, i);
-            map[current] = MapCell::FixedWall;
+            map[current] = CellType::FixedWall;
         }
         for (; i < upLimit; i++)
         {
             Cell current(j, i);
-            map[current] = MapCell::FixedWall;
+            map[current] = CellType::FixedWall;
         }
         for (; j > startWidth; j--)
         {
             Cell current(j, i);
-            map[current] = MapCell::FixedWall;
+            map[current] = CellType::FixedWall;
         }
 
         for (j = leftLimit + 1; j < rightLimit; j++)
@@ -178,17 +172,17 @@ public:
             for (i = downLimit + 1; i < upLimit; i++)
             {
                 Cell current(j, i);
-                map[current] = MapCell::Corridor;
+                map[current] = CellType::Corridor;
             }
         }
     }
 
-    void generateRandomRecInner(Cell currentCell, Matrix<MapCellVisit> &visited)
+    void generateRandomRecInner(Cell currentCell, Matrix<CellTypeVisit> &visited)
     {
         while (true)
         {
             // If the current cell has any neighbours which have not been visited
-            visited[currentCell] = MapCellVisit::Visited; // mark it as visited
+            visited[currentCell] = CellTypeVisit::Visited; // mark it as visited
             int initialRandomIntDir = rand() % NUM_DIRECTIONS;
             Direction randomDirection = (Direction)(initialRandomIntDir);
             Cell wall = currentCell.move(randomDirection);
@@ -198,13 +192,13 @@ public:
             // While we haven't found a movement to an unvisited cell...
             while (nextRandomIntDir != initialRandomIntDir &&
                    !(map.validInBounds(corridor) &&
-                     visited[corridor] == MapCellVisit::Unvisited))
+                     visited[corridor] == CellTypeVisit::Unvisited))
             {
                 // loop through all possible movements deterministically
                 if (!map.validInBounds(corridor) &&
                     map.validInBounds(wall))
                 {
-                    visited[wall] = MapCellVisit::Visited;
+                    visited[wall] = CellTypeVisit::Visited;
                 }
                 nextRandomIntDir = nextRandomIntDir == -1 ? initialRandomIntDir + 1 : nextRandomIntDir + 1;
                 nextRandomIntDir = nextRandomIntDir % NUM_DIRECTIONS;
@@ -222,8 +216,8 @@ public:
 
             // Choose one of the unvisited neighbours
             // Remove the wall between the current cell and the chosen cell
-            setSymetric(corridor, MapCell::Corridor, visited);
-            setSymetric(wall, MapCell::Corridor, visited);
+            setSymetric(corridor, CellType::Corridor, visited);
+            setSymetric(wall, CellType::Corridor, visited);
             // Note that this sets the values SYMETRICALLY!
             // This means that the resulting map will be symetrical
             // also, because the visited flag is also set symetrically there
@@ -252,15 +246,15 @@ public:
             for (int x = 0; x < map.width; x++)
             {
                 Cell current(x, y);
-                if (map[current] == MapCell::Corridor)
+                if (map[current] == CellType::Corridor)
                 {
                     int numWallsAround = 0;
                     for (int i = 0; i < 4; i++)
                     {
                         Direction d = (Direction)(i);
                         Cell next = current.move(d);
-                        MapCell mc = map[next];
-                        if (map.validInBounds(next) && mc == MapCell::Wall || mc == MapCell::FixedWall)
+                        CellType mc = map[next];
+                        if (map.validInBounds(next) && mc == CellType::Wall || mc == CellType::FixedWall)
                         {
                             numWallsAround++;
                         }
@@ -275,9 +269,9 @@ public:
                     {
                         Direction d = (Direction)(i);
                         Cell next = current.move(d);
-                        if (map.validInBounds(next) && map[next] == MapCell::Wall)
+                        if (map.validInBounds(next) && map[next] == CellType::Wall)
                         {
-                            setSymetric(next, MapCell::Corridor);
+                            setSymetric(next, CellType::Corridor);
                             changedWall = true;
                             break;
                         }

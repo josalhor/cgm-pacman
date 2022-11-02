@@ -72,6 +72,17 @@ public:
         }
     }
 
+    Matrix(int width, int height)
+    {
+        this->width = width;
+        this->height = height;
+        this->matrix = new T *[height];
+        for (int i = 0; i < height; i++)
+        {
+            matrix[i] = new T[width];
+        }
+    }
+
     ~Matrix()
     {
         for (int i = 0; i < height; i++)

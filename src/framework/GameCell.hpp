@@ -9,15 +9,12 @@
  */
 
 #include "utils/Vector2D.hpp"
+class GameEntity;
 #include "GameEntity.hpp"
+#include "CellType.hpp"
 #include <vector>
 using namespace std;
 
- enum CellType
-{
-    Wall,
-    Corridor
-};
 class GameCell {
     private:
         CellType type;
@@ -27,7 +24,9 @@ class GameCell {
         vector<Vector2D> region;
         vector<GameEntity> entities;
 
-    public: GameCell(CellType type, Vector2D logicPosition);
+    public:
+    GameCell();
+    GameCell(CellType type, Vector2D logicPosition);
     void draw();
     void update();
     void detectCollision();
