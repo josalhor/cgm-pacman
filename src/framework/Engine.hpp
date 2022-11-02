@@ -10,9 +10,10 @@ class Engine {
     private:
         Matrix matrix;
     public:
-        void display();
+        Engine();
         void setup();
         void run();
+        void display();
         void destroy(GameEntity entity);
 };
 
