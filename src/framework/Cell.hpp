@@ -6,6 +6,10 @@
  * draw()
  */
 
+#include "utils/Vector2D.hpp"
+#include <vector>
+using namespace std;
+
  enum CellType
 {
     Wall,
@@ -17,13 +21,13 @@ class Cell {
          // Absolute position in the matrix ex: [0, 0] can only be ints in this case
         Vector2D logicPosition;
         // Vertices to paint
-        vec<Vector2D> region;
+        vector<Vector2D> region;
         
 
-    public: Cell() {
+    public: Cell(CellType type, Vector2D logicPosition) : type(type), logicPosition(logicPosition) {
 
     }
 
     void draw(){}
     void detectCollision(){}
-}
+};
