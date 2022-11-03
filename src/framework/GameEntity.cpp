@@ -25,11 +25,16 @@ void GameEntity::receiveKeyboard(Direction d) {
 }
 
 void GameEntity::setPosition(Vector2D position) {
-    if(this->engine.canMove(position.asCell())){
+    CellType tp = this->engine.getCellType(position.asCell());
+    if(canMoveInto(tp)){
         this->logicPosition = position;
     } else {
         speed = Vector2D(0.0, 0.0);
     }
+}
+
+bool GameEntity::canMoveInto(CellType cellType) {
+    return true;
 }
 
 Vector2D GameEntity::center(Vector2D point) {

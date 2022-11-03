@@ -8,8 +8,8 @@
 class Fruit: public GameEntity {
     public:
     Fruit(Engine& engine) : GameEntity(engine) {
-        const float height = 0.3;
-        const float width = 0.3;
+        const float height = 0.33;
+        const float width = 0.33;
         size = Vector2D(width, height);
     }
 
