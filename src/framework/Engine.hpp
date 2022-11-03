@@ -18,6 +18,7 @@ class Engine {
         */
     public:
         Engine();
+        bool canMove(Cell cell);
         void setup(int columns, int rows);
         void run();
         void display();

@@ -15,7 +15,7 @@ void fillMatrix(Engine& engine, Matrix<GameCell>& matrix){
         {
             Cell c = Cell(i, j);
             GameCell& gc = matrix[c];
-            bool empty = gc.entities.size() == 0 && gc.getCellType() != CellType::Wall;
+            bool empty = gc.entities.size() == 0 && gc.getCellType() == CellType::FixedCorridor;
             if (phantoms > 0 && empty){
                 Phantom* p = new Phantom(engine);
                 p->setPosition(Vector2D(i, j));

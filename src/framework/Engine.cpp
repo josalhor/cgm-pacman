@@ -41,6 +41,10 @@ Engine::Engine() {
 
 }
 
+bool Engine::canMove(Cell cell) {
+    return (*(this->matrix))[cell].getCellType() == CellType::Corridor;
+}
+
 void Engine::setup(int columns, int rows){
     MapBuilder map(columns, rows);
 
@@ -56,9 +60,9 @@ void Engine::setup(int columns, int rows){
     {
         for (int j = 0; j < rows; j++)
         {
-            CellType t = CellType::Corridor;
             Cell c = Cell(i, j);
             CellType m = map.map[c];
+            CellType t = m;
             if (m == CellType::FixedWall || m == CellType::Wall){
                 t = CellType::Wall;
             }

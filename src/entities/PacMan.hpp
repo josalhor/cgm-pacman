@@ -14,7 +14,12 @@ class PacMan: public GameEntity {
     }
 
     void update(){
-        this->logicPosition = this->logicPosition.add(speed);
+        Vector2D nextPos = this->logicPosition.add(speed);
+        if(this->engine.canMove(nextPos.asCell())){
+            this->logicPosition = nextPos;
+        } else {
+            speed = Vector2D(0.0, 0.0);
+        }
     }
 
     void receiveKeyboard(Direction d) {

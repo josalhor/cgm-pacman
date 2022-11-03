@@ -13,7 +13,7 @@ void GameCell::drawScenario(CoordinateMapper& mapper)
 {
     if (type == CellType::Wall || type == CellType::FixedWall){
         glColor3f(0, 0, 1);
-    } else if (type == CellType::Corridor){
+    } else if (type == CellType::Corridor || type == CellType::FixedCorridor){
         glColor3f(1, 1, 1);
 
     }
