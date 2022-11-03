@@ -48,7 +48,7 @@ void fillMatrix(Engine& engine, Matrix<GameCell>& matrix){
         {
             Cell c = Cell(i, j);
             GameCell& gc = matrix[c];
-            bool empty = gc.entities.size() == 0 && gc.getCellType() != CellType::Wall;
+            bool empty = gc.entities.size() == 0 && gc.getCellType() == CellType::Corridor;
             if (empty){
                 Fruit* p = new Fruit(engine);
                 p->setPosition(Vector2D(i, j));
