@@ -7,8 +7,8 @@
 class PacMan: public GameEntity {
     public:
     PacMan(Engine& engine) : GameEntity(engine) {
-        const float height = 0.5;
-        const float width = 0.5;
+        const float height = 0.65;
+        const float width = 0.65;
         size = Vector2D(width, height);
     }
 
