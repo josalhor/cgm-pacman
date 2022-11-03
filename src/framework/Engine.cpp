@@ -41,8 +41,8 @@ Engine::Engine() {
 
 }
 
-bool Engine::canMove(Cell cell) {
-    return (*(this->matrix))[cell].getCellType() == CellType::Corridor;
+CellType Engine::getCellType(Cell cell) {
+    return (*(this->matrix))[cell].getCellType();
 }
 
 void Engine::setup(int columns, int rows){
