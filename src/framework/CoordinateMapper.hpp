@@ -29,6 +29,14 @@ class CoordinateMapper
     int YtoVisual(float y){
         return roundToInt(y * (float)opengl_height / (float)height);
     }
+
+    float XtoVisualFloat(float x) {
+        return x * (float)opengl_width / (float)width;
+    }
+
+    float YtoVisualFloat(float y){
+        return y * (float)opengl_height / (float)height;
+    }
 };
 
 #endif

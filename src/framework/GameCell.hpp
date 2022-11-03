@@ -22,7 +22,7 @@ class GameCell {
          // Absolute position in the matrix ex: [0, 0] can only be ints in this case
         Vector2D logicPosition;
         // Vertices to paint
-        vector<Vector2D> region;
+        // vector<Vector2D> region;
     public:
         vector<GameEntity*> entities;
     GameCell();

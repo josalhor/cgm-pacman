@@ -18,10 +18,10 @@ class Phantom: public GameEntity {
         float x = logicPosition.getX();
         float y = logicPosition.getY();
 
-        glVertex2i(mapper.XtoVisual(x), mapper.YtoVisual(y));
-        glVertex2i(mapper.XtoVisual(x + 1), mapper.YtoVisual(y));
-        glVertex2i(mapper.XtoVisual(x + 1), mapper.YtoVisual(y + 1));
-        glVertex2i(mapper.XtoVisual(x), mapper.YtoVisual(y + 1));
+        glVertex2f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y));
+        glVertex2f(mapper.XtoVisualFloat(x + 1), mapper.YtoVisualFloat(y));
+        glVertex2f(mapper.XtoVisualFloat(x + 1), mapper.YtoVisualFloat(y + 1));
+        glVertex2f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y + 1));
 
         glEnd();
     }
