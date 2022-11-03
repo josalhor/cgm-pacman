@@ -49,7 +49,7 @@ void Engine::setup(int columns, int rows){
         }
     }
 
-    fillMatrix(this->matrix);
+    fillMatrix(*this, *(this->matrix));
 
     engine = this;
 }

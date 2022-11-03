@@ -30,6 +30,9 @@ class GameEntity {
         Vector2D getPosition() {
             return this->logicPosition;
         }
+        void setPosition(Vector2D position){
+            this->logicPosition = position;
+        }
         void receiveCollision(GameEntity entity);
 };
 
