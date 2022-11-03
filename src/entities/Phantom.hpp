@@ -20,10 +20,10 @@ class Phantom: public GameEntity {
 
         glColor3f(1, 0, 0);
         glBegin(GL_QUADS);
-        Vector2D renderOn = center(logicPosition);
+        Vector2D centerPoint = center(logicPosition);
+        Vector2D renderOn = logicPosition.add(centerPoint);
         float x = renderOn.getX();
         float y = renderOn.getY();
-
 
         glVertex2f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y));
         glVertex2f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y));
