@@ -12,6 +12,10 @@ class Phantom: public GameEntity {
         size = Vector2D(width, height);
     }
 
+    bool canMoveInto(CellType cellType){
+        return cellType == CellType::Corridor || cellType == CellType::FixedCorridor;
+    }
+
     void update(){
         this->logicPosition = Vector2D(this->logicPosition.getX() + 0.01, this->logicPosition.getY());
     }
