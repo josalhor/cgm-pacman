@@ -4,7 +4,7 @@
 #include "framework/GameEntity.hpp"
 #include <GL/glut.h>
 
-#define PACMAN_BASE_SPEED 0.005
+#define PACMAN_BASE_SPEED 0.004
 
 class PacMan: public GameEntity {
     public:

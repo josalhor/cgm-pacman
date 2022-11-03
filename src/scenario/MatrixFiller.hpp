@@ -42,6 +42,8 @@ void fillMatrix(Engine& engine, Matrix<GameCell>& matrix){
         }
     }
 
+    // exit(-1);
+
     for (int i = 0; i < matrix.width; i++)
     {
         for (int j = 0; j < matrix.height; j++)
