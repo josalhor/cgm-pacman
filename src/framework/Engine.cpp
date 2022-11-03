@@ -46,6 +46,8 @@ void Engine::setup(int columns, int rows){
             (*(this->matrix))[c] = GameCell(t, Vector2D(i, j));
         }
     }
+
+    engine = this;
 }
 
 void Engine::run(){
