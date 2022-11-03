@@ -11,9 +11,8 @@ class Engine;
 using namespace std;
 
 class GameEntity {
-    private:
-        Engine& engine;
     protected:
+        Engine& engine;
         // Absolute position in the matrix ex: [0.5, 0.5]
         Vector2D logicPosition;
         // Vertices to paint

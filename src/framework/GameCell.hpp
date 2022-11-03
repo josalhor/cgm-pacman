@@ -1,5 +1,5 @@
-#ifndef CELL
-#define CELL
+#ifndef GAMECELL
+#define GAMECELL
 /*
  * 3 Types of cell { WALL, CORRIDOR }
  * position
