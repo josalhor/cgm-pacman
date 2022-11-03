@@ -13,7 +13,6 @@ using namespace std;
 class GameEntity {
     private:
         Engine& engine;
-        void destroy();
     protected:
         // Absolute position in the matrix ex: [0.5, 0.5]
         Vector2D logicPosition;
@@ -22,10 +21,10 @@ class GameEntity {
         // Vector that indicates the speed of a game object
         Vector2D speed;
         Vector2D size;
-        map<string, void(*)()> collisionResolver;
+        // map<string, void(*)()> collisionResolver;
     public:
         GameEntity(Engine& engine);
-        static const string typeName;
+        void destroy();
         Vector2D getPosition() {
             return this->logicPosition;
         }
@@ -35,6 +34,7 @@ class GameEntity {
         virtual void update();
         virtual void draw(CoordinateMapper& mapper);
         virtual void receiveCollision(GameEntity& entity);
+        virtual string getName();
         Vector2D center(Vector2D point);
 };
 

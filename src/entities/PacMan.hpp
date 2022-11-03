@@ -32,6 +32,13 @@ class PacMan: public GameEntity {
 
         glEnd();
     }
-};
 
+    static string getTypeName(){
+        return "PacMan";
+    }
+    
+    string getName() {
+        return this->getTypeName();
+    }
+};
 #endif

@@ -32,6 +32,14 @@ class Phantom: public GameEntity {
 
         glEnd();
     }
+
+    static string getTypeName(){
+        return "Phantom";
+    }
+
+    string getName() {
+        return this->getTypeName();
+    }
 };
 
 #endif
