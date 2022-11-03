@@ -13,6 +13,10 @@ class PacMan: public GameEntity {
         speed = Vector2D(0.01, 0);
     }
 
+    bool canMoveInto(CellType cellType){
+        return cellType == CellType::Corridor;
+    }
+
     void update(){
         Vector2D nextPos = this->logicPosition.add(speed);
         setPosition(nextPos);
