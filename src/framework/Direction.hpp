@@ -9,4 +9,6 @@ enum Direction
     Right = 3
 };
 
+#define NUM_DIRECTIONS 4
+
 #endif

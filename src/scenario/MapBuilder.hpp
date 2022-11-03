@@ -3,6 +3,7 @@
 #include <iostream>
 #include "utils/Matrix.hpp"
 #include "framework/CellType.hpp"
+#include "MapConstants.hpp"
 
 using namespace std;
 
@@ -11,12 +12,6 @@ enum CellTypeVisit
     Unvisited,
     Visited
 };
-
-#define NUM_DIRECTIONS 4
-
-#define HOUSE_WIDTH 4
-#define HOUSE_HEIGHT 6
-
 
 class MapBuilder
 {
