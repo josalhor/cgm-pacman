@@ -41,6 +41,13 @@ class Vector2D {
     float getY(){
         return y;
     }
+
+    Vector2D operator*(float scalar){
+        return Vector2D(
+            x * scalar,
+            y * scalar
+        );
+    }
 };
 
 #endif
