@@ -30,6 +30,7 @@ class GameCell {
     CellType getCellType() {
         return type;
     }
+    void receiveKeyboard(unsigned char c);
     void drawScenario(CoordinateMapper& mapper);
     void draw(CoordinateMapper& mapper);
     void update();

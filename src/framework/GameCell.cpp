@@ -42,6 +42,13 @@ void GameCell::update()
     }
 }
 
+void GameCell::receiveKeyboard(unsigned char c)
+{
+    for(int i = 0; i < this->entities.size(); i++){
+        this->entities[i]->receiveKeyboard(c);
+    }
+}
+
 void GameCell::detectCollision()
 {
     for(int i = 0; i < this->entities.size(); i++){

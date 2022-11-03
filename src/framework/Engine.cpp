@@ -21,9 +21,14 @@ void displayOpenGL()
     engine->display();
 }
 
-void idleOpenGl()
+void idleOpenGL()
 {
   engine->idle();
+}
+
+void keyboardOpenGL(unsigned char c,int x,int y)
+{
+  engine->keyboard(c);
 }
 
 
@@ -70,8 +75,8 @@ void Engine::run(){
     glutCreateWindow("Amazing Pacman Game v2");
 
     glutDisplayFunc(displayOpenGL);
-    glutIdleFunc(idleOpenGl);
-    // glutKeyboardFunc(keyboard);
+    glutIdleFunc(idleOpenGL);
+    glutKeyboardFunc(keyboardOpenGL);
 
     glMatrixMode(GL_PROJECTION);
     gluOrtho2D(0, WIDTH - 1, 0, HEIGHT - 1);
@@ -172,6 +177,19 @@ void Engine::update(){
             Cell current(x, y);
             GameCell& gc = matrix[current];
             gc.detectCollision();
+        }
+    }
+}
+
+void Engine::keyboard(unsigned char c){
+    Matrix<GameCell>& matrix = *(this->matrix);
+    for (int y = 0; y < this->matrix->height; y++)
+    {
+        for (int x = 0; x < this->matrix->width; x++)
+        {
+            Cell current(x, y);
+            GameCell& gc = matrix[current];
+            gc.receiveKeyboard(c);
         }
     }
 }

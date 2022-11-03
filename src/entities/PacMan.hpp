@@ -10,10 +10,15 @@ class PacMan: public GameEntity {
         const float height = 0.65;
         const float width = 0.65;
         size = Vector2D(width, height);
+        speed = Vector2D(0.01, 0);
     }
 
     void update(){
-        this->logicPosition = Vector2D(this->logicPosition.getX() + 0.01, this->logicPosition.getY());
+        this->logicPosition = this->logicPosition.add(speed);
+    }
+
+    void receiveKeyboard(unsigned char c) {
+        speed = Vector2D(0.0, 0.01);
     }
 
     void draw(CoordinateMapper& mapper) {
