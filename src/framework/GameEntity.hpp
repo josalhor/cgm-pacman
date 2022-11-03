@@ -21,6 +21,7 @@ class GameEntity {
         vector<Vector2D> region;
         // Vector that indicates the speed of a game object
         Vector2D speed;
+        Vector2D size;
         map<string, void(*)()> collisionResolver;
     public:
         GameEntity(Engine& engine);
@@ -34,6 +35,7 @@ class GameEntity {
         virtual void update();
         virtual void draw(CoordinateMapper& mapper);
         virtual void receiveCollision(GameEntity& entity);
+        Vector2D center(Vector2D point);
 };
 
 #endif
