@@ -37,7 +37,7 @@ public:
                 {
                     c = '0';
                 }
-                else if (m == CellType::Corridor)
+                else if (m == CellType::Corridor || m == CellType::FixedCorridor)
                 {
                     c = ' ';
                 }
@@ -83,7 +83,7 @@ public:
             for (int y = 0; y < map.height; y++)
             {
                 Cell current(x, y);
-                if (map[current] == CellType::FixedWall)
+                if (map[current] == CellType::FixedWall || map[current] == CellType::FixedCorridor)
                 {
                     visited[current] = CellTypeVisit::Visited;
                 }
@@ -174,7 +174,7 @@ public:
             for (i = downLimit + 1; i < upLimit; i++)
             {
                 Cell current(j, i);
-                map[current] = CellType::Corridor;
+                map[current] = CellType::FixedCorridor;
             }
         }
     }

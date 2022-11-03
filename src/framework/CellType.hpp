@@ -6,7 +6,8 @@ enum CellType
     Debug,
     Wall,
     Corridor,
-    FixedWall
+    FixedWall,
+    FixedCorridor
 };
 
 #endif
