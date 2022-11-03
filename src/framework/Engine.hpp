@@ -14,6 +14,7 @@ class Engine {
     private:
         CoordinateMapper* mapper = nullptr;
         Matrix<GameCell>* matrix = nullptr;
+        long last_t = 0.0;
         /*
         TODO: memory cleanup
         */
@@ -23,7 +24,7 @@ class Engine {
         void setup(int columns, int rows);
         void run();
         void display();
-        void update();
+        void update(long t);
         void destroy(GameEntity* entity);
         void idle();
         void keyboard(unsigned char c);

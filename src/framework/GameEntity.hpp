@@ -30,7 +30,7 @@ class GameEntity {
         }
         void setPosition(Vector2D position);
         virtual bool canMoveInto(CellType cellType);
-        virtual void update();
+        virtual void update(long t);
         virtual void draw(CoordinateMapper& mapper);
         virtual void receiveCollision(GameEntity& entity);
         virtual void receiveKeyboard(Direction d);

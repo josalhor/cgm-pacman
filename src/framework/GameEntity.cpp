@@ -4,7 +4,7 @@ GameEntity::GameEntity(Engine& engine) : engine(engine) {
 
 }
 
-void GameEntity::update(){
+void GameEntity::update(long t){
     // empty by default
 }
 

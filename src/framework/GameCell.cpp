@@ -35,10 +35,10 @@ void GameCell::draw(CoordinateMapper& mapper)
     }
 }
 
-void GameCell::update()
+void GameCell::update(long t)
 {
     for(int i = 0; i < this->entities.size(); i++){
-        this->entities[i]->update();
+        this->entities[i]->update(t);
     }
 }
 

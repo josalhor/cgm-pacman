@@ -13,7 +13,7 @@ class Fruit: public GameEntity {
         size = Vector2D(width, height);
     }
 
-    void update(){
+    void update(long t){
         
     }
 

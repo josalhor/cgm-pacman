@@ -33,7 +33,7 @@ class GameCell {
     void receiveKeyboard(Direction d);
     void drawScenario(CoordinateMapper& mapper);
     void draw(CoordinateMapper& mapper);
-    void update();
+    void update(long t);
     void detectCollision();
 };
 

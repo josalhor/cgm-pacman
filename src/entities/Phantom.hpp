@@ -17,8 +17,9 @@ class Phantom: public GameEntity {
         return cellType == CellType::Corridor || cellType == CellType::FixedCorridor;
     }
 
-    void update(){
-        Vector2D nextPos = this->logicPosition.add(speed);
+    void update(long t){
+        Vector2D _speed = speed.multiply(t);
+        Vector2D nextPos = this->logicPosition.add(_speed);
         setPosition(nextPos);
     }
 

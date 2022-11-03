@@ -99,17 +99,14 @@ void Engine::idle(){
 
     t=glutGet(GLUT_ELAPSED_TIME);
 
-    update();
-
-    /*
     if(last_t==0) {
         last_t=t;
     }
     else
     {
-        square.integrate(t-last_t);
+        update(t-last_t);
         last_t=t;
-    }*/
+    }
 
 
     glutPostRedisplay();
@@ -144,7 +141,7 @@ void Engine::display(){
     glutSwapBuffers();
 }
 
-void Engine::update(){
+void Engine::update(long t){
     Matrix<GameCell>& matrix = *(this->matrix);
 
     // update logic positions
@@ -154,7 +151,7 @@ void Engine::update(){
         {
             Cell current(x, y);
             GameCell& gc = matrix[current];
-            gc.update();
+            gc.update(t);
         }
     }
     
