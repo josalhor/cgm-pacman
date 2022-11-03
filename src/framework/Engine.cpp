@@ -3,6 +3,7 @@
 #include "scenario/MapBuilder.hpp"
 #include "scenario/MatrixFiller.hpp"
 #include "utils/Matrix.hpp"
+#include "utils/utils.hpp"
 #include "framework/GameCell.hpp"
 #include <GL/glut.h>
 
@@ -72,6 +73,7 @@ void Engine::run(){
 }
 
 void Engine::display(){
+    update();
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
     Matrix<GameCell>& matrix = *(this->matrix);
@@ -89,6 +91,54 @@ void Engine::display(){
 
     glutSwapBuffers();
 }
+
+void Engine::update(){
+    Matrix<GameCell>& matrix = *(this->matrix);
+
+    // update logic positions
+    for (int y = 0; y < this->matrix->height; y++)
+    {
+        for (int x = 0; x < this->matrix->width; x++)
+        {
+            Cell current(x, y);
+            GameCell& gc = matrix[current];
+            gc.update();
+        }
+    }
+    
+    // update cells
+    for (int y = 0; y < this->matrix->height; y++)
+    {
+        for (int x = 0; x < this->matrix->width; x++)
+        {
+            Cell current(x, y);
+            GameCell& gc = matrix[current];
+            for(int z = gc.entities.size() - 1; z >= 0; z--){
+                GameEntity* e = gc.entities[z];
+                Vector2D v = e->getPosition();
+
+                Cell c = Cell(roundToInt(v.getX()), roundToInt(v.getY()));
+                if (c.x != x || c.y != y){
+                    // update matrix
+                    gc.entities.erase(gc.entities.begin() + z);
+                    matrix[c].entities.push_back(e);
+                }
+            }
+        }
+    }
+
+    // update collisions
+    for (int y = 0; y < this->matrix->height; y++)
+    {
+        for (int x = 0; x < this->matrix->width; x++)
+        {
+            Cell current(x, y);
+            GameCell& gc = matrix[current];
+            gc.detectCollision();
+        }
+    }
+}
+
 
 void Engine::destroy(GameEntity* entity){
     

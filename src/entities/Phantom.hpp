@@ -6,7 +6,7 @@
 
 class Phantom: public GameEntity {
     using GameEntity::GameEntity;
-    
+
     void draw(CoordinateMapper& mapper) {
 
         glColor3f(1, 0, 0);
