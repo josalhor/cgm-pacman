@@ -31,6 +31,11 @@ void keyboardOpenGL(unsigned char c,int x,int y)
   engine->keyboard(c);
 }
 
+void specialFuncOpenGL(int key, int x, int y)
+{
+    engine->specialFunc(key);
+}
+
 
 Engine::Engine() {
 
@@ -77,6 +82,7 @@ void Engine::run(){
     glutDisplayFunc(displayOpenGL);
     glutIdleFunc(idleOpenGL);
     glutKeyboardFunc(keyboardOpenGL);
+    glutSpecialFunc(specialFuncOpenGL);
 
     glMatrixMode(GL_PROJECTION);
     gluOrtho2D(0, WIDTH - 1, 0, HEIGHT - 1);
@@ -181,7 +187,7 @@ void Engine::update(){
     }
 }
 
-void Engine::keyboard(unsigned char c){
+void Engine::keyboard(Direction d){
     Matrix<GameCell>& matrix = *(this->matrix);
     for (int y = 0; y < this->matrix->height; y++)
     {
@@ -189,8 +195,40 @@ void Engine::keyboard(unsigned char c){
         {
             Cell current(x, y);
             GameCell& gc = matrix[current];
-            gc.receiveKeyboard(c);
+            gc.receiveKeyboard(d);
         }
+    }
+}
+
+void Engine::keyboard(unsigned char c){
+    Direction d = (Direction) -1;
+    if (c == 'w'){
+        d = Direction::Up;
+    } else if (c == 'd') {
+        d = Direction::Right;
+    } else if (c == 's') {
+        d = Direction::Down;  
+    } else if (c == 'a') {
+        d = Direction::Left;
+    }
+    if (d != -1) {
+        this->keyboard(d);
+    }
+}
+
+void Engine::specialFunc(int c){
+    Direction d = (Direction) -1;
+    if (c == GLUT_KEY_UP){
+        d = Direction::Up;
+    } else if (c == GLUT_KEY_RIGHT) {
+        d = Direction::Right;
+    } else if (c == GLUT_KEY_DOWN) {
+        d = Direction::Down;  
+    } else if (c == GLUT_KEY_LEFT) {
+        d = Direction::Left;
+    }
+    if (d != -1) {
+        this->keyboard(d);
     }
 }
 

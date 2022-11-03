@@ -42,10 +42,10 @@ void GameCell::update()
     }
 }
 
-void GameCell::receiveKeyboard(unsigned char c)
+void GameCell::receiveKeyboard(Direction d)
 {
     for(int i = 0; i < this->entities.size(); i++){
-        this->entities[i]->receiveKeyboard(c);
+        this->entities[i]->receiveKeyboard(d);
     }
 }
 

@@ -17,16 +17,16 @@ class PacMan: public GameEntity {
         this->logicPosition = this->logicPosition.add(speed);
     }
 
-    void receiveKeyboard(unsigned char c) {
-        if (c == 'w') {
+    void receiveKeyboard(Direction d) {
+        if (d == Direction::Up) {
             speed = Vector2D(0.0, 0.01);
-        } else if (c == 'd')
+        } else if (d == Direction::Right)
         {
             speed = Vector2D(0.01, 0.0);
-        } else if (c == 's')
+        } else if (d == Direction::Down)
         {
             speed = Vector2D(0.0, -0.01);
-        } else if (c == 'a')
+        } else if (d == Direction::Left)
         {
             speed = Vector2D(-0.01, 0.0);
         }

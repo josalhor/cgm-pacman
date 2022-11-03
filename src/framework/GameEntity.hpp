@@ -34,7 +34,7 @@ class GameEntity {
         virtual void update();
         virtual void draw(CoordinateMapper& mapper);
         virtual void receiveCollision(GameEntity& entity);
-        virtual void receiveKeyboard(unsigned char c);
+        virtual void receiveKeyboard(Direction d);
         virtual string getName();
         Vector2D center(Vector2D point);
 };

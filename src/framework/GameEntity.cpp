@@ -20,7 +20,7 @@ void GameEntity::receiveCollision(GameEntity& entity) {
     // empty by default
 }
 
-void GameEntity::receiveKeyboard(unsigned char c) {
+void GameEntity::receiveKeyboard(Direction d) {
     // empty by default
 }
 

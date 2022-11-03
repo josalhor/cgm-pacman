@@ -25,6 +25,8 @@ class Engine {
         void destroy(GameEntity* entity);
         void idle();
         void keyboard(unsigned char c);
+        void specialFunc(int c);
+        void keyboard(Direction d);
 };
 
 #endif
