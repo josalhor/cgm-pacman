@@ -178,5 +178,23 @@ void Engine::update(){
 
 
 void Engine::destroy(GameEntity* entity){
-    
+    Matrix<GameCell>& matrix = *(this->matrix);
+
+    for (int y = 0; y < this->matrix->height; y++)
+    {
+        for (int x = 0; x < this->matrix->width; x++)
+        {
+            Cell current(x, y);
+            GameCell& gc = matrix[current];
+            for(int z = gc.entities.size() - 1; z >= 0; z--){
+                GameEntity* e = gc.entities[z];
+                if (e == entity){
+                    // update matrix
+                    gc.entities.erase(gc.entities.begin() + z);
+                }
+            }
+        }
+    }
+
+    delete entity;
 }
