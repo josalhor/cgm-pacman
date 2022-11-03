@@ -18,7 +18,18 @@ class PacMan: public GameEntity {
     }
 
     void receiveKeyboard(unsigned char c) {
-        speed = Vector2D(0.0, 0.01);
+        if (c == 'w') {
+            speed = Vector2D(0.0, 0.01);
+        } else if (c == 'd')
+        {
+            speed = Vector2D(0.01, 0.0);
+        } else if (c == 's')
+        {
+            speed = Vector2D(0.0, -0.01);
+        } else if (c == 'a')
+        {
+            speed = Vector2D(-0.01, 0.0);
+        }
     }
 
     void draw(CoordinateMapper& mapper) {
