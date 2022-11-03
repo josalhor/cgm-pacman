@@ -48,6 +48,7 @@ void Engine::setup(int columns, int rows){
     }
 
     engine = this;
+    this->mapper = new CoordinateMapper(columns, rows, WIDTH, HEIGHT);
 }
 
 void Engine::run(){
@@ -71,6 +72,7 @@ void Engine::display(){
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
     Matrix<GameCell>& matrix = *(this->matrix);
+    CoordinateMapper& mapper = *(this->mapper);
 
     for (int y = 0; y < this->matrix->height; y++)
     {
@@ -90,10 +92,10 @@ void Engine::display(){
             }
             glBegin(GL_QUADS);
 
-            glVertex2i(x * WIDTH / this->matrix->width, y * HEIGHT / this->matrix->height);
-            glVertex2i((x + 1) * WIDTH / this->matrix->width, y * HEIGHT / this->matrix->height);
-            glVertex2i((x + 1) * WIDTH / this->matrix->width, (y + 1) * HEIGHT / this->matrix->height);
-            glVertex2i(x * WIDTH / this->matrix->width, (y + 1) * HEIGHT / this->matrix->height);
+            glVertex2i(mapper.XtoVisual(x), mapper.YtoVisual(y));
+            glVertex2i(mapper.XtoVisual(x + 1), mapper.YtoVisual(y));
+            glVertex2i(mapper.XtoVisual(x + 1), mapper.YtoVisual(y + 1));
+            glVertex2i(mapper.XtoVisual(x), mapper.YtoVisual(y + 1));
 
             glEnd();
         }
