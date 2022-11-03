@@ -6,6 +6,7 @@ class GameCell;
 #include "GameCell.hpp"
 class GameEntity;
 #include "GameEntity.hpp"
+#include "CellType.hpp"
 #include "CoordinateMapper.hpp"
 
 

@@ -8,6 +8,7 @@
 class Engine;
 #include "Engine.hpp"
 #include "CoordinateMapper.hpp"
+#include "CellType.hpp"
 using namespace std;
 
 class GameEntity {

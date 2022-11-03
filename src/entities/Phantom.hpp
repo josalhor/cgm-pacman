@@ -10,6 +10,7 @@ class Phantom: public GameEntity {
         const float height = 0.25;
         const float width = 0.65;
         size = Vector2D(width, height);
+        speed = Vector2D(0.01, 0.0);
     }
 
     bool canMoveInto(CellType cellType){
@@ -17,7 +18,8 @@ class Phantom: public GameEntity {
     }
 
     void update(){
-        this->logicPosition = Vector2D(this->logicPosition.getX() + 0.01, this->logicPosition.getY());
+        Vector2D nextPos = this->logicPosition.add(speed);
+        setPosition(nextPos);
     }
 
     void draw(CoordinateMapper& mapper) {
