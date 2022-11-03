@@ -1,6 +1,7 @@
 #ifndef COORDINATE_MAPPER
 #define COORDINATE_MAPPER
 
+#include "utils/utils.hpp"
 class CoordinateMapper
 {
     public:
@@ -19,6 +20,14 @@ class CoordinateMapper
 
     int YtoVisual(int y){
         return y * opengl_height / height;
+    }
+
+    int XtoVisual(float x) {
+        return roundToInt(x * (float)opengl_width / (float)width);
+    }
+
+    int YtoVisual(float y){
+        return roundToInt(y * (float)opengl_height / (float)height);
     }
 };
 

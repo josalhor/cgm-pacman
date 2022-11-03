@@ -7,12 +7,16 @@
 class Phantom: public GameEntity {
     using GameEntity::GameEntity;
 
+    void update(){
+        
+    }
+
     void draw(CoordinateMapper& mapper) {
 
         glColor3f(1, 0, 0);
         glBegin(GL_QUADS);
-        int x = (int) logicPosition.getX();
-        int y = (int) logicPosition.getY();
+        float x = logicPosition.getX();
+        float y = logicPosition.getY();
 
         glVertex2i(mapper.XtoVisual(x), mapper.YtoVisual(y));
         glVertex2i(mapper.XtoVisual(x + 1), mapper.YtoVisual(y));
