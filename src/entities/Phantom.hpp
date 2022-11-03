@@ -27,7 +27,7 @@ class Phantom: public GameEntity {
 
         glColor3f(1, 0, 0);
         glBegin(GL_QUADS);
-        Vector2D centerPoint = center(logicPosition);
+        Vector2D centerPoint = getCenter();
         Vector2D renderOn = logicPosition.add(centerPoint);
         float x = renderOn.getX();
         float y = renderOn.getY();

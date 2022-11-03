@@ -21,7 +21,7 @@ class Fruit: public GameEntity {
 
         glColor3f(0, 0.6, 0.6);
         glBegin(GL_QUADS);
-        Vector2D centerPoint = center(logicPosition);
+        Vector2D centerPoint = getCenter();
         Vector2D renderOn = logicPosition.add(centerPoint);
         float x = renderOn.getX();
         float y = renderOn.getY();

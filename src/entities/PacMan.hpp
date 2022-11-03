@@ -4,6 +4,8 @@
 #include "framework/GameEntity.hpp"
 #include <GL/glut.h>
 
+#define PACMAN_BASE_SPEED 0.005
+
 class PacMan: public GameEntity {
     public:
     PacMan(Engine& engine) : GameEntity(engine) {
@@ -25,16 +27,16 @@ class PacMan: public GameEntity {
 
     void receiveKeyboard(Direction d) {
         if (d == Direction::Up) {
-            speed = Vector2D(0.0, 0.01);
+            speed = Vector2D(0.0, PACMAN_BASE_SPEED);
         } else if (d == Direction::Right)
         {
-            speed = Vector2D(0.01, 0.0);
+            speed = Vector2D(PACMAN_BASE_SPEED, 0.0);
         } else if (d == Direction::Down)
         {
-            speed = Vector2D(0.0, -0.01);
+            speed = Vector2D(0.0, -PACMAN_BASE_SPEED);
         } else if (d == Direction::Left)
         {
-            speed = Vector2D(-0.01, 0.0);
+            speed = Vector2D(-PACMAN_BASE_SPEED, 0.0);
         }
     }
 
@@ -42,7 +44,7 @@ class PacMan: public GameEntity {
 
         glColor3f(0, 1, 0);
         glBegin(GL_QUADS);
-        Vector2D centerPoint = center(logicPosition);
+        Vector2D centerPoint = getCenter();
         Vector2D renderOn = logicPosition.add(centerPoint);
         float x = renderOn.getX();
         float y = renderOn.getY();
