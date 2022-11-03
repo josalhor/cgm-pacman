@@ -21,6 +21,12 @@ void displayOpenGL()
     engine->display();
 }
 
+void idleOpenGl()
+{
+  engine->idle();
+}
+
+
 Engine::Engine() {
 
 }
@@ -64,6 +70,7 @@ void Engine::run(){
     glutCreateWindow("Amazing Pacman Game v2");
 
     glutDisplayFunc(displayOpenGL);
+    glutIdleFunc(idleOpenGl);
     // glutKeyboardFunc(keyboard);
 
     glMatrixMode(GL_PROJECTION);
@@ -72,8 +79,28 @@ void Engine::run(){
     glutMainLoop();
 }
 
-void Engine::display(){
+void Engine::idle(){
+    long t;
+
+    t=glutGet(GLUT_ELAPSED_TIME);
+
     update();
+
+    /*
+    if(last_t==0) {
+        last_t=t;
+    }
+    else
+    {
+        square.integrate(t-last_t);
+        last_t=t;
+    }*/
+
+
+    glutPostRedisplay();
+}
+
+void Engine::display(){
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
     Matrix<GameCell>& matrix = *(this->matrix);

@@ -8,7 +8,7 @@ class Phantom: public GameEntity {
     using GameEntity::GameEntity;
 
     void update(){
-        
+        this->logicPosition = Vector2D(this->logicPosition.getX() + 0.01, this->logicPosition.getY());
     }
 
     void draw(CoordinateMapper& mapper) {

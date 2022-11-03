@@ -23,6 +23,7 @@ class Engine {
         void display();
         void update();
         void destroy(GameEntity* entity);
+        void idle();
 };
 
 #endif
