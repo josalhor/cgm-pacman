@@ -9,7 +9,7 @@ GameCell::GameCell(CellType type, Vector2D logicPosition) : type(type), logicPos
 
 }
 
-void GameCell::draw(CoordinateMapper& mapper)
+void GameCell::drawScenario(CoordinateMapper& mapper)
 {
     if (type == CellType::Wall || type == CellType::FixedWall){
         glColor3f(0, 0, 1);
@@ -27,7 +27,9 @@ void GameCell::draw(CoordinateMapper& mapper)
     glVertex2i(mapper.XtoVisual(x), mapper.YtoVisual(y + 1));
 
     glEnd();
-    
+}
+void GameCell::draw(CoordinateMapper& mapper)
+{
     for(int i = 0; i < this->entities.size(); i++){
         this->entities[i]->draw(mapper);
     }

@@ -112,6 +112,16 @@ void Engine::display(){
         {
             Cell current(x, y);
             GameCell& gc = matrix[current];
+            gc.drawScenario(mapper);
+        }
+    }
+
+    for (int y = 0; y < this->matrix->height; y++)
+    {
+        for (int x = 0; x < this->matrix->width; x++)
+        {
+            Cell current(x, y);
+            GameCell& gc = matrix[current];
             gc.draw(mapper);
         }
     }
