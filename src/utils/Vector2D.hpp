@@ -42,7 +42,7 @@ class Vector2D {
         return y;
     }
 
-    Vector2D operator*(float scalar){
+    Vector2D operator*(long scalar){
         return Vector2D(
             x * scalar,
             y * scalar
