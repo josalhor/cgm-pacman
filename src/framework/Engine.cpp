@@ -82,7 +82,7 @@ void Engine::display(){
         for (int x = 0; x < this->matrix->width; x++)
         {
             Cell current(x, y);
-            GameCell gc = matrix[current];
+            GameCell& gc = matrix[current];
             gc.draw(mapper);
         }
     }
@@ -90,6 +90,6 @@ void Engine::display(){
     glutSwapBuffers();
 }
 
-void Engine::destroy(GameEntity entity){
+void Engine::destroy(GameEntity* entity){
     
 }

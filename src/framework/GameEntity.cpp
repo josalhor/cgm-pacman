@@ -12,6 +12,6 @@ void GameEntity::draw(CoordinateMapper& mapper){
     // empty by default
 }
 
-void GameEntity::receiveCollision(GameEntity entity) {
+void GameEntity::receiveCollision(GameEntity& entity) {
     // empty by default
 }

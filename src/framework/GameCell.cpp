@@ -27,16 +27,16 @@ void GameCell::draw(CoordinateMapper& mapper)
     glVertex2i(mapper.XtoVisual(x), mapper.YtoVisual(y + 1));
 
     glEnd();
-
+    
     for(int i = 0; i < this->entities.size(); i++){
-        this->entities[i].draw(mapper);
+        this->entities[i]->draw(mapper);
     }
 }
 
 void GameCell::update()
 {
     for(int i = 0; i < this->entities.size(); i++){
-        this->entities[i].update();
+        this->entities[i]->update();
     }
 }
 
@@ -48,7 +48,7 @@ void GameCell::detectCollision()
                 continue;
             }
 
-            this->entities[j].receiveCollision(this->entities[i]);
+            this->entities[j]->receiveCollision(*(this->entities[i]));
         }
     }
 }

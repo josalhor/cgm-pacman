@@ -21,7 +21,7 @@ class Engine {
         void setup(int columns, int rows);
         void run();
         void display();
-        void destroy(GameEntity entity);
+        void destroy(GameEntity* entity);
 };
 
 #endif

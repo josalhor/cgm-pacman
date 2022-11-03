@@ -25,15 +25,15 @@ class GameEntity {
     public:
         GameEntity(Engine& engine);
         static const string typeName;
-        void update();
-        void draw(CoordinateMapper& mapper);
         Vector2D getPosition() {
             return this->logicPosition;
         }
         void setPosition(Vector2D position){
             this->logicPosition = position;
         }
-        void receiveCollision(GameEntity entity);
+        virtual void update();
+        virtual void draw(CoordinateMapper& mapper);
+        virtual void receiveCollision(GameEntity& entity);
 };
 
 #endif

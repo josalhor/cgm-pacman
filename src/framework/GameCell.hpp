@@ -24,7 +24,7 @@ class GameCell {
         // Vertices to paint
         vector<Vector2D> region;
     public:
-        vector<GameEntity> entities;
+        vector<GameEntity*> entities;
     GameCell();
     GameCell(CellType type, Vector2D logicPosition);
     CellType getCellType() {

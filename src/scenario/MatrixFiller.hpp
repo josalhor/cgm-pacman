@@ -12,10 +12,11 @@ void fillMatrix(Engine& engine, Matrix<GameCell>& matrix){
         for (int j = 0; j < matrix.height; j++)
         {
             Cell c = Cell(i, j);
-            GameCell gc = matrix[c];
-            bool empty = gc.entities.size() == 0 && gc.getCellType() == CellType::Wall;
+            GameCell& gc = matrix[c];
+            bool empty = gc.entities.size() == 0 && gc.getCellType() != CellType::Wall;
             if (phantoms > 0 && empty){
-                Phantom p = Phantom(engine);
+                Phantom* p = new Phantom(engine);
+                p->setPosition(Vector2D(i, j));
                 gc.entities.push_back(p);
                 phantoms--;
             }
