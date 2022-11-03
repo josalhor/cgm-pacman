@@ -12,9 +12,9 @@ using namespace std;
 
 class GameEntity {
     protected:
+        Vector2D logicPosition;
         Engine& engine;
         // Absolute position in the matrix ex: [0.5, 0.5]
-        Vector2D logicPosition;
         // Vertices to paint
         vector<Vector2D> region;
         // Vector that indicates the speed of a game object
@@ -27,9 +27,8 @@ class GameEntity {
         Vector2D getPosition() {
             return this->logicPosition;
         }
-        void setPosition(Vector2D position){
-            this->logicPosition = position;
-        }
+        void setPosition(Vector2D position);
+        virtual bool canMoveInto(CellType cellType);
         virtual void update();
         virtual void draw(CoordinateMapper& mapper);
         virtual void receiveCollision(GameEntity& entity);

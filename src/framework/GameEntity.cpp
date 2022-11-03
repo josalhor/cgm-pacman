@@ -24,6 +24,14 @@ void GameEntity::receiveKeyboard(Direction d) {
     // empty by default
 }
 
+void GameEntity::setPosition(Vector2D position) {
+    if(this->engine.canMove(position.asCell())){
+        this->logicPosition = position;
+    } else {
+        speed = Vector2D(0.0, 0.0);
+    }
+}
+
 Vector2D GameEntity::center(Vector2D point) {
     const float centerY = 0.5 - this->size.getY() / 2.0;
     const float centerX = 0.5 - this->size.getX() / 2.0;
