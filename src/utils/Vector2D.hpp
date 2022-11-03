@@ -23,6 +23,14 @@ class Vector2D {
             this->y + o.y
         );
     }
+
+    float getX(){
+        return x;
+    }
+
+    float getY(){
+        return y;
+    }
 };
 
 #endif

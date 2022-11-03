@@ -8,7 +8,7 @@ void GameEntity::update(){
     // empty by default
 }
 
-void GameEntity::draw(){
+void GameEntity::draw(CoordinateMapper& mapper){
     // empty by default
 }
 

@@ -11,6 +11,7 @@
 #include "utils/Vector2D.hpp"
 class GameEntity;
 #include "GameEntity.hpp"
+#include "CoordinateMapper.hpp"
 #include "CellType.hpp"
 #include <vector>
 using namespace std;
@@ -30,7 +31,7 @@ class GameCell {
     CellType getCellType() {
         return type;
     }
-    void draw();
+    void draw(CoordinateMapper& mapper);
     void update();
     void detectCollision();
 };

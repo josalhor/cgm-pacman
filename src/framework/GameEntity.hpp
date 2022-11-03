@@ -7,6 +7,7 @@
 #include "utils/Vector2D.hpp"
 class Engine;
 #include "Engine.hpp"
+#include "CoordinateMapper.hpp"
 using namespace std;
 
 class GameEntity {
@@ -25,7 +26,7 @@ class GameEntity {
         GameEntity(Engine& engine);
         static const string typeName;
         void update();
-        void draw();
+        void draw(CoordinateMapper& mapper);
         Vector2D getPosition() {
             return this->logicPosition;
         }

@@ -1,6 +1,7 @@
 
 #include "Engine.hpp"
 #include "scenario/MapBuilder.hpp"
+#include "scenario/MatrixFiller.hpp"
 #include "utils/Matrix.hpp"
 #include "framework/GameCell.hpp"
 #include <GL/glut.h>
@@ -32,6 +33,7 @@ void Engine::setup(int columns, int rows){
     map.print();                // print the map in the console
 
     this->matrix = new Matrix<GameCell>(columns, rows);
+    this->mapper = new CoordinateMapper(columns, rows, WIDTH, HEIGHT);
         
     for (int i = 0; i < columns; i++)
     {
@@ -47,8 +49,9 @@ void Engine::setup(int columns, int rows){
         }
     }
 
+    fillMatrix(this->matrix);
+
     engine = this;
-    this->mapper = new CoordinateMapper(columns, rows, WIDTH, HEIGHT);
 }
 
 void Engine::run(){
@@ -79,25 +82,8 @@ void Engine::display(){
         for (int x = 0; x < this->matrix->width; x++)
         {
             Cell current(x, y);
-            
-            CellType mCell = matrix[current].getCellType();
-            bool printBlue = mCell == CellType::Wall || mCell == CellType::FixedWall;
-            if (printBlue)
-            {
-                glColor3f(0, 0, 1);
-            }
-            else
-            {
-                glColor3f(1, 1, 1);
-            }
-            glBegin(GL_QUADS);
-
-            glVertex2i(mapper.XtoVisual(x), mapper.YtoVisual(y));
-            glVertex2i(mapper.XtoVisual(x + 1), mapper.YtoVisual(y));
-            glVertex2i(mapper.XtoVisual(x + 1), mapper.YtoVisual(y + 1));
-            glVertex2i(mapper.XtoVisual(x), mapper.YtoVisual(y + 1));
-
-            glEnd();
+            GameCell gc = matrix[current];
+            gc.draw(mapper);
         }
     }
 
