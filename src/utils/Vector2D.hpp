@@ -1,6 +1,9 @@
 #ifndef VECT2D
 #define VECT2D
 
+#include "utils.hpp"
+#include "Cell.hpp"
+
 class Vector2D {
     private:
         float x;
@@ -21,6 +24,13 @@ class Vector2D {
         return Vector2D(
             this->x + o.x,
             this->y + o.y
+        );
+    }
+
+    Cell asCell() {
+        return Cell(
+            roundToInt(x),
+            roundToInt(y)
         );
     }
 
