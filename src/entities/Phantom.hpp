@@ -5,6 +5,7 @@
 #include <GL/glut.h>
 
 class Phantom: public GameEntity {
+    public:
     Phantom(Engine& engine) : GameEntity(engine) {
         const float height = 0.25;
         const float width = 0.65;
