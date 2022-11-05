@@ -35,7 +35,7 @@ class GameEntity {
         virtual void receiveCollision(GameEntity& entity);
         virtual void receiveKeyboard(Direction d);
         virtual string getName();
-        Vector2D center(Vector2D point);
+        Vector2D getCenter();
 };
 
 #endif

@@ -3,6 +3,9 @@
 
 #include "utils.hpp"
 #include "Cell.hpp"
+#include <array>
+
+using namespace std;
 
 class Vector2D {
     private:
@@ -34,6 +37,14 @@ class Vector2D {
         );
     }
 
+    Cell asCellRaw() {
+        return Cell(
+            
+            (int) x,
+            (int) y
+        );
+    }
+
     float getX(){
         return x;
     }
@@ -42,11 +53,20 @@ class Vector2D {
         return y;
     }
 
-    Vector2D multiply(long scalar){
+    Vector2D multiply(float scalar){
         return Vector2D(
             x * scalar,
             y * scalar
         );
+    }
+
+    array<Vector2D, 4> withRespectTo(Vector2D center){
+        array<Vector2D, 4> arr;
+        arr[0] = Vector2D(x + center.x, y + center.y);
+        arr[1] = Vector2D(x - center.x, y + center.y);
+        arr[2] = Vector2D(x + center.x, y - center.y);
+        arr[3] = Vector2D(x - center.x, y - center.y);
+        return arr;
     }
 };
 
