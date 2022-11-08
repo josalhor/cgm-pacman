@@ -54,6 +54,7 @@ void Engine::setup(int columns, int rows){
     map.print();                // print the map in the console
 
     this->matrix = new Matrix<GameCell>(columns, rows);
+    this->pathFinder = new PathFinder(*matrix);
     this->mapper = new CoordinateMapper(columns, rows, WIDTH, HEIGHT);
         
     for (int i = 0; i < columns; i++)
@@ -107,7 +108,6 @@ void Engine::idle(){
         update(t-last_t);
         last_t=t;
     }
-
 
     glutPostRedisplay();
 }
@@ -254,4 +254,8 @@ void Engine::destroy(GameEntity* entity){
     }
 
     delete entity;
+}
+
+vector<Cell> Engine::pathTo(Cell base, string name){
+    return pathFinder->searchOn(base, name);
 }

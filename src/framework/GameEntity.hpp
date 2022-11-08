@@ -28,7 +28,7 @@ class GameEntity {
         Vector2D getPosition() {
             return this->logicPosition;
         }
-        void setPosition(Vector2D position);
+        bool setPosition(Vector2D position);
         virtual bool canMoveInto(CellType cellType);
         virtual void update(long t);
         virtual void draw(CoordinateMapper& mapper);

@@ -26,7 +26,7 @@ void GameEntity::receiveKeyboard(Direction d) {
 
 #include <iostream>
 
-void GameEntity::setPosition(Vector2D position) {
+bool GameEntity::setPosition(Vector2D position) {
     bool canMove = true;
     Vector2D halfSize = size.multiply(0.5);
     Vector2D centerCell = Vector2D(0.5, 0.5);
@@ -40,8 +40,10 @@ void GameEntity::setPosition(Vector2D position) {
     }
     if(canMove){
         this->logicPosition = position;
+        return true;
     } else {
         speed = Vector2D(0.0, 0.0);
+        return false;
     }
 }
 
