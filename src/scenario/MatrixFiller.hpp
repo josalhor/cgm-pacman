@@ -72,6 +72,6 @@ void fillMatrix(Engine& engine, Matrix<GameCell>& matrix){
     spawnEnemies(engine, matrix, phantoms);
     PacMan* p = spawnPlayer(engine, matrix);
     fruits = spawnPoints(engine, matrix);
-    p->setFruitsToEat(fruits);
+    // p->setFruitsToEat(fruits);
 }
 #endif
