@@ -13,7 +13,7 @@ void ArgParser::invalid()
     exit(-1);
 }
 
-void ArgParser::parse()
+EngineSetup ArgParser::parse()
 {
     int c;
     bool parsedRows = false;
@@ -87,6 +87,8 @@ void ArgParser::parse()
         }
     }
     validate();
+
+    return this->setup;
 }
 
 void ArgParser::preValidate()

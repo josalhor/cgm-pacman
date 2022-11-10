@@ -29,15 +29,13 @@ class ArgParser {
         char **argv;
         EngineSetup setup;
 
-        GraphicsMode mode = GraphicsMode::SIMPLE;
-
         void invalid();
         void preValidate();
         void usage();
         void validate();
     public:
         ArgParser(int argc, char **argv);
-        void parse();
+        EngineSetup parse();
 };
 
 #endif
