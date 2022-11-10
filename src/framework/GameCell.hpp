@@ -35,6 +35,7 @@ class GameCell {
     void draw(CoordinateMapper& mapper);
     void update(long t);
     void detectCollision();
+    bool containsEntity(string name);
 };
 
 #endif

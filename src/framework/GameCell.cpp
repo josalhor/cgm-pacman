@@ -61,3 +61,12 @@ void GameCell::detectCollision()
         }
     }
 }
+
+bool GameCell::containsEntity(string name){
+    for(int i = 0; i < this->entities.size(); i++){
+        if(this->entities[i]->getName() == name) {
+            return true;
+        }
+    }
+    return false;
+}

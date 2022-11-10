@@ -8,12 +8,14 @@ class GameEntity;
 #include "GameEntity.hpp"
 #include "CellType.hpp"
 #include "CoordinateMapper.hpp"
-
+class PathFinder;
+#include "PathFinder.hpp"
 
 class Engine {
     private:
         CoordinateMapper* mapper = nullptr;
         Matrix<GameCell>* matrix = nullptr;
+        PathFinder* pathFinder = nullptr;
         long last_t = 0.0;
         /*
         TODO: memory cleanup
@@ -30,6 +32,7 @@ class Engine {
         void keyboard(unsigned char c);
         void specialFunc(int c);
         void keyboard(Direction d);
+        vector<Cell> pathTo(Cell base, string name);
 };
 
 #endif
