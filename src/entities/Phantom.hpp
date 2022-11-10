@@ -50,6 +50,17 @@ class Phantom: public GameEntity {
         } while(!moved && i < 2);
     }
 
+    void receiveCollision(GameEntity& entity) {
+        if (entity.getName() == PacMan::getTypeName()) {
+            Vector2D delta = entity.getPosition().subsctract(logicPosition);
+            float sqrLength = delta.getX() + delta.getY();
+            if (delta.getX() < 0.5 && delta.getY() < 0.5){
+                cout << "End Game" << endl;
+                exit(0);
+            }
+        }
+    }
+
     void draw(CoordinateMapper& mapper) {
 
         glColor3f(1, 0, 0);

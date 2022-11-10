@@ -45,7 +45,10 @@ CellType Engine::getCellType(Cell cell) {
     return (*(this->matrix))[cell].getCellType();
 }
 
-void Engine::setup(int columns, int rows){
+void Engine::setup(EngineSetup* setup){
+    settings = setup;
+    int columns = settings->cols;
+    int rows = settings->rows;
     MapBuilder map(columns, rows);
 
     map.makeHouse();            // first insert the housing in the middle
@@ -71,7 +74,7 @@ void Engine::setup(int columns, int rows){
         }
     }
 
-    fillMatrix(*this, *(this->matrix));
+    fillMatrix(*this, *(this->matrix), settings->phantoms);
 
     engine = this;
 }

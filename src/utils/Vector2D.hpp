@@ -30,6 +30,13 @@ class Vector2D {
         );
     }
 
+    Vector2D subsctract(Vector2D& o){
+        return Vector2D(
+            this->x - o.x,
+            this->y - o.y
+        );
+    }
+
     Cell asCell() {
         return Cell(
             roundToInt(x),
