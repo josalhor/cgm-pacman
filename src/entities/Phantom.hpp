@@ -52,7 +52,10 @@ class Phantom: public GameEntity {
 
     void receiveCollision(GameEntity& entity) {
         if (entity.getName() == PacMan::getTypeName()) {
-            Vector2D delta = entity.getPosition().subsctract(logicPosition);
+            Vector2D entityCenter = entity.getCenter();
+            Vector2D center = getCenter();
+            center = logicPosition.add(center);
+            Vector2D delta = entity.getPosition().add(entityCenter).subsctract(center);
             float sqrLength = delta.getX() + delta.getY();
             if (delta.getX() < 0.5 && delta.getY() < 0.5){
                 cout << "End Game" << endl;
