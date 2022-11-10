@@ -1,2 +1,2 @@
-1:
-	tar -czvf deliverable.tar.gz deliverable1
+src.tar.gz: src
+	tar -czvf src.tar.gz src
