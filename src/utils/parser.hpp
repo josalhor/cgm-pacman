@@ -4,7 +4,6 @@
 #include <getopt.h>
 
 #include "./utils.hpp"
-#include "../enums/graphics_mode.hpp"
 
 using namespace std;
 
@@ -29,7 +28,7 @@ class ArgParser {
         char **argv;
         EngineSetup setup;
 
-        GraphicsMode mode = GraphicsMode::SIMPLE;
+        // GraphicsMode mode = GraphicsMode::SIMPLE;
 
         void invalid();
         void preValidate();
