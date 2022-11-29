@@ -66,12 +66,11 @@ int spawnPoints(Engine& engine, Matrix<GameCell>& matrix)
     return points;
 }
 
-void fillMatrix(Engine& engine, Matrix<GameCell>& matrix){
-    int phantoms = 4;
+void fillMatrix(Engine& engine, Matrix<GameCell>& matrix, int phantoms){
     int fruits;
     spawnEnemies(engine, matrix, phantoms);
     PacMan* p = spawnPlayer(engine, matrix);
     fruits = spawnPoints(engine, matrix);
-    p->setFruitsToEat(fruits);
+    // p->setFruitsToEat(fruits);
 }
 #endif

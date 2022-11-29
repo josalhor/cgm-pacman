@@ -50,6 +50,20 @@ class Phantom: public GameEntity {
         } while(!moved && i < 2);
     }
 
+    void receiveCollision(GameEntity& entity) {
+        if (entity.getName() == PacMan::getTypeName()) {
+            Vector2D entityCenter = entity.getCenter();
+            Vector2D center = getCenter();
+            center = logicPosition.add(center);
+            Vector2D delta = entity.getPosition().add(entityCenter).subsctract(center);
+            float sqrLength = delta.getX() + delta.getY();
+            if (delta.getX() < 0.5 && delta.getY() < 0.5){
+                cout << "End Game" << endl;
+                exit(0);
+            }
+        }
+    }
+
     void draw(CoordinateMapper& mapper) {
 
         glColor3f(1, 0, 0);
@@ -59,10 +73,10 @@ class Phantom: public GameEntity {
         float x = renderOn.getX();
         float y = renderOn.getY();
 
-        glVertex2f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y));
-        glVertex2f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y));
-        glVertex2f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y + size.getY()));
-        glVertex2f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y + size.getY()));
+        glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y), 0);
+        glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y), 0);
+        glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y + size.getY()), 0);
+        glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y + size.getY()), 0);
 
         glEnd();
 

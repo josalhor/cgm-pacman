@@ -114,7 +114,7 @@ void ArgParser::validate()
 {
     bool valid = true;
     
-    if(!hasMinimumAmount(17, this->setup.rows) || !hasMinimumAmount(23, this->.setup.cols))
+    if(!hasMinimumAmount(17, this->setup.rows) || !hasMinimumAmount(23, this->setup.cols))
     {
         cout << "ERROR: The smallest map size posible is 17x23\n";
         valid = false;

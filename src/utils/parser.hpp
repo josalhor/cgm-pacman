@@ -4,7 +4,6 @@
 #include <getopt.h>
 
 #include "./utils.hpp"
-#include "../enums/graphics_mode.hpp"
 
 using namespace std;
 

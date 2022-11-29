@@ -43,16 +43,49 @@ class PacMan: public GameEntity {
     void draw(CoordinateMapper& mapper) {
 
         glColor3f(0, 1, 0);
+
+        glBegin(GL_QUADS);
+        glVertex3i(50,50,50);
+        glVertex3i(-50,50,50);
+        glVertex3i(-50,-50,50);
+        glVertex3i(50,-50,50);
+        glEnd();
+
+        glColor3f(1.0, 1.0, 0.0);
+        glBegin(GL_QUADS);
+        glVertex3i(50,-50,-50);
+        glVertex3i(-50,-50,-50);
+        glVertex3i(-50,50,-50);
+        glVertex3i(50,50,-50);
+        glEnd();
+
+        glColor3f(0.0, 0.0, 1.0);
+        glBegin(GL_QUADS);
+        glVertex3i(50,-50,50);
+        glVertex3i(50,-50,-50);
+        glVertex3i(50,50,-50);
+        glVertex3i(50,50,50);
+        glEnd();
+
+        glColor3f(0.0, 1.0, 0.0);
+        glBegin(GL_QUADS);
+        glVertex3i(-50,50,50);
+        glVertex3i(-50,50,-50);
+        glVertex3i(-50,-50,-50);
+        glVertex3i(-50,-50,50);
+        glEnd();
+
+
         glBegin(GL_QUADS);
         Vector2D centerPoint = getCenter();
         Vector2D renderOn = logicPosition.add(centerPoint);
         float x = renderOn.getX();
         float y = renderOn.getY();
 
-        glVertex2f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y));
-        glVertex2f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y));
-        glVertex2f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y + size.getY()));
-        glVertex2f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y + size.getY()));
+        glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y), 0);
+        glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y), 0);
+        glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y + size.getY()), 0);
+        glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y + size.getY()), 0);
 
         glEnd();
     }

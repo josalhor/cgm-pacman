@@ -20,11 +20,15 @@ void GameCell::drawScenario(CoordinateMapper& mapper)
     glBegin(GL_QUADS);
     int x = (int) logicPosition.getX();
     int y = (int) logicPosition.getY();
+    int height = -1;
+    if (type == Wall){
+        height = -2;
+    }
 
-    glVertex2i(mapper.XtoVisual(x), mapper.YtoVisual(y));
-    glVertex2i(mapper.XtoVisual(x + 1), mapper.YtoVisual(y));
-    glVertex2i(mapper.XtoVisual(x + 1), mapper.YtoVisual(y + 1));
-    glVertex2i(mapper.XtoVisual(x), mapper.YtoVisual(y + 1));
+    glVertex3i(mapper.XtoVisual(x), mapper.YtoVisual(y), height);
+    glVertex3i(mapper.XtoVisual(x + 1), mapper.YtoVisual(y), height);
+    glVertex3i(mapper.XtoVisual(x + 1), mapper.YtoVisual(y + 1), height);
+    glVertex3i(mapper.XtoVisual(x), mapper.YtoVisual(y + 1), height);
 
     glEnd();
 }

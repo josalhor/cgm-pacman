@@ -6,7 +6,9 @@
 #include "utils/utils.hpp"
 #include "framework/GameCell.hpp"
 #include <GL/glut.h>
+#include <math.h>
 
+#define PI M_PI
 #define SIZE_CELL 50
 #define WIDTH 1000
 #define HEIGHT 1000
@@ -45,7 +47,10 @@ CellType Engine::getCellType(Cell cell) {
     return (*(this->matrix))[cell].getCellType();
 }
 
-void Engine::setup(int columns, int rows){
+void Engine::setup(EngineSetup* setup){
+    settings = setup;
+    int columns = settings->cols;
+    int rows = settings->rows;
     MapBuilder map(columns, rows);
 
     map.makeHouse();            // first insert the housing in the middle
@@ -71,7 +76,7 @@ void Engine::setup(int columns, int rows){
         }
     }
 
-    fillMatrix(*this, *(this->matrix));
+    fillMatrix(*this, *(this->matrix), settings->phantoms);
 
     engine = this;
 }
@@ -79,10 +84,11 @@ void Engine::setup(int columns, int rows){
 void Engine::run(){
     int argc = 0;
     glutInit(&argc, NULL);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowPosition(50, 50);
     glutInitWindowSize(SIZE_CELL * this->matrix->width, SIZE_CELL * this->matrix->height);
     glutCreateWindow("Amazing Pacman Game v2");
+    glEnable(GL_DEPTH_TEST);
 
     glutDisplayFunc(displayOpenGL);
     glutIdleFunc(idleOpenGL);
@@ -112,9 +118,68 @@ void Engine::idle(){
     glutPostRedisplay();
 }
 
+void PositionObserver(float alpha,float beta,int radi)
+{
+  float x,y,z;
+  float upx,upy,upz;
+  float modul;
+
+  x = (float)radi*cos(alpha*2*PI/360.0)*cos(beta*2*PI/360.0);
+  y = (float)radi*sin(beta*2*PI/360.0);
+  z = (float)radi*sin(alpha*2*PI/360.0)*cos(beta*2*PI/360.0);
+
+  if (beta>0)
+    {
+      upx=-x;
+      upz=-z;
+      upy=(x*x+z*z)/y;
+    }
+  else if(beta==0)
+    {
+      upx=0;
+      upy=1;
+      upz=0;
+    }
+  else
+    {
+      upx=x;
+      upz=z;
+      upy=-(x*x+z*z)/y;
+    }
+
+
+  modul=sqrt(upx*upx+upy*upy+upz*upz);
+
+  upx=upx/modul;
+  upy=upy/modul;
+  upz=upz/modul;
+
+  gluLookAt(x,y,z,    0.0, 0.0, 0.0,     upx,upy,upz);
+}
+
+/*--- Global variables that determine the viewpoint location ---*/
+int anglealpha = 90;
+int anglebeta = 30;
+
+
 void Engine::display(){
     glClearColor(0.0, 0.0, 0.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT);
+    //glClearColor(1.0,1.0,1.0,0.0);
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    PositionObserver(anglealpha,anglebeta,450);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(-WIDTH*0.6,WIDTH*0.6,-HEIGHT*0.6,HEIGHT*0.6,10,2000);
+
+    glMatrixMode(GL_MODELVIEW);
+
+    glPolygonMode(GL_FRONT,GL_FILL);
+    glPolygonMode(GL_BACK,GL_LINE);
     Matrix<GameCell>& matrix = *(this->matrix);
     CoordinateMapper& mapper = *(this->mapper);
 
@@ -212,6 +277,16 @@ void Engine::keyboard(unsigned char c){
     } else if (c == 'a') {
         d = Direction::Left;
     }
+      int i,j;
+
+    if (c=='i' && anglebeta<=(90-4))
+        anglebeta=(anglebeta+3);
+    else if (c=='k' && anglebeta>=(-90+4))
+        anglebeta=anglebeta-3;
+    else if (c=='j')
+        anglealpha=(anglealpha+3)%360;
+    else if (c=='l')
+        anglealpha=(anglealpha-3+360)%360;
     if (d != -1) {
         this->keyboard(d);
     }

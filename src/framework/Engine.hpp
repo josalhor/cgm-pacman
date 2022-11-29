@@ -10,9 +10,11 @@ class GameEntity;
 #include "CoordinateMapper.hpp"
 class PathFinder;
 #include "PathFinder.hpp"
+#include "utils/parser.hpp"
 
 class Engine {
     private:
+        EngineSetup* settings = nullptr;
         CoordinateMapper* mapper = nullptr;
         Matrix<GameCell>* matrix = nullptr;
         PathFinder* pathFinder = nullptr;
@@ -23,7 +25,7 @@ class Engine {
     public:
         Engine();
         CellType getCellType(Cell cell);
-        void setup(int columns, int rows);
+        void setup(EngineSetup* setup);
         void run();
         void display();
         void update(long t);

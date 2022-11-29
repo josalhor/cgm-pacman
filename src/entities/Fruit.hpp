@@ -26,10 +26,10 @@ class Fruit: public GameEntity {
         float x = renderOn.getX();
         float y = renderOn.getY();
 
-        glVertex2f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y));
-        glVertex2f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y));
-        glVertex2f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y + size.getY()));
-        glVertex2f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y + size.getY()));
+        glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y), 0);
+        glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y), 0);
+        glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y + size.getY()), 0);
+        glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y + size.getY()), 0);
 
         glEnd();
     }
