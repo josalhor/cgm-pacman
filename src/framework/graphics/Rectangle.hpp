@@ -10,9 +10,13 @@ class Rectangle: private Shape {
             this->geo_center = Vector3D(0.5*x, 0, -0.5*y);
         }
 
-        draw() {
+        void draw() {
 
         }
-}
+
+        void print() {
+            
+        }
+};
 
 #endif

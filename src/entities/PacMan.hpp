@@ -2,6 +2,7 @@
 #define PACMAN
 
 #include "framework/GameEntity.hpp"
+#include "framework/graphics/Prisma.hpp"
 #include <GL/glut.h>
 
 #define PACMAN_BASE_SPEED 0.004
@@ -41,41 +42,8 @@ class PacMan: public GameEntity {
     }
 
     void draw(CoordinateMapper& mapper) {
-
+        Prisma(0, 0).draw();
         glColor3f(0, 1, 0);
-
-        glBegin(GL_QUADS);
-        glVertex3i(50,50,50);
-        glVertex3i(-50,50,50);
-        glVertex3i(-50,-50,50);
-        glVertex3i(50,-50,50);
-        glEnd();
-
-        glColor3f(1.0, 1.0, 0.0);
-        glBegin(GL_QUADS);
-        glVertex3i(50,-50,-50);
-        glVertex3i(-50,-50,-50);
-        glVertex3i(-50,50,-50);
-        glVertex3i(50,50,-50);
-        glEnd();
-
-        glColor3f(0.0, 0.0, 1.0);
-        glBegin(GL_QUADS);
-        glVertex3i(50,-50,50);
-        glVertex3i(50,-50,-50);
-        glVertex3i(50,50,-50);
-        glVertex3i(50,50,50);
-        glEnd();
-
-        glColor3f(0.0, 1.0, 0.0);
-        glBegin(GL_QUADS);
-        glVertex3i(-50,50,50);
-        glVertex3i(-50,50,-50);
-        glVertex3i(-50,-50,-50);
-        glVertex3i(-50,-50,50);
-        glEnd();
-
-
         glBegin(GL_QUADS);
         Vector2D centerPoint = getCenter();
         Vector2D renderOn = logicPosition.add(centerPoint);

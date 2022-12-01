@@ -12,7 +12,7 @@
  *            /
  *           z
 */
-/*
+
 class Vector3D {
     private:
         float x;
@@ -60,6 +60,18 @@ class Vector3D {
             float z = this->x * v.y - this->y * v.x;
             return Vector3D(x, y, z);
         }
+
+        float getX(){
+            return x;
+        }
+
+        float getY(){
+            return y;
+        }
+
+        float getZ(){
+            return z;
+        }
 };
-*/
+
 #endif
