@@ -42,20 +42,25 @@ class PacMan: public GameEntity {
     }
 
     void draw(CoordinateMapper& mapper) {
-        Prisma(0, 0).draw();
-        glColor3f(0, 1, 0);
-        glBegin(GL_QUADS);
         Vector2D centerPoint = getCenter();
         Vector2D renderOn = logicPosition.add(centerPoint);
         float x = renderOn.getX();
         float y = renderOn.getY();
 
-        glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y), 0);
-        glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y), 0);
-        glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y + size.getY()), 0);
-        glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y + size.getY()), 0);
+        Prisma(
+            mapper.XtoVisualFloat(x),
+            mapper.YtoVisualFloat(y),
+            mapper.XtoVisualFloat(x + size.getX()),
+            mapper.YtoVisualFloat(y + size.getY())
+        ).draw();
+        // glColor3f(0, 1, 0);
+        // glBegin(GL_QUADS);
+        // glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y), 0);
+        // glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y), 0);
+        // glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y + size.getY()), 0);
+        // glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y + size.getY()), 0);
 
-        glEnd();
+        // glEnd();
     }
 
     static string getTypeName(){
