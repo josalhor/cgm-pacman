@@ -9,26 +9,25 @@ class Prisma: public Shape {
     public:
         Color color;
         Prisma(CoordinateMapper& mapper, Color color) : color(color), Shape(mapper) {
-            float x = 0;
-            float y = 0;
-            collision_boxing = Vector3D(0.5*x, 0, 0.5*y);
-            geo_center = Vector3D(0.5*x, 0, -0.5*y);
+            // float x = 0;
+            // float y = 0;
+            // collision_boxing = Vector3D(0.5*x, 0, 0.5*y);
+            // geo_center = Vector3D(0.5*x, 0, -0.5*y);
         }
 
         void draw(Vector2D logicPosition, Vector2D size, float height, float offset) {
             Vector2D centerPoint = getCenter(size);
             Vector2D renderOn = logicPosition.add(centerPoint);
-            float x = renderOn.getX();
-            float y = renderOn.getY();
             Vector2D p0 = renderOn.add(size);
             Vector3D renderOn3D = to3dSpace(renderOn);
-            x = mapper.XtoVisualFloat(renderOn3D.getX());
-            y = mapper.YtoVisualFloat(renderOn3D.getZ());
-            glColor3f(this->color[0], this->color[1], this->color[2]);
-            float px = mapper.XtoVisualFloat(p0.getX());
-            float py = mapper.YtoVisualFloat(p0.getY());
-            int p = -height;
+            Vector3D p03D = to3dSpace(p0);
+            float x = mapper.XtoVisualFloat(renderOn3D.getX());
+            float y = mapper.YtoVisualFloat(renderOn3D.getZ());
+            float px = mapper.XtoVisualFloat(p03D.getX());
+            float py = mapper.YtoVisualFloat(p03D.getZ());
+            int p = height;
 
+            glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
             glVertex3i(x, p, y);
             glVertex3i(px, p, y);

@@ -18,6 +18,6 @@ Vector3D to3dSpace(Vector2D v) {
     return Vector3D(
         v.getX(),
         0,
-        v.getY()
+        -v.getY()
     );
 }

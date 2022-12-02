@@ -15,7 +15,7 @@ class Phantom: public GameEntity {
     Vector2D moveTo;
     Prisma prisma;
     public:
-    Phantom(Engine& engine) : prisma(engine.getCoordinateMapper(), BLUE), GameEntity(engine, prisma) {
+    Phantom(Engine& engine) : prisma(engine.getCoordinateMapper(), RED), GameEntity(engine, prisma) {
         const float height = 0.65;
         const float width = 0.65;
         size = Vector2D(width, height);
@@ -68,19 +68,26 @@ class Phantom: public GameEntity {
 
     void draw() {
 
-        glColor3f(1, 0, 0);
-        glBegin(GL_QUADS);
-        Vector2D centerPoint = getCenter();
-        Vector2D renderOn = logicPosition.add(centerPoint);
-        float x = renderOn.getX();
-        float y = renderOn.getY();
+        prisma.draw(
+            logicPosition,
+            size,
+            20, //mapper.XtoVisualFloat(x + size.getX()) - mapper.XtoVisualFloat(x),
+            0
+        );
 
-        glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y), 0);
-        glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y), 0);
-        glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y + size.getY()), 0);
-        glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y + size.getY()), 0);
+        // glColor3f(1, 0, 0);
+        // glBegin(GL_QUADS);
+        // Vector2D centerPoint = getCenter();
+        // Vector2D renderOn = logicPosition.add(centerPoint);
+        // float x = renderOn.getX();
+        // float y = renderOn.getY();
 
-        glEnd();
+        // glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y), 0);
+        // glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y), 0);
+        // glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y + size.getY()), 0);
+        // glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y + size.getY()), 0);
+
+        // glEnd();
 
         /*
         Debug position
