@@ -83,7 +83,7 @@ class Shape {
             return box;
         }
 
-        Vector2D getCenter(Vector2D size) {
+        Vector2D getP2(Vector2D size) {
             const float centerY = 0.5 - size.getY() / 2.0;
             const float centerX = 0.5 - size.getX() / 2.0;
             return Vector2D(centerX, centerY);

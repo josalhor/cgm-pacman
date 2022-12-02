@@ -49,16 +49,8 @@ class PacMan: public GameEntity {
             logicPosition,
             size,
             20, //mapper.XtoVisualFloat(x + size.getX()) - mapper.XtoVisualFloat(x),
-            0
+            10
         );
-        // glColor3f(0, 1, 0);
-        // glBegin(GL_QUADS);
-        // glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y), 0);
-        // glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y), 0);
-        // glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y + size.getY()), 0);
-        // glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y + size.getY()), 0);
-
-        // glEnd();
     }
 
     static string getTypeName(){

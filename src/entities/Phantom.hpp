@@ -72,39 +72,8 @@ class Phantom: public GameEntity {
             logicPosition,
             size,
             20, //mapper.XtoVisualFloat(x + size.getX()) - mapper.XtoVisualFloat(x),
-            0
+            10
         );
-
-        // glColor3f(1, 0, 0);
-        // glBegin(GL_QUADS);
-        // Vector2D centerPoint = getCenter();
-        // Vector2D renderOn = logicPosition.add(centerPoint);
-        // float x = renderOn.getX();
-        // float y = renderOn.getY();
-
-        // glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y), 0);
-        // glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y), 0);
-        // glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y + size.getY()), 0);
-        // glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y + size.getY()), 0);
-
-        // glEnd();
-
-        /*
-        Debug position
-        glColor3f(1, 0, 1);
-        glBegin(GL_QUADS);
-        centerPoint = getCenter();
-        renderOn = moveTo.add(centerPoint);
-        x = renderOn.getX();
-        y = renderOn.getY();
-
-        glVertex2f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y));
-        glVertex2f(mapper.XtoVisualFloat(x + size.getX() / 2), mapper.YtoVisualFloat(y));
-        glVertex2f(mapper.XtoVisualFloat(x + size.getX() / 2), mapper.YtoVisualFloat(y + size.getY()));
-        glVertex2f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y + size.getY()));
-
-        glEnd();
-        */
     }
 
     static string getTypeName(){
