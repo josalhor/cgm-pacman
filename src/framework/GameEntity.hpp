@@ -9,6 +9,7 @@ class Engine;
 #include "Engine.hpp"
 #include "CoordinateMapper.hpp"
 #include "CellType.hpp"
+#include "graphics/Shape.hpp"
 using namespace std;
 
 class GameEntity {
@@ -21,9 +22,10 @@ class GameEntity {
         // Vector that indicates the speed of a game object
         Vector2D speed;
         Vector2D size;
+        Shape& shape;
         // map<string, void(*)()> collisionResolver;
     public:
-        GameEntity(Engine& engine);
+        GameEntity(Engine& engine, Shape& s);
         void destroy();
         Vector2D getPosition() {
             return this->logicPosition;

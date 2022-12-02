@@ -1,4 +1,6 @@
 #include "GameCell.hpp"
+#include "framework/graphics/Prisma.hpp"
+#include "framework/graphics/Color.hpp"
 #include <GL/glut.h>
 
 GameCell::GameCell() : type(CellType::Debug), logicPosition(Vector2D()){
@@ -11,26 +13,34 @@ GameCell::GameCell(CellType type, Vector2D logicPosition) : type(type), logicPos
 
 void GameCell::drawScenario(CoordinateMapper& mapper)
 {
+    Color color;
     if (type == CellType::Wall || type == CellType::FixedWall){
-        glColor3f(0, 0, 1);
+        color = BLUE;
     } else if (type == CellType::Corridor || type == CellType::FixedCorridor){
-        glColor3f(1, 1, 1);
+        color = WHITE;
 
     }
-    glBegin(GL_QUADS);
     int x = (int) logicPosition.getX();
     int y = (int) logicPosition.getY();
-    int height = -1;
+    int height = 0;
     if (type == Wall){
-        height = -2;
+        height = 1;
     }
 
-    glVertex3i(mapper.XtoVisual(x), mapper.YtoVisual(y), height);
-    glVertex3i(mapper.XtoVisual(x + 1), mapper.YtoVisual(y), height);
-    glVertex3i(mapper.XtoVisual(x + 1), mapper.YtoVisual(y + 1), height);
-    glVertex3i(mapper.XtoVisual(x), mapper.YtoVisual(y + 1), height);
+    Prisma(color).draw(
+        mapper.XtoVisualFloat(x),
+        mapper.YtoVisualFloat(y),
+        mapper.XtoVisualFloat(x + 1),
+        mapper.YtoVisualFloat(y + 1),
+        mapper.YtoVisualFloat(height)
+    );
+    // glBegin(GL_QUADS);
+    // glVertex3i(mapper.XtoVisual(x), mapper.YtoVisual(y), height);
+    // glVertex3i(mapper.XtoVisual(x + 1), mapper.YtoVisual(y), height);
+    // glVertex3i(mapper.XtoVisual(x + 1), mapper.YtoVisual(y + 1), height);
+    // glVertex3i(mapper.XtoVisual(x), mapper.YtoVisual(y + 1), height);
 
-    glEnd();
+    // glEnd();
 }
 void GameCell::draw(CoordinateMapper& mapper)
 {

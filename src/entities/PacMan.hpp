@@ -3,13 +3,16 @@
 
 #include "framework/GameEntity.hpp"
 #include "framework/graphics/Prisma.hpp"
+#include "framework/graphics/Color.hpp"
 #include <GL/glut.h>
 
 #define PACMAN_BASE_SPEED 0.004
 
 class PacMan: public GameEntity {
+    private:
+        Prisma prisma;
     public:
-    PacMan(Engine& engine) : GameEntity(engine) {
+    PacMan(Engine& engine) : prisma(YELLOW), GameEntity(engine, prisma) {
         const float height = 0.65;
         const float width = 0.65;
         size = Vector2D(width, height);
@@ -47,12 +50,13 @@ class PacMan: public GameEntity {
         float x = renderOn.getX();
         float y = renderOn.getY();
 
-        Prisma(
+        prisma.draw(
             mapper.XtoVisualFloat(x),
             mapper.YtoVisualFloat(y),
             mapper.XtoVisualFloat(x + size.getX()),
-            mapper.YtoVisualFloat(y + size.getY())
-        ).draw();
+            mapper.YtoVisualFloat(y + size.getY()),
+            mapper.XtoVisualFloat(x + size.getX()) - mapper.XtoVisualFloat(x)
+        );
         // glColor3f(0, 1, 0);
         // glBegin(GL_QUADS);
         // glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y), 0);

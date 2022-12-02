@@ -19,7 +19,7 @@ class Shape {
         Shape() {
 
         }
-        virtual void draw() = 0;
+        // virtual void draw() = 0;
         virtual void print() = 0;
         bool intersects(Shape& s)
         {

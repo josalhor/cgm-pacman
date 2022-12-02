@@ -1,6 +1,6 @@
 #include "GameEntity.hpp"
 
-GameEntity::GameEntity(Engine& engine) : engine(engine) {
+GameEntity::GameEntity(Engine& engine, Shape& shape) : engine(engine), shape(shape) {
 
 }
 

@@ -1,74 +1,70 @@
 #ifndef SHAPE_PRISMA
 #define SHAPE_PRISMA
 #include "framework/graphics/Shape.hpp"
+#include "framework/graphics/Color.hpp"
 #include "utils/Vector3D.hpp"
 #include <GL/glut.h>
 
 class Prisma: public Shape {
     public:
-        float x;
-        float px;
-        float y;
-        float py;
-        Prisma(float x, float y, float px, float py) : Shape() {
-            this->x = x;
-            this->px = px;
-            this->py = py;
-            this->y = y;
-            this->collision_boxing = Vector3D(0.5*x, 0, 0.5*y);
-            this->geo_center = Vector3D(0.5*x, 0, -0.5*y);
+        Color color;
+        Prisma(Color color) : color(color), Shape() {
+            float x = 0;
+            float y = 0;
+            collision_boxing = Vector3D(0.5*x, 0, 0.5*y);
+            geo_center = Vector3D(0.5*x, 0, -0.5*y);
         }
 
-        void draw() {
-            glColor3f(1, 0, 0);
+        void draw(float x, float y, float px, float py, float height) {
+            glColor3f(this->color[0], this->color[1], this->color[2]);
 
-            int p = this->px - this->x;
+            int p = height;
 
             glBegin(GL_QUADS);
-            glVertex3i(this->x,this->y,p);
-            glVertex3i(this->px,this->y,p);
-            glVertex3i(this->px,this->py,p);
-            glVertex3i(this->x,this->py,p);
+            glVertex3i(x,y,p);
+            glVertex3i(px,y,p);
+            glVertex3i(px,py,p);
+            glVertex3i(x,py,p);
             glEnd();
 
-            glColor3f(1.0, 1.0, 0.0);
+            glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
-            glVertex3i(this->x,this->py,0);
-            glVertex3i(this->px,this->py,0);
-            glVertex3i(this->px,this->y,0);
-            glVertex3i(this->x,this->y,0);
+            glVertex3i(x,py,0);
+            glVertex3i(px,py,0);
+            glVertex3i(px,y,0);
+            glVertex3i(x,y,0);
             glEnd();
 
-            glColor3f(0.0, 0.0, 1.0);
+            glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
-            glVertex3i(this->x,this->py,p);
-            glVertex3i(this->x,this->py,0);
-            glVertex3i(this->x,this->y,0);
-            glVertex3i(this->x,this->y,p);
+            glVertex3i(x,py,p);
+            glVertex3i(x,py,0);
+            glVertex3i(x,y,0);
+            glVertex3i(x,y,p);
             glEnd();
 
-            glColor3f(0.0, 1.0, 0.0);
+            glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
-            glVertex3i(this->px,this->y,p);
-            glVertex3i(this->px,this->y,0);
-            glVertex3i(this->px,this->py,0);
-            glVertex3i(this->px,this->py,p);
+            glVertex3i(px,y,p);
+            glVertex3i(px,y,0);
+            glVertex3i(px,py,0);
+            glVertex3i(px,py,p);
             glEnd();
 
-            glColor3f(1.0, 0.0, 1.0);
+            glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
-            glVertex3i(this->px,this->y,p);
-            glVertex3i(this->x,this->y,p);
-            glVertex3i(this->x,this->y,0);
-            glVertex3i(this->px,this->y,0);
+            glVertex3i(px,y,p);
+            glVertex3i(x,y,p);
+            glVertex3i(x,y,0);
+            glVertex3i(px,y,0);
             glEnd();
 
-            glColor3f(1.0, 1.0, 1.0);
+            glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
-            glVertex3i(this->px,this->py,p);
-            glVertex3i(this->px,this->py,0);
-            glVertex3i(this->x,this->py,0);
-            glVertex3i(this->x,this->py,p);
+            glVertex3i(px,py,p);
+            glVertex3i(px,py,0);
+            glVertex3i(x,py,0);
+            glVertex3i(x,py,p);
             glEnd();
 
         }

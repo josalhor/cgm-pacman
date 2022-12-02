@@ -2,12 +2,14 @@
 #define FRUIT
 
 #include "framework/GameEntity.hpp"
+#include "framework/graphics/Color.hpp"
 #include "PacMan.hpp"
 #include <GL/glut.h>
 
 class Fruit: public GameEntity {
+    Prisma prisma;
     public:
-    Fruit(Engine& engine) : GameEntity(engine) {
+    Fruit(Engine& engine) : prisma(YELLOW), GameEntity(engine, prisma) {
         const float height = 0.33;
         const float width = 0.33;
         size = Vector2D(width, height);
