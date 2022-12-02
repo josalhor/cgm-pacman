@@ -15,7 +15,7 @@ class Phantom: public GameEntity {
     Vector2D moveTo;
     Prisma prisma;
     public:
-    Phantom(Engine& engine) : prisma(BLUE), GameEntity(engine, prisma) {
+    Phantom(Engine& engine) : prisma(engine.getCoordinateMapper(), BLUE), GameEntity(engine, prisma) {
         const float height = 0.65;
         const float width = 0.65;
         size = Vector2D(width, height);
@@ -66,7 +66,7 @@ class Phantom: public GameEntity {
         }
     }
 
-    void draw(CoordinateMapper& mapper) {
+    void draw() {
 
         glColor3f(1, 0, 0);
         glBegin(GL_QUADS);

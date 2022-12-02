@@ -9,7 +9,7 @@
 class Fruit: public GameEntity {
     Prisma prisma;
     public:
-    Fruit(Engine& engine) : prisma(YELLOW), GameEntity(engine, prisma) {
+    Fruit(Engine& engine) : prisma(engine.getCoordinateMapper(), GREEN), GameEntity(engine, prisma) {
         const float height = 0.33;
         const float width = 0.33;
         size = Vector2D(width, height);
@@ -19,7 +19,7 @@ class Fruit: public GameEntity {
         
     }
 
-    void draw(CoordinateMapper& mapper) {
+    void draw() {
 
         glColor3f(0, 0.6, 0.6);
         glBegin(GL_QUADS);

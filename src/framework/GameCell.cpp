@@ -7,11 +7,11 @@ GameCell::GameCell() : type(CellType::Debug), logicPosition(Vector2D()){
 
 }
 
-GameCell::GameCell(CellType type, Vector2D logicPosition) : type(type), logicPosition(logicPosition){
+GameCell::GameCell(CoordinateMapper* mapper, CellType type, Vector2D logicPosition) : mapper(mapper), type(type), logicPosition(logicPosition){
 
 }
 
-void GameCell::drawScenario(CoordinateMapper& mapper)
+void GameCell::drawScenario()
 {
     Color color;
     if (type == CellType::Wall || type == CellType::FixedWall){
@@ -20,19 +20,16 @@ void GameCell::drawScenario(CoordinateMapper& mapper)
         color = WHITE;
 
     }
-    int x = (int) logicPosition.getX();
-    int y = (int) logicPosition.getY();
     int height = 0;
     if (type == Wall){
-        height = 1;
+        height = 50;
     }
 
-    Prisma(color).draw(
-        mapper.XtoVisualFloat(x),
-        mapper.YtoVisualFloat(y),
-        mapper.XtoVisualFloat(x + 1),
-        mapper.YtoVisualFloat(y + 1),
-        mapper.YtoVisualFloat(height)
+    Prisma(*mapper, color).draw(
+        logicPosition,
+        Vector2D(1, 1),
+        height,
+        0
     );
     // glBegin(GL_QUADS);
     // glVertex3i(mapper.XtoVisual(x), mapper.YtoVisual(y), height);
@@ -42,10 +39,10 @@ void GameCell::drawScenario(CoordinateMapper& mapper)
 
     // glEnd();
 }
-void GameCell::draw(CoordinateMapper& mapper)
+void GameCell::draw()
 {
     for(int i = 0; i < this->entities.size(); i++){
-        this->entities[i]->draw(mapper);
+        this->entities[i]->draw();
     }
 }
 

@@ -72,7 +72,7 @@ void Engine::setup(EngineSetup* setup){
             if (m == CellType::FixedWall || m == CellType::Wall){
                 t = CellType::Wall;
             }
-            (*(this->matrix))[c] = GameCell(t, Vector2D(i, j));
+            (*(this->matrix))[c] = GameCell(mapper, t, Vector2D(i, j));
         }
     }
 
@@ -189,7 +189,7 @@ void Engine::display(){
         {
             Cell current(x, y);
             GameCell& gc = matrix[current];
-            gc.drawScenario(mapper);
+            gc.drawScenario();
         }
     }
 
@@ -199,7 +199,7 @@ void Engine::display(){
         {
             Cell current(x, y);
             GameCell& gc = matrix[current];
-            gc.draw(mapper);
+            gc.draw();
         }
     }
 

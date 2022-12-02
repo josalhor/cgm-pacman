@@ -23,6 +23,7 @@ class GameEntity {
         Vector2D speed;
         Vector2D size;
         Shape& shape;
+        CoordinateMapper& mapper;
         // map<string, void(*)()> collisionResolver;
     public:
         GameEntity(Engine& engine, Shape& s);
@@ -33,11 +34,11 @@ class GameEntity {
         bool setPosition(Vector2D position);
         virtual bool canMoveInto(CellType cellType);
         virtual void update(long t);
-        virtual void draw(CoordinateMapper& mapper);
+        virtual void draw();
         virtual void receiveCollision(GameEntity& entity);
         virtual void receiveKeyboard(Direction d);
         virtual string getName();
-        Vector2D getCenter();
+        Vector2D getCenter(); // TODO remove
 };
 
 #endif

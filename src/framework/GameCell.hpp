@@ -21,18 +21,19 @@ class GameCell {
         CellType type;
          // Absolute position in the matrix ex: [0, 0] can only be ints in this case
         Vector2D logicPosition;
+        CoordinateMapper* mapper = nullptr;
         // Vertices to paint
         // vector<Vector2D> region;
     public:
         vector<GameEntity*> entities;
     GameCell();
-    GameCell(CellType type, Vector2D logicPosition);
+    GameCell(CoordinateMapper* mapper, CellType type, Vector2D logicPosition);
     CellType getCellType() {
         return type;
     }
     void receiveKeyboard(Direction d);
-    void drawScenario(CoordinateMapper& mapper);
-    void draw(CoordinateMapper& mapper);
+    void drawScenario();
+    void draw();
     void update(long t);
     void detectCollision();
     bool containsEntity(string name);

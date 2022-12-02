@@ -2,6 +2,7 @@
 #define SHAPE_H
 
 #include "utils/Vector3D.hpp"
+#include "framework/CoordinateMapper.hpp"
 #include <array>
 
 using namespace std;
@@ -15,8 +16,9 @@ class Shape {
          * in the x axis, used to compute a collision cube
          */
         Vector3D collision_boxing;
+        CoordinateMapper& mapper;
     public:
-        Shape() {
+        Shape(CoordinateMapper& mapper) : mapper(mapper) {
 
         }
         // virtual void draw() = 0;
@@ -79,6 +81,12 @@ class Shape {
             box[6] = Vector3D(negX, posY, posZ);
             box[7] = Vector3D(posX, posY, posZ);
             return box;
+        }
+
+        Vector2D getCenter(Vector2D size) {
+            const float centerY = 0.5 - size.getY() / 2.0;
+            const float centerX = 0.5 - size.getX() / 2.0;
+            return Vector2D(centerX, centerY);
         }
 };
 

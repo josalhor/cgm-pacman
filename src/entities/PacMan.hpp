@@ -12,7 +12,7 @@ class PacMan: public GameEntity {
     private:
         Prisma prisma;
     public:
-    PacMan(Engine& engine) : prisma(YELLOW), GameEntity(engine, prisma) {
+    PacMan(Engine& engine) : prisma(engine.getCoordinateMapper(), YELLOW), GameEntity(engine, prisma) {
         const float height = 0.65;
         const float width = 0.65;
         size = Vector2D(width, height);
@@ -44,18 +44,12 @@ class PacMan: public GameEntity {
         }
     }
 
-    void draw(CoordinateMapper& mapper) {
-        Vector2D centerPoint = getCenter();
-        Vector2D renderOn = logicPosition.add(centerPoint);
-        float x = renderOn.getX();
-        float y = renderOn.getY();
-
+    void draw() {
         prisma.draw(
-            mapper.XtoVisualFloat(x),
-            mapper.YtoVisualFloat(y),
-            mapper.XtoVisualFloat(x + size.getX()),
-            mapper.YtoVisualFloat(y + size.getY()),
-            mapper.XtoVisualFloat(x + size.getX()) - mapper.XtoVisualFloat(x)
+            logicPosition,
+            size,
+            20, //mapper.XtoVisualFloat(x + size.getX()) - mapper.XtoVisualFloat(x),
+            0
         );
         // glColor3f(0, 1, 0);
         // glBegin(GL_QUADS);
