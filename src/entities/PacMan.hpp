@@ -13,7 +13,7 @@ class PacMan: public GameEntity {
     private:
         Prisma prisma;
     public:
-    PacMan(Engine& engine) : prisma(engine.getCoordinateMapper(), YELLOW, PACMAN_TEXTURE_INDEX), GameEntity(engine, prisma) {
+    PacMan(Engine& engine) : prisma(engine.getCoordinateMapper(), WHITE, PACMAN_TEXTURE_INDEX), GameEntity(engine, prisma) {
         const float height = 0.65;
         const float width = 0.65;
         size = Vector2D(width, height);

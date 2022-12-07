@@ -29,8 +29,11 @@ class Sphere: public Shape {
             glPushMatrix();
             GLUquadric *quad;
             quad = gluNewQuadric();
+            gluQuadricTexture(quad, GL_TRUE);
+            glBindTexture(GL_TEXTURE_2D, texture_index);
             glTranslatef(x,offset,z);
             gluSphere(quad,radius,slices,slices);
+            gluDeleteQuadric(quad);
             glPopMatrix();
         }
 

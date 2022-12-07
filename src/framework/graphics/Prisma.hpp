@@ -29,7 +29,7 @@ class Prisma: public Shape {
             float pz = mapper.YtoVisualFloat(p03D.getZ());
             int high = height + offset;
             if (texture_index >= 0){
-                glBindTexture(GL_TEXTURE_2D,0);
+                glBindTexture(GL_TEXTURE_2D, texture_index);
             }
 
             glColor3f(this->color[0], this->color[1], this->color[2]);

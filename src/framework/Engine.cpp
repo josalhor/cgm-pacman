@@ -91,6 +91,7 @@ void Engine::run(){
     glutInitWindowSize(SIZE_CELL * this->matrix->width, SIZE_CELL * this->matrix->height);
     glutCreateWindow("Amazing Pacman Game v2");
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_TEXTURE_2D);
 
     glutDisplayFunc(displayOpenGL);
     glutIdleFunc(idleOpenGL);

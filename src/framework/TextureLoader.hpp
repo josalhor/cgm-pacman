@@ -2,6 +2,10 @@
 #define TEXTURELOADER
 
 #define PACMAN_TEXTURE_INDEX 0
+#define FLOOR_TEXTURE_INDEX 1
+#define WALL_TEXTURE_INDEX 2
+#define ENEMY_TEXTURE_INDEX 3
+#define FOOD_TEXTURE_INDEX 4
 
 typedef struct
 {

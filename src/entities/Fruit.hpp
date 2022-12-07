@@ -10,7 +10,7 @@
 class Fruit: public GameEntity {
     Sphere sphere;
     public:
-    Fruit(Engine& engine) : sphere(engine.getCoordinateMapper(), GREEN, -1), GameEntity(engine, sphere) {
+    Fruit(Engine& engine) : sphere(engine.getCoordinateMapper(), GREEN, FOOD_TEXTURE_INDEX), GameEntity(engine, sphere) {
         const float height = 0.33;
         const float width = 0.33;
         size = Vector2D(width, height);

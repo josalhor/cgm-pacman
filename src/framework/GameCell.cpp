@@ -1,6 +1,7 @@
 #include "GameCell.hpp"
 #include "framework/graphics/Prisma.hpp"
 #include "framework/graphics/Color.hpp"
+#include "framework/TextureLoader.hpp"
 #include <GL/glut.h>
 
 GameCell::GameCell() : type(CellType::Debug), logicPosition(Vector2D()){
@@ -13,19 +14,19 @@ GameCell::GameCell(CoordinateMapper* mapper, CellType type, Vector2D logicPositi
 
 void GameCell::drawScenario()
 {
-    Color color;
+    Color color = WHITE;
+    int texture_index;
     if (type == CellType::Wall || type == CellType::FixedWall){
-        color = BLUE;
+        texture_index = WALL_TEXTURE_INDEX;
     } else if (type == CellType::Corridor || type == CellType::FixedCorridor){
-        color = WHITE;
-
+        texture_index = FLOOR_TEXTURE_INDEX;
     }
     int height = 0;
     if (type == Wall){
         height = 50;
     }
 
-    Prisma(*mapper, color, -1).draw(
+    Prisma(*mapper, color, texture_index).draw(
         logicPosition,
         Vector2D(1, 1),
         height,
