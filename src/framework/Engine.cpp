@@ -5,6 +5,7 @@
 #include "utils/Matrix.hpp"
 #include "utils/utils.hpp"
 #include "framework/GameCell.hpp"
+#include "TextureLoader.hpp"
 #include <GL/glut.h>
 #include <math.h>
 
@@ -12,6 +13,7 @@
 #define SIZE_CELL 50
 #define WIDTH 1000
 #define HEIGHT 1000
+#define CAMERA_DISTANCE 700
 
 /*
 This trick allows us to encapsulate all OpenGL
@@ -98,6 +100,9 @@ void Engine::run(){
     glMatrixMode(GL_PROJECTION);
     gluOrtho2D(0, WIDTH - 1, 0, HEIGHT - 1);
 
+    TextureLoader loader = TextureLoader();
+    loader.loadTextures();
+
     glutMainLoop();
 }
 
@@ -170,7 +175,7 @@ void Engine::display(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    PositionObserver(anglealpha,anglebeta,450);
+    PositionObserver(anglealpha,anglebeta,CAMERA_DISTANCE);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();

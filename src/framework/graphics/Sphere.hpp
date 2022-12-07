@@ -9,7 +9,7 @@
 class Sphere: public Shape {
     public:
         Color color;
-        Sphere(CoordinateMapper& mapper, Color color) : color(color), Shape(mapper) {
+        Sphere(CoordinateMapper& mapper, Color color, int texture_index) : color(color), Shape(mapper, texture_index) {
             // float x = 0;
             // float y = 0;
             // collision_boxing = Vector3D(0.5*x, offset, 0.5*z);
@@ -22,7 +22,7 @@ class Sphere: public Shape {
             Vector3D renderOn3D = to3dSpace(renderOn);
             float x = mapper.XtoVisualFloat(renderOn3D.getX());
             float z = mapper.YtoVisualFloat(renderOn3D.getZ());
-            radius = mapper.XtoVisualFloat(radius);
+            radius = mapper.XtoVisualFloatWithoutCenter(radius);
             int slices = 20;
 
             glColor3f(this->color[0], this->color[1], this->color[2]);

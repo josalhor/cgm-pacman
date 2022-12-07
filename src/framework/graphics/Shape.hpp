@@ -17,8 +17,9 @@ class Shape {
          */
         Vector3D collision_boxing;
         CoordinateMapper& mapper;
+        const int texture_index;
     public:
-        Shape(CoordinateMapper& mapper) : mapper(mapper) {
+        Shape(CoordinateMapper& mapper, int texture_index) : mapper(mapper), texture_index(texture_index) {
 
         }
         // virtual void draw() = 0;

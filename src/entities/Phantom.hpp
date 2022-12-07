@@ -15,7 +15,7 @@ class Phantom: public GameEntity {
     Vector2D moveTo;
     Prisma prisma;
     public:
-    Phantom(Engine& engine) : prisma(engine.getCoordinateMapper(), RED), GameEntity(engine, prisma) {
+    Phantom(Engine& engine) : prisma(engine.getCoordinateMapper(), RED, -1), GameEntity(engine, prisma) {
         const float height = 0.65;
         const float width = 0.65;
         size = Vector2D(width, height);

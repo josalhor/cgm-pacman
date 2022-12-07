@@ -5,10 +5,12 @@
 #include "utils/Vector3D.hpp"
 #include <GL/glut.h>
 
+#define O(c,t,v) (c ? (t, v) : (v));
+
 class Prisma: public Shape {
     public:
         Color color;
-        Prisma(CoordinateMapper& mapper, Color color) : color(color), Shape(mapper) {
+        Prisma(CoordinateMapper& mapper, Color color, int texture_index) : color(color), Shape(mapper, texture_index) {
             // float x = 0;
             // float y = 0;
             // collision_boxing = Vector3D(0.5*x, offset, 0.5*z);
@@ -26,53 +28,56 @@ class Prisma: public Shape {
             float px = mapper.XtoVisualFloat(p03D.getX());
             float pz = mapper.YtoVisualFloat(p03D.getZ());
             int high = height + offset;
+            if (texture_index >= 0){
+                glBindTexture(GL_TEXTURE_2D,0);
+            }
 
             glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
-            glVertex3i(x, high, z);
-            glVertex3i(px, high, z);
-            glVertex3i(px, high, pz);
-            glVertex3i(x, high, pz);
+            O(texture_index >= 0, glTexCoord2f(-1.0,0.0), glVertex3i(x, high, z));
+            O(texture_index >= 0, glTexCoord2f(1.0,0.0), glVertex3i(px, high, z));
+            O(texture_index >= 0, glTexCoord2f(1.0,1.0), glVertex3i(px, high, pz));
+            O(texture_index >= 0, glTexCoord2f(-1.0,1.0), glVertex3i(x, high, pz));
             glEnd();
 
             glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
-            glVertex3i(x, offset, pz);
-            glVertex3i(px, offset, pz);
-            glVertex3i(px, offset, z);
-            glVertex3i(x, offset, z);
+            O(texture_index >= 0, glTexCoord2f(-1.0,0.0), glVertex3i(x, offset, pz));
+            O(texture_index >= 0, glTexCoord2f(1.0,0.0), glVertex3i(px, offset, pz));
+            O(texture_index >= 0, glTexCoord2f(1.0,1.0), glVertex3i(px, offset, z));
+            O(texture_index >= 0, glTexCoord2f(-1.0,1.0), glVertex3i(x, offset, z));
             glEnd();
 
             glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
-            glVertex3i(x, high, pz);
-            glVertex3i(x, offset, pz);
-            glVertex3i(x, offset, z);
-            glVertex3i(x, high, z);
+            O(texture_index >= 0, glTexCoord2f(-1.0,0.0), glVertex3i(x, high, pz));
+            O(texture_index >= 0, glTexCoord2f(1.0,0.0), glVertex3i(x, offset, pz));
+            O(texture_index >= 0, glTexCoord2f(1.0,1.0), glVertex3i(x, offset, z));
+            O(texture_index >= 0, glTexCoord2f(-1.0,1.0), glVertex3i(x, high, z));
             glEnd();
 
             glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
-            glVertex3i(px, high, z);
-            glVertex3i(px, offset, z);
-            glVertex3i(px, offset, pz);
-            glVertex3i(px, high, pz);
+            O(texture_index >= 0, glTexCoord2f(-1.0,0.0), glVertex3i(px, high, z));
+            O(texture_index >= 0, glTexCoord2f(1.0,0.0), glVertex3i(px, offset, z));
+            O(texture_index >= 0, glTexCoord2f(1.0,1.0), glVertex3i(px, offset, pz));
+            O(texture_index >= 0, glTexCoord2f(-1.0,1.0), glVertex3i(px, high, pz));
             glEnd();
 
             glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
-            glVertex3i(px, high, z);
-            glVertex3i(x, high, z);
-            glVertex3i(x, offset, z);
-            glVertex3i(px, offset, z);
+            O(texture_index >= 0, glTexCoord2f(-1.0,0.0), glVertex3i(px, high, z));
+            O(texture_index >= 0, glTexCoord2f(1.0,0.0), glVertex3i(x, high, z));
+            O(texture_index >= 0, glTexCoord2f(1.0,1.0), glVertex3i(x, offset, z));
+            O(texture_index >= 0, glTexCoord2f(-1.0,1.0), glVertex3i(px, offset, z));
             glEnd();
 
             glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
-            glVertex3i(px, high, pz);
-            glVertex3i(px, offset, pz);
-            glVertex3i(x, offset, pz);
-            glVertex3i(x, high, pz);
+            O(texture_index >= 0, glTexCoord2f(-1.0,0.0), glVertex3i(px, high, pz));
+            O(texture_index >= 0, glTexCoord2f(1.0,0.0), glVertex3i(px, offset, pz));
+            O(texture_index >= 0, glTexCoord2f(1.0,1.0), glVertex3i(x, offset, pz));
+            O(texture_index >= 0, glTexCoord2f(-1.0,1.0), glVertex3i(x, high, pz));
             glEnd();
 
         }

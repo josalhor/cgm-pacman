@@ -4,6 +4,7 @@
 #include "framework/GameEntity.hpp"
 #include "framework/graphics/Prisma.hpp"
 #include "framework/graphics/Color.hpp"
+#include "framework/TextureLoader.hpp"
 #include <GL/glut.h>
 
 #define PACMAN_BASE_SPEED 0.004
@@ -12,7 +13,7 @@ class PacMan: public GameEntity {
     private:
         Prisma prisma;
     public:
-    PacMan(Engine& engine) : prisma(engine.getCoordinateMapper(), YELLOW), GameEntity(engine, prisma) {
+    PacMan(Engine& engine) : prisma(engine.getCoordinateMapper(), YELLOW, PACMAN_TEXTURE_INDEX), GameEntity(engine, prisma) {
         const float height = 0.65;
         const float width = 0.65;
         size = Vector2D(width, height);

@@ -25,7 +25,7 @@ void GameCell::drawScenario()
         height = 50;
     }
 
-    Prisma(*mapper, color).draw(
+    Prisma(*mapper, color, -1).draw(
         logicPosition,
         Vector2D(1, 1),
         height,
