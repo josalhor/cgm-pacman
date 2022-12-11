@@ -92,6 +92,9 @@ void Engine::run(){
     glutCreateWindow("Amazing Pacman Game v2");
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_NORMALIZE);
+
 
     glutDisplayFunc(displayOpenGL);
     glutIdleFunc(idleOpenGL);
@@ -186,6 +189,31 @@ void Engine::display(){
 
     glPolygonMode(GL_FRONT,GL_FILL);
     glPolygonMode(GL_BACK,GL_LINE);
+
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+    // GLint position[4];
+    // GLfloat color[4];
+    // position[0]=0; position[1]=0; position[2]=0; position[3]=1; 
+    // glLightiv(GL_LIGHT0,GL_POSITION,position);
+    
+    // color[0]=0.15; color[1]=0.15; color[2]=0.15; color[3]=1;
+    // glLightfv(GL_LIGHT0,GL_AMBIENT,color);
+    // glEnable(GL_LIGHT0);
+
+    // position[0]=100; position[1]=75; position[2]=50; position[3]=1; 
+    // glLightiv(GL_LIGHT1,GL_POSITION,position);
+    
+    // color[0]=0.3; color[1]=0.3; color[2]=0.3; color[3]=1;
+    // glLightfv(GL_LIGHT1,GL_DIFFUSE,color);
+
+    // glLightf(GL_LIGHT1,GL_CONSTANT_ATTENUATION,1.0);
+    // glLightf(GL_LIGHT1,GL_LINEAR_ATTENUATION,0.0);
+    // glLightf(GL_LIGHT1,GL_QUADRATIC_ATTENUATION,0.0);
+
+    // glEnable(GL_LIGHT1);
+    // Define the position of the light
+
     Matrix<GameCell>& matrix = *(this->matrix);
     CoordinateMapper& mapper = *(this->mapper);
 

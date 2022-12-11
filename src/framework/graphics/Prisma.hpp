@@ -3,6 +3,7 @@
 #include "framework/graphics/Shape.hpp"
 #include "framework/graphics/Color.hpp"
 #include "utils/Vector3D.hpp"
+#include "framework/TextureLoader.hpp"
 #include <GL/glut.h>
 
 #define O(c,t,v) (c ? (t, v) : (v));
@@ -28,57 +29,98 @@ class Prisma: public Shape {
             float px = mapper.XtoVisualFloat(p03D.getX());
             float pz = mapper.YtoVisualFloat(p03D.getZ());
             int high = height + offset;
+            GLfloat material[4];
             if (texture_index >= 0){
                 glBindTexture(GL_TEXTURE_2D, texture_index);
             }
 
-            glColor3f(this->color[0], this->color[1], this->color[2]);
+            material[0]=1.0; material[1]=0.0; material[2]=0.0; material[3]=1.0; 
+            
+            //glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
-            O(texture_index >= 0, glTexCoord2f(-1.0,0.0), glVertex3i(x, high, z));
-            O(texture_index >= 0, glTexCoord2f(1.0,0.0), glVertex3i(px, high, z));
-            O(texture_index >= 0, glTexCoord2f(1.0,1.0), glVertex3i(px, high, pz));
-            O(texture_index >= 0, glTexCoord2f(-1.0,1.0), glVertex3i(x, high, pz));
+            glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
+            glNormal3f(0,0,-1);
+            glTexCoord2f(-1.0,0.0), glVertex3f(x, high, z);
+            glTexCoord2f(1.0,0.0), glVertex3f(px, high, z);
+            glTexCoord2f(1.0,1.0), glVertex3f(px, high, pz);
+            glTexCoord2f(-1.0,1.0), glVertex3f(x, high, pz);
             glEnd();
 
-            glColor3f(this->color[0], this->color[1], this->color[2]);
+            //glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
-            O(texture_index >= 0, glTexCoord2f(-1.0,0.0), glVertex3i(x, offset, pz));
-            O(texture_index >= 0, glTexCoord2f(1.0,0.0), glVertex3i(px, offset, pz));
-            O(texture_index >= 0, glTexCoord2f(1.0,1.0), glVertex3i(px, offset, z));
-            O(texture_index >= 0, glTexCoord2f(-1.0,1.0), glVertex3i(x, offset, z));
+            glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
+            glNormal3f(0,0,1);
+            glTexCoord2f(-1.0,0.0), glVertex3f(x, offset, pz);
+            glTexCoord2f(1.0,0.0), glVertex3f(px, offset, pz);
+            glTexCoord2f(1.0,1.0), glVertex3f(px, offset, z);
+            glTexCoord2f(-1.0,1.0), glVertex3f(x, offset, z);
             glEnd();
 
-            glColor3f(this->color[0], this->color[1], this->color[2]);
+            //glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
-            O(texture_index >= 0, glTexCoord2f(-1.0,0.0), glVertex3i(x, high, pz));
-            O(texture_index >= 0, glTexCoord2f(1.0,0.0), glVertex3i(x, offset, pz));
-            O(texture_index >= 0, glTexCoord2f(1.0,1.0), glVertex3i(x, offset, z));
-            O(texture_index >= 0, glTexCoord2f(-1.0,1.0), glVertex3i(x, high, z));
+            glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
+            
+            glNormal3f(-1,0,0);
+            glTexCoord2f(-1.0,0.0), glVertex3f(x, high, pz);
+            glTexCoord2f(1.0,0.0), glVertex3f(x, offset, pz);
+            glTexCoord2f(1.0,1.0), glVertex3f(x, offset, z);
+            glTexCoord2f(-1.0,1.0), glVertex3f(x, high, z);
             glEnd();
 
-            glColor3f(this->color[0], this->color[1], this->color[2]);
+            //glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
-            O(texture_index >= 0, glTexCoord2f(-1.0,0.0), glVertex3i(px, high, z));
-            O(texture_index >= 0, glTexCoord2f(1.0,0.0), glVertex3i(px, offset, z));
-            O(texture_index >= 0, glTexCoord2f(1.0,1.0), glVertex3i(px, offset, pz));
-            O(texture_index >= 0, glTexCoord2f(-1.0,1.0), glVertex3i(px, high, pz));
+            glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
+            glNormal3f(1,0,0);
+            glTexCoord2f(-1.0,0.0), glVertex3f(px, high, z);
+            glTexCoord2f(1.0,0.0), glVertex3f(px, offset, z);
+            glTexCoord2f(1.0,1.0), glVertex3f(px, offset, pz);
+            glTexCoord2f(-1.0,1.0), glVertex3f(px, high, pz);
             glEnd();
 
-            glColor3f(this->color[0], this->color[1], this->color[2]);
+            //glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
-            O(texture_index >= 0, glTexCoord2f(-1.0,0.0), glVertex3i(px, high, z));
-            O(texture_index >= 0, glTexCoord2f(1.0,0.0), glVertex3i(x, high, z));
-            O(texture_index >= 0, glTexCoord2f(1.0,1.0), glVertex3i(x, offset, z));
-            O(texture_index >= 0, glTexCoord2f(-1.0,1.0), glVertex3i(px, offset, z));
+            glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
+            glNormal3f(0,-1,0);
+            glTexCoord2f(-1.0,0.0), glVertex3f(px, high, z);
+            glTexCoord2f(1.0,0.0), glVertex3f(x, high, z);
+            glTexCoord2f(1.0,1.0), glVertex3f(x, offset, z);
+            glTexCoord2f(-1.0,1.0), glVertex3f(px, offset, z);
             glEnd();
 
-            glColor3f(this->color[0], this->color[1], this->color[2]);
+            //glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
-            O(texture_index >= 0, glTexCoord2f(-1.0,0.0), glVertex3i(px, high, pz));
-            O(texture_index >= 0, glTexCoord2f(1.0,0.0), glVertex3i(px, offset, pz));
-            O(texture_index >= 0, glTexCoord2f(1.0,1.0), glVertex3i(x, offset, pz));
-            O(texture_index >= 0, glTexCoord2f(-1.0,1.0), glVertex3i(x, high, pz));
+            glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
+            glNormal3f(0,1,0);
+            glTexCoord2f(-1.0,0.0), glVertex3f(px, high, pz);
+            glTexCoord2f(1.0,0.0), glVertex3f(px, offset, pz);
+            glTexCoord2f(1.0,1.0), glVertex3f(x, offset, pz);
+            glTexCoord2f(-1.0,1.0), glVertex3f(x, high, pz);
             glEnd();
+
+            if (texture_index == PACMAN_TEXTURE_INDEX) {
+                GLint position[4];
+                GLfloat color[4];
+                position[0]=(x + px) /2; position[1]=offset+(height/2); position[2]=(z + pz)/2; position[3]=1; 
+                glLightiv(GL_LIGHT1,GL_POSITION,position);
+                GLint direction[3];
+                direction[0] = 0; direction[1] = 0; direction[2] = 1; 
+                glLightiv(GL_LIGHT1, GL_SPOT_DIRECTION, direction);
+                
+                color[0]=0.3; color[1]=0.3; color[2]=0.3; color[3]=1;
+                glLightfv(GL_LIGHT1,GL_DIFFUSE,color);
+
+                glLightf(GL_LIGHT1,GL_CONSTANT_ATTENUATION,0.005);
+                // glLightf(GL_LIGHT1,GL_LINEAR_ATTENUATION,0.001);
+                // glLightf(GL_LIGHT1,GL_QUADRATIC_ATTENUATION,0.0000001);
+                glLightf(GL_LIGHT1,GL_LINEAR_ATTENUATION,0.0);
+                glLightf(GL_LIGHT1,GL_QUADRATIC_ATTENUATION,0.0);
+                glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,20.0);
+                glLightf (GL_LIGHT1, GL_SPOT_EXPONENT, 1);
+
+                glEnable(GL_LIGHT1);
+            }
+
+           
 
         }
 

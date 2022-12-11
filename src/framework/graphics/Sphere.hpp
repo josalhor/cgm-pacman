@@ -25,12 +25,16 @@ class Sphere: public Shape {
             radius = mapper.XtoVisualFloatWithoutCenter(radius);
             int slices = 20;
 
-            glColor3f(this->color[0], this->color[1], this->color[2]);
+            //glColor3f(this->color[0], this->color[1], this->color[2]);
             glPushMatrix();
             GLUquadric *quad;
             quad = gluNewQuadric();
             gluQuadricTexture(quad, GL_TRUE);
             glBindTexture(GL_TEXTURE_2D, texture_index);
+            //glBindTexture(GL_TEXTURE_2D, 0);
+            GLfloat material[4];
+            material[0]=1.0; material[1]=1.0; material[2]=1.0; material[3]=1.0;
+            glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
             glTranslatef(x,offset,z);
             gluSphere(quad,radius,slices,slices);
             gluDeleteQuadric(quad);
