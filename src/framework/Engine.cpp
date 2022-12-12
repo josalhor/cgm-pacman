@@ -192,14 +192,20 @@ void Engine::display(){
 
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-    // GLint position[4];
-    // GLfloat color[4];
-    // position[0]=0; position[1]=0; position[2]=0; position[3]=1; 
-    // glLightiv(GL_LIGHT0,GL_POSITION,position);
-    
-    // color[0]=0.15; color[1]=0.15; color[2]=0.15; color[3]=1;
-    // glLightfv(GL_LIGHT0,GL_AMBIENT,color);
-    // glEnable(GL_LIGHT0);
+    GLint position[4];
+    GLfloat color[4];
+    position[0]=0; position[1]=50; position[2]=0; position[3]=0; 
+    glLightiv(GL_LIGHT0,GL_POSITION,position);
+    const float L = 0.00000000000000001;
+    color[0]=L; color[1]=L; color[2]=L; color[3]=1;
+    // color[0]=0; color[1]=0; color[2]=0; color[3]=1;
+    //glLightf(GL_LIGHT0, GL_AMBIENT, 0.000000005);
+    float attenuation = 0.1;
+    glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, attenuation);
+    // glLightf(GL_LIGHT1,GL_LINEAR_ATTENUATION,0.0);
+    // glLightf(GL_LIGHT1,GL_QUADRATIC_ATTENUATION,0.0);
+    glLightfv(GL_LIGHT0,GL_DIFFUSE,color);
+    glEnable(GL_LIGHT0);
 
     // position[0]=100; position[1]=75; position[2]=50; position[3]=1; 
     // glLightiv(GL_LIGHT1,GL_POSITION,position);

@@ -8,6 +8,8 @@
 
 #define O(c,t,v) (c ? (t, v) : (v));
 
+#define PRISMA_SLICES 8
+
 class Prisma: public Shape {
     public:
         Color color;
@@ -17,6 +19,66 @@ class Prisma: public Shape {
             // collision_boxing = Vector3D(0.5*x, offset, 0.5*z);
             // geo_center = Vector3D(0.5*x, offset, -0.5*z);
         }
+
+    void renderFaceX(float x, float y, float yf, float z, float zf) {
+        const float slicesF = (float) PRISMA_SLICES;
+        for(int j = 0; j < PRISMA_SLICES; j++){
+            float yi = ((yf - y) * ((float) j) / slicesF) + y;
+            for(int k = 0; k < PRISMA_SLICES; k++){
+                float zi = ((zf - z) * ((float) k) / slicesF) + z;
+                glTexCoord2f(1.0 / (float) j,1.0 / (float) k), glVertex3f(x, yi, zi);
+            }
+        }
+    }
+
+    void renderFaceY(float x, float xf, float y, float z, float zf) {
+        const float slicesF = (float) PRISMA_SLICES;
+        for(int i = 0; i < PRISMA_SLICES; i++){
+            float xi = ((xf - x) * ((float) i) / slicesF) + x;
+            for(int k = 0; k < PRISMA_SLICES; k++){
+                float zi = ((zf - z) * ((float) k) / slicesF) + z;
+                glTexCoord2f(1.0 / (float) i,1.0 / (float) k), glVertex3f(xi, y, zi);
+            }
+        }
+    }
+
+    void renderFaceZ(float x, float xf, float y, float yf, float z) {
+        const float slicesF = (float) PRISMA_SLICES;
+        for(int i = 0; i < PRISMA_SLICES; i++){
+            float xi = ((xf - x) * ((float) i) / slicesF) + x;
+            for(int j = 0; j < PRISMA_SLICES; j++){
+                float yi = ((yf - y) * ((float) j) / slicesF) + y;
+                glTexCoord2f(1.0 / (float) i,1.0 / (float) j), glVertex3f(xi, yi, z);
+            }
+        }
+    }
+
+    /*void renderFace(float x, float xf, float y, float yf, float z, float zf) {
+        
+            const float slicesF = (float) PRISMA_SLICES;
+            float incX = (xf - x) / (float) slices;
+            float incY = (yf - y) / (float) slices;
+            float incZ = (zf - z) / (float) slices;
+            glTexCoord2f(-1.0,0.0), glVertex3f(x, high, z);
+            glTexCoord2f(1.0,0.0), glVertex3f(px, high, z);
+            glTexCoord2f(1.0,1.0), glVertex3f(px, high, pz);
+            glTexCoord2f(-1.0,1.0), glVertex3f(x, high, pz);
+            for(int i = 0; i < slices; i++){
+                float xi = ((xf - x) * ((float) i) / slicesF) + x;
+                for(int j = 0; j < slices; j++){
+                    float yi = ((yf - y) * ((float) j) / slicesF) + y;
+                    for(int k = 0; k < slices; k++){
+                        float zi = ((zf - z) * ((float) k) / slicesF) + z;
+
+                        glTexCoord2f(-1.0,1.0), glVertex3f(x, high, pz);
+                        if(z == zf) break;
+                    }
+                    if(y == yf) break;
+                }
+                if(x == xf) break;
+            }
+        }*/
+
 
         void draw(Vector2D logicPosition, Vector2D size, float height, float offset) {
             Vector2D centerPoint = getP2(size);
@@ -34,12 +96,12 @@ class Prisma: public Shape {
                 glBindTexture(GL_TEXTURE_2D, texture_index);
             }
 
-            material[0]=1.0; material[1]=0.0; material[2]=0.0; material[3]=1.0; 
+            material[0]=1.0; material[1]=1.0; material[2]=1.0; material[3]=0.0; 
             
             //glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
             glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
-            glNormal3f(0,0,-1);
+            glNormal3f(0,1,0);
             glTexCoord2f(-1.0,0.0), glVertex3f(x, high, z);
             glTexCoord2f(1.0,0.0), glVertex3f(px, high, z);
             glTexCoord2f(1.0,1.0), glVertex3f(px, high, pz);
@@ -49,7 +111,7 @@ class Prisma: public Shape {
             //glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
             glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
-            glNormal3f(0,0,1);
+            glNormal3f(0,-1,0);
             glTexCoord2f(-1.0,0.0), glVertex3f(x, offset, pz);
             glTexCoord2f(1.0,0.0), glVertex3f(px, offset, pz);
             glTexCoord2f(1.0,1.0), glVertex3f(px, offset, z);
@@ -80,7 +142,7 @@ class Prisma: public Shape {
             //glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
             glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
-            glNormal3f(0,-1,0);
+            glNormal3f(0,0,1);
             glTexCoord2f(-1.0,0.0), glVertex3f(px, high, z);
             glTexCoord2f(1.0,0.0), glVertex3f(x, high, z);
             glTexCoord2f(1.0,1.0), glVertex3f(x, offset, z);
@@ -90,7 +152,7 @@ class Prisma: public Shape {
             //glColor3f(this->color[0], this->color[1], this->color[2]);
             glBegin(GL_QUADS);
             glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
-            glNormal3f(0,1,0);
+            glNormal3f(0,0,-1);
             glTexCoord2f(-1.0,0.0), glVertex3f(px, high, pz);
             glTexCoord2f(1.0,0.0), glVertex3f(px, offset, pz);
             glTexCoord2f(1.0,1.0), glVertex3f(x, offset, pz);
@@ -106,7 +168,7 @@ class Prisma: public Shape {
                 direction[0] = 0; direction[1] = 0; direction[2] = 1; 
                 glLightiv(GL_LIGHT1, GL_SPOT_DIRECTION, direction);
                 
-                color[0]=0.3; color[1]=0.3; color[2]=0.3; color[3]=1;
+                color[0]=0; color[1]=0.5; color[2]=0.5; color[3]=1;
                 glLightfv(GL_LIGHT1,GL_DIFFUSE,color);
 
                 glLightf(GL_LIGHT1,GL_CONSTANT_ATTENUATION,0.005);
