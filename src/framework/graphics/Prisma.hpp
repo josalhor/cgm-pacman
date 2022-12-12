@@ -8,7 +8,7 @@
 
 #define O(c,t,v) (c ? (t, v) : (v));
 
-#define PRISMA_SLICES 8
+#define PRISMA_SLICES 10
 
 class PointSquare {
     public:
@@ -37,99 +37,89 @@ class Prisma: public Shape {
             material[0]=1.0; material[1]=1.0; material[2]=1.0; material[3]=0.0; 
         }
 
-    void renderFaceX(float x, float y, float yf, float z, float zf, float normal) {
-        const float slicesF = (float) PRISMA_SLICES;
-        for(int j = 0; j < PRISMA_SLICES - 1; j++){
-            for(int k = 0; k < PRISMA_SLICES - 1; k++){
-
-                float yi = ((yf - y) * ((float) j) / slicesF) + y;
-                float yiF = ((yf - y) * ((float) j + 1) / slicesF) + y;
-                float zi = ((zf - z) * ((float) k) / slicesF) + z;
-                float ziF = ((zf - z) * ((float) k + 1) / slicesF) + z;
-                float progressYi = yi / yf;
-                float progressYiF = yiF / yf;
-                float progressZi = zi / zf;
-                float progressZiF = ziF / zf;
-
-                glBegin(GL_QUADS);
-                glNormal3f(normal,0,0);
-                glTexCoord2f(progressYiF,progressZiF), glVertex3f(x, yiF, ziF);
-                glTexCoord2f(progressYi,progressZiF), glVertex3f(x, yi, ziF);
-                glTexCoord2f(progressYi,progressZi), glVertex3f(x, yi, zi);
-                glTexCoord2f(progressYiF,progressZi), glVertex3f(x, yiF, zi);
-
-                glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
-                
-                glEnd();
-            }
-        }
-    }
-
-    void renderFaceY(float x, float xf, float y, float z, float zf, float normal) {
-        const float slicesF = (float) PRISMA_SLICES;
-        for(int j = 0; j < PRISMA_SLICES - 1; j++){
-            for(int k = 0; k < PRISMA_SLICES - 1; k++){
-
-                float xi = ((xf - x) * ((float) j) / slicesF) + x;
-                float xiF = ((xf - x) * ((float) j + 1) / slicesF) + x;
-                float zi = ((zf - z) * ((float) k) / slicesF) + z;
-                float ziF = ((zf - z) * ((float) k + 1) / slicesF) + z;
-                float progressXi = xi / xf;
-                float progressXiF = xiF / xf;
-                float progressZi = zi / zf;
-                float progressZiF = ziF / zf;
-
-                glBegin(GL_QUADS);
-                glNormal3f(normal,0,0);
-                glTexCoord2f(progressXiF,progressZiF), glVertex3f(x, xiF, ziF);
-                glTexCoord2f(progressXi,progressZiF), glVertex3f(x, xi, ziF);
-                glTexCoord2f(progressXi,progressZi), glVertex3f(x, xi, zi);
-                glTexCoord2f(progressXiF,progressZi), glVertex3f(x, xiF, zi);
-
-                glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
-                
-                glEnd();
-            }
-        }
-    }
-
-    void renderFaceZ(float x, float xf, float y, float yf, float z) {
-        const float slicesF = (float) PRISMA_SLICES;
-        for(int i = 0; i < PRISMA_SLICES; i++){
-            float xi = ((xf - x) * ((float) i) / slicesF) + x;
-            for(int j = 0; j < PRISMA_SLICES; j++){
-                float yi = ((yf - y) * ((float) j) / slicesF) + y;
-                glTexCoord2f(1.0 / (float) i,1.0 / (float) j), glVertex3f(xi, yi, z);
-            }
-        }
-    }
-
-    /*void renderFace(float x, float xf, float y, float yf, float z, float zf) {
-        
+        void renderFaceX(float x, float y, float yf, float z, float zf, float normal) {
             const float slicesF = (float) PRISMA_SLICES;
-            float incX = (xf - x) / (float) slices;
-            float incY = (yf - y) / (float) slices;
-            float incZ = (zf - z) / (float) slices;
-            glTexCoord2f(-1.0,0.0), glVertex3f(x, high, z);
-            glTexCoord2f(1.0,0.0), glVertex3f(px, high, z);
-            glTexCoord2f(1.0,1.0), glVertex3f(px, high, pz);
-            glTexCoord2f(-1.0,1.0), glVertex3f(x, high, pz);
-            for(int i = 0; i < slices; i++){
-                float xi = ((xf - x) * ((float) i) / slicesF) + x;
-                for(int j = 0; j < slices; j++){
+            for(int j = 0; j < PRISMA_SLICES; j++){
+                for(int k = 0; k < PRISMA_SLICES; k++){
+
                     float yi = ((yf - y) * ((float) j) / slicesF) + y;
-                    for(int k = 0; k < slices; k++){
-                        float zi = ((zf - z) * ((float) k) / slicesF) + z;
+                    float yiF = ((yf - y) * ((float) j + 1) / slicesF) + y;
+                    float zi = ((zf - z) * ((float) k) / slicesF) + z;
+                    float ziF = ((zf - z) * ((float) k + 1) / slicesF) + z;
+                    float progressYi = ((float) j) / slicesF;
+                    float progressYiF = ((float) j + 1) / slicesF;
+                    float progressZi = ((float) k) / slicesF;
+                    float progressZiF = ((float) k + 1) / slicesF;
 
-                        glTexCoord2f(-1.0,1.0), glVertex3f(x, high, pz);
-                        if(z == zf) break;
-                    }
-                    if(y == yf) break;
+                    glBegin(GL_QUADS);
+                    glNormal3f(normal,0,0);
+                    glTexCoord2f(progressYiF,progressZiF), glVertex3f(x, yiF, ziF);
+                    glTexCoord2f(progressYi,progressZiF), glVertex3f(x, yi, ziF);
+                    glTexCoord2f(progressYi,progressZi), glVertex3f(x, yi, zi);
+                    glTexCoord2f(progressYiF,progressZi), glVertex3f(x, yiF, zi);
+
+                    glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
+                    
+                    glEnd();
                 }
-                if(x == xf) break;
             }
-        }*/
+        }
 
+        void renderFaceY(float x, float xf, float y, float z, float zf, float normal) {
+            const float slicesF = (float) PRISMA_SLICES;
+            for(int j = 0; j < PRISMA_SLICES; j++){
+                for(int k = 0; k < PRISMA_SLICES; k++){
+
+                    float xi = ((xf - x) * ((float) j) / slicesF) + x;
+                    float xiF = ((xf - x) * ((float) j + 1) / slicesF) + x;
+                    float zi = ((zf - z) * ((float) k) / slicesF) + z;
+                    float ziF = ((zf - z) * ((float) k + 1) / slicesF) + z;
+                    float progressXi = ((float) j) / slicesF;
+                    float progressXiF = ((float) j + 1) / slicesF;
+                    float progressZi = ((float) k) / slicesF;
+                    float progressZiF = ((float) k + 1) / slicesF;
+
+                    glBegin(GL_QUADS);
+                    glNormal3f(0,normal,0);
+                    glTexCoord2f(progressXiF,progressZiF), glVertex3f(xi, y, zi);
+                    glTexCoord2f(progressXi,progressZiF), glVertex3f(xiF, y, zi);
+                    glTexCoord2f(progressXi,progressZi), glVertex3f(xiF, y, ziF);
+                    glTexCoord2f(progressXiF,progressZi), glVertex3f(xi, y, ziF);
+
+                    glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
+                    
+                    glEnd();
+                }
+            }
+        }
+
+        void renderFaceZ(float x, float xf, float y, float yf, float z, float normal) {
+            const float slicesF = (float) PRISMA_SLICES;
+            for(int j = 0; j < PRISMA_SLICES; j++){
+                for(int k = 0; k < PRISMA_SLICES; k++){
+
+                    float xi = ((xf - x) * ((float) j) / slicesF) + x;
+                    float xiF = ((xf - x) * ((float) j + 1) / slicesF) + x;
+                    float yi = ((yf - y) * ((float) k) / slicesF) + y;
+                    float yiF = ((yf - y) * ((float) k + 1) / slicesF) + y;
+                    float progressXi = ((float) j) / slicesF;
+                    float progressXiF = ((float) j + 1) / slicesF;
+                    float progressYi = ((float) k) / slicesF;
+                    float progressYiF = ((float) k + 1) / slicesF;
+
+                    glBegin(GL_QUADS);
+                    glNormal3f(0,0,normal);
+                    glTexCoord2f(progressXiF,progressYiF), glVertex3f(xiF, yiF, z);
+                    glTexCoord2f(progressXi,progressYiF), glVertex3f(xiF, yi, z);
+                    glTexCoord2f(progressXi,progressYi), glVertex3f(xi, yi, z);
+                    glTexCoord2f(progressXiF,progressYi), glVertex3f(xi, yiF, z);
+
+                    glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
+                    
+                    glEnd();
+                }
+            }
+        }
 
         void draw(Vector2D logicPosition, Vector2D size, float height, float offset) {
             Vector2D centerPoint = getP2(size);
@@ -147,67 +137,18 @@ class Prisma: public Shape {
                 glBindTexture(GL_TEXTURE_2D, texture_index);
             }
             
-            //glColor3f(this->color[0], this->color[1], this->color[2]);
-            glBegin(GL_QUADS);
-            glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
-            glNormal3f(0,1,0);
-            glTexCoord2f(-1.0,0.0), glVertex3f(x, high, z);
-            glTexCoord2f(1.0,0.0), glVertex3f(px, high, z);
-            glTexCoord2f(1.0,1.0), glVertex3f(px, high, pz);
-            glTexCoord2f(-1.0,1.0), glVertex3f(x, high, pz);
-            glEnd();
 
-            //glColor3f(this->color[0], this->color[1], this->color[2]);
-            glBegin(GL_QUADS);
-            glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
-            glNormal3f(0,-1,0);
-            glTexCoord2f(-1.0,0.0), glVertex3f(x, offset, pz);
-            glTexCoord2f(1.0,0.0), glVertex3f(px, offset, pz);
-            glTexCoord2f(1.0,1.0), glVertex3f(px, offset, z);
-            glTexCoord2f(-1.0,1.0), glVertex3f(x, offset, z);
-            glEnd();
+            renderFaceY(x, px, high, z, pz, 1);
 
-            //glColor3f(this->color[0], this->color[1], this->color[2]);
+            renderFaceY(x, px, offset, z, pz, -1);
+
             renderFaceX(x, offset, high, z, pz, -1);
-            // glBegin(GL_QUADS);
-            // glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
-            
-            // glNormal3f(-1,0,0);
-            // glTexCoord2f(-1.0,0.0), glVertex3f(x, high, pz);
-            // glTexCoord2f(1.0,0.0), glVertex3f(x, offset, pz);
-            // glTexCoord2f(1.0,1.0), glVertex3f(x, offset, z);
-            // glTexCoord2f(-1.0,1.0), glVertex3f(x, high, z);
-            // glEnd();
 
-            //glColor3f(this->color[0], this->color[1], this->color[2]);
-            glBegin(GL_QUADS);
-            glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
-            glNormal3f(1,0,0);
-            glTexCoord2f(-1.0,0.0), glVertex3f(px, high, z);
-            glTexCoord2f(1.0,0.0), glVertex3f(px, offset, z);
-            glTexCoord2f(1.0,1.0), glVertex3f(px, offset, pz);
-            glTexCoord2f(-1.0,1.0), glVertex3f(px, high, pz);
-            glEnd();
+            renderFaceX(x, offset, high, z, pz, 1);
 
-            //glColor3f(this->color[0], this->color[1], this->color[2]);
-            glBegin(GL_QUADS);
-            glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
-            glNormal3f(0,0,1);
-            glTexCoord2f(-1.0,0.0), glVertex3f(px, high, z);
-            glTexCoord2f(1.0,0.0), glVertex3f(x, high, z);
-            glTexCoord2f(1.0,1.0), glVertex3f(x, offset, z);
-            glTexCoord2f(-1.0,1.0), glVertex3f(px, offset, z);
-            glEnd();
+            renderFaceZ(x, px, offset, high, z, 1);
 
-            //glColor3f(this->color[0], this->color[1], this->color[2]);
-            glBegin(GL_QUADS);
-            glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
-            glNormal3f(0,0,-1);
-            glTexCoord2f(-1.0,0.0), glVertex3f(px, high, pz);
-            glTexCoord2f(1.0,0.0), glVertex3f(px, offset, pz);
-            glTexCoord2f(1.0,1.0), glVertex3f(x, offset, pz);
-            glTexCoord2f(-1.0,1.0), glVertex3f(x, high, pz);
-            glEnd();
+            renderFaceZ(x, px, offset, high, z, -1);
 
             if (texture_index == PACMAN_TEXTURE_INDEX) {
                 GLint position[4];
