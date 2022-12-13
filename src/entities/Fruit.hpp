@@ -25,7 +25,8 @@ class Fruit: public GameEntity {
             logicPosition,
             size.getX(),
             25,
-            -1
+            -1,
+            0
         );
     }
 

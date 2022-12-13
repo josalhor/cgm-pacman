@@ -17,7 +17,7 @@ class Sphere: public Shape {
             // geo_center = Vector3D(0.5*x, offset, -0.5*z);
         }
 
-        void draw(Vector2D logicPosition, float radius, float offset, int lightIndex) {
+        void draw(Vector2D logicPosition, float radius, float offset, int lightIndex, float flashAngle) {
             Vector2D centerOffset = Vector2D(0.5, 0.5);
             Vector2D renderOn = logicPosition.add(centerOffset);
             Vector3D renderOn3D = to3dSpace(renderOn);
@@ -48,18 +48,18 @@ class Sphere: public Shape {
                 position[0]=x; position[1]=offset; position[2]=z; position[3]=1; 
                 glLightiv(GL_LIGHT1 + lightIndex, GL_POSITION,position);
                 GLint direction[3];
-                direction[0] = 0; direction[1] = 0; direction[2] = 1; 
+                direction[0] = 1; direction[1] = 0; direction[2] = 0; 
                 glLightiv(GL_LIGHT1 + lightIndex, GL_SPOT_DIRECTION, direction);
                 
                 color[0]=0.0; color[1]=0.5; color[2]=0.5; color[3]=1;
                 glLightfv(GL_LIGHT1 + lightIndex,GL_DIFFUSE,color);
 
-                glLightf(GL_LIGHT1 + lightIndex,GL_CONSTANT_ATTENUATION,0.005);
+                glLightf(GL_LIGHT1 + lightIndex,GL_CONSTANT_ATTENUATION,0.01);
                 // glLightf(GL_LIGHT1 + lightIndex,GL_LINEAR_ATTENUATION,0.001);
                 // glLightf(GL_LIGHT1 + lightIndex,GL_QUADRATIC_ATTENUATION,0.0000001);
-                glLightf(GL_LIGHT1 + lightIndex,GL_LINEAR_ATTENUATION,0.0);
+                glLightf(GL_LIGHT1 + lightIndex,GL_LINEAR_ATTENUATION,0.0001);
                 glLightf(GL_LIGHT1 + lightIndex,GL_QUADRATIC_ATTENUATION,0.0);
-                glLightf(GL_LIGHT1 + lightIndex,GL_SPOT_CUTOFF,20.0);
+                glLightf(GL_LIGHT1 + lightIndex,GL_SPOT_CUTOFF,flashAngle);
                 glLightf (GL_LIGHT1 + lightIndex, GL_SPOT_EXPONENT, 1);
 
                 glEnable(GL_LIGHT1 + lightIndex);
