@@ -14,6 +14,7 @@
 #define WIDTH 1000
 #define HEIGHT 1000
 #define CAMERA_DISTANCE 700
+#define SMOOTH_CAMERA_FACTOR 0.5
 
 /*
 This trick allows us to encapsulate all OpenGL
@@ -127,65 +128,48 @@ void Engine::idle(){
     glutPostRedisplay();
 }
 
-void PositionObserver(float alpha,float beta,int radi)
+void Engine::PositionObserver(int radi)
 {
-  float x,y,z;
-  float upx,upy,upz;
-  float modul;
-
-  x = (float)radi*cos(alpha*2*PI/360.0)*cos(beta*2*PI/360.0);
-  y = (float)radi*sin(beta*2*PI/360.0);
-  z = (float)radi*sin(alpha*2*PI/360.0)*cos(beta*2*PI/360.0);
-
-  if (beta>0)
-    {
-      upx=-x;
-      upz=-z;
-      upy=(x*x+z*z)/y;
-    }
-  else if(beta==0)
-    {
-      upx=0;
-      upy=1;
-      upz=0;
-    }
-  else
-    {
-      upx=x;
-      upz=z;
-      upy=-(x*x+z*z)/y;
-    }
+    float beta = anglebeta;
+    float alpha = anglealpha;
+    float x,y,z;
+    float upx,upy,upz;
+    float modul;
 
 
-  modul=sqrt(upx*upx+upy*upy+upz*upz);
+    // code that computes x,y,z and upx,upy,upz and modul
 
-  upx=upx/modul;
-  upy=upy/modul;
-  upz=upz/modul;
+    x = (float)radi*cos(alpha*2*PI/360.0)*cos(beta*2*PI/360.0);
+    y = (float)radi*sin(beta*2*PI/360.0);
+    z = (float)radi*sin(alpha*2*PI/360.0)*cos(beta*2*PI/360.0);
 
-  gluLookAt(x,y,z,    0.0, 0.0, 0.0,     upx,upy,upz);
+    if (beta>0) { upx=-x; upz=-z; upy=(x*x+z*z)/y; }
+    else if(beta==0) {  upx=0; upy=1; upz=0; }
+    else { upx=x; upz=z; upy=-(x*x+z*z)/y; }
+
+    modul=sqrt(upx*upx+upy*upy+upz*upz);
+
+    upx=upx/modul;
+    upy=upy/modul;
+    upz=upz/modul;
+
+    gluLookAt(x,y,z,    0.0, 0.0, 0.0,     upx,upy,upz);
 }
-
-/*--- Global variables that determine the viewpoint location ---*/
-int anglealpha = 90;
-int anglebeta = 30;
-
 
 void Engine::display(){
     glClearColor(0.0, 0.0, 0.0, 0.0);
     //glClearColor(1.0,1.0,1.0,0.0);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    PositionObserver(anglealpha,anglebeta,CAMERA_DISTANCE);
-
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(-WIDTH*0.6,WIDTH*0.6,-HEIGHT*0.6,HEIGHT*0.6,10,2000);
 
     glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    PositionObserver(CAMERA_DISTANCE);
+
 
     glPolygonMode(GL_FRONT,GL_FILL);
     glPolygonMode(GL_BACK,GL_LINE);
@@ -194,18 +178,11 @@ void Engine::display(){
 
     GLint position[4];
     GLfloat color[4];
-    position[0]=0; position[1]=1; position[2]=0; position[3]=0; 
+    position[0]=0; position[1]=8; position[2]=0; position[3]=1; 
     glLightiv(GL_LIGHT0,GL_POSITION,position);
-    const float L = 0.00001;
-    color[0]=L; color[1]=L; color[2]=L; color[3]=1;
-    // color[0]=0; color[1]=0; color[2]=0; color[3]=1;
-    glLightf(GL_LIGHT0, GL_AMBIENT, 0.000000005);
-    float attenuation = 0.1;
-    // glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, attenuation);
-    // glLightf(GL_LIGHT1,GL_LINEAR_ATTENUATION,0.0);
-    // glLightf(GL_LIGHT1,GL_QUADRATIC_ATTENUATION,0.0);
-    // glLightfv(GL_LIGHT0,GL_DIFFUSE,color);
-    // glEnable(GL_LIGHT0);
+    color[0]=0.2; color[1]=0; color[2]=0; color[3]=0;
+    glLightfv(GL_LIGHT0, GL_AMBIENT, color);
+    glEnable(GL_LIGHT0);
 
     // position[0]=100; position[1]=75; position[2]=50; position[3]=1; 
     // glLightiv(GL_LIGHT1,GL_POSITION,position);

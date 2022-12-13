@@ -1,6 +1,7 @@
 #ifndef SHAPE_SPHERE
 #define SHAPE_SPHERE
 
+#include "framework/TextureLoader.hpp"
 #include "framework/graphics/Shape.hpp"
 #include "framework/graphics/Color.hpp"
 #include "utils/Vector3D.hpp"
@@ -39,6 +40,29 @@ class Sphere: public Shape {
             gluSphere(quad,radius,slices,slices);
             gluDeleteQuadric(quad);
             glPopMatrix();
+
+            if (texture_index == PACMAN_TEXTURE_INDEX) {
+                GLint position[4];
+                GLfloat color[4];
+                position[0]=x; position[1]=offset; position[2]=z; position[3]=1; 
+                glLightiv(GL_LIGHT1,GL_POSITION,position);
+                GLint direction[3];
+                direction[0] = 0; direction[1] = 0; direction[2] = 1; 
+                glLightiv(GL_LIGHT1, GL_SPOT_DIRECTION, direction);
+                
+                color[0]=0.0; color[1]=0.5; color[2]=0.5; color[3]=1;
+                glLightfv(GL_LIGHT1,GL_DIFFUSE,color);
+
+                glLightf(GL_LIGHT1,GL_CONSTANT_ATTENUATION,0.005);
+                // glLightf(GL_LIGHT1,GL_LINEAR_ATTENUATION,0.001);
+                // glLightf(GL_LIGHT1,GL_QUADRATIC_ATTENUATION,0.0000001);
+                glLightf(GL_LIGHT1,GL_LINEAR_ATTENUATION,0.0);
+                glLightf(GL_LIGHT1,GL_QUADRATIC_ATTENUATION,0.0);
+                glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,20.0);
+                glLightf (GL_LIGHT1, GL_SPOT_EXPONENT, 1);
+
+                glEnable(GL_LIGHT1);
+            }
         }
 
         void print() {

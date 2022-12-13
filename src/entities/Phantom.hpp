@@ -3,6 +3,7 @@
 
 #include "framework/GameEntity.hpp"
 #include "framework/graphics/Color.hpp"
+#include "framework/graphics/Sphere.hpp"
 #include "PacMan.hpp"
 #include <GL/glut.h>
 
@@ -13,9 +14,9 @@ using namespace std;
 
 class Phantom: public GameEntity {
     Vector2D moveTo;
-    Prisma prisma;
+    Sphere sphere;
     public:
-    Phantom(Engine& engine) : prisma(engine.getCoordinateMapper(), RED, ENEMY_TEXTURE_INDEX), GameEntity(engine, prisma) {
+    Phantom(Engine& engine) : sphere(engine.getCoordinateMapper(), RED, ENEMY_TEXTURE_INDEX), GameEntity(engine, sphere) {
         const float height = 0.65;
         const float width = 0.65;
         size = Vector2D(width, height);
@@ -67,12 +68,10 @@ class Phantom: public GameEntity {
     }
 
     void draw() {
-
-        prisma.draw(
+        sphere.draw(
             logicPosition,
-            size,
-            20, //mapper.XtoVisualFloat(x + size.getX()) - mapper.XtoVisualFloat(x),
-            10
+            size.getX() / 2,
+            20
         );
     }
 

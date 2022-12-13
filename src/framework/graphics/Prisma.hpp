@@ -3,12 +3,11 @@
 #include "framework/graphics/Shape.hpp"
 #include "framework/graphics/Color.hpp"
 #include "utils/Vector3D.hpp"
-#include "framework/TextureLoader.hpp"
 #include <GL/glut.h>
 
 #define O(c,t,v) (c ? (t, v) : (v));
 
-#define PRISMA_SLICES 10
+#define PRISMA_SLICES 4
 
 class PointSquare {
     public:
@@ -34,7 +33,7 @@ class Prisma: public Shape {
             // float y = 0;
             // collision_boxing = Vector3D(0.5*x, offset, 0.5*z);
             // geo_center = Vector3D(0.5*x, offset, -0.5*z);
-            material[0]=1.0; material[1]=1.0; material[2]=1.0; material[3]=0.0; 
+            material[0]=1.0; material[1]=1.0; material[2]=1.0; material[3]=1.0; 
         }
 
         void renderFaceX(float x, float y, float yf, float z, float zf, float normal) {
@@ -52,11 +51,19 @@ class Prisma: public Shape {
                     float progressZiF = ((float) k + 1) / slicesF;
 
                     glBegin(GL_QUADS);
-                    glNormal3f(normal,0,0);
-                    glTexCoord2f(progressYiF,progressZiF), glVertex3f(x, yiF, ziF);
-                    glTexCoord2f(progressYi,progressZiF), glVertex3f(x, yi, ziF);
-                    glTexCoord2f(progressYi,progressZi), glVertex3f(x, yi, zi);
-                    glTexCoord2f(progressYiF,progressZi), glVertex3f(x, yiF, zi);
+                    glNormal3f(normal,0,0);                    
+
+                    auto F1 = [&]() { glTexCoord2f(progressYiF,progressZi), glVertex3f(x, yiF, zi); };
+                    auto F2 = [&]() { glTexCoord2f(progressYi,progressZi), glVertex3f(x, yi, zi); };
+                    auto F3 = [&]() { glTexCoord2f(progressYi,progressZiF), glVertex3f(x, yi, ziF); };
+                    auto F4 = [&]() { glTexCoord2f(progressYiF,progressZiF), glVertex3f(x, yiF, ziF); };
+
+                    if (normal > 0) {
+                        F1(); F2(); F3(); F4();
+                    } else {
+                        F4(); F3(); F2(); F1();
+                    }
+
 
                     glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
                     
@@ -81,10 +88,16 @@ class Prisma: public Shape {
 
                     glBegin(GL_QUADS);
                     glNormal3f(0,normal,0);
-                    glTexCoord2f(progressXiF,progressZiF), glVertex3f(xi, y, zi);
-                    glTexCoord2f(progressXi,progressZiF), glVertex3f(xiF, y, zi);
-                    glTexCoord2f(progressXi,progressZi), glVertex3f(xiF, y, ziF);
-                    glTexCoord2f(progressXiF,progressZi), glVertex3f(xi, y, ziF);
+                    auto F1 = [&]() { glTexCoord2f(progressXiF,progressZiF), glVertex3f(xi, y, zi); };
+                    auto F2 = [&]() { glTexCoord2f(progressXi,progressZiF), glVertex3f(xiF, y, zi); };
+                    auto F3 = [&]() { glTexCoord2f(progressXi,progressZi), glVertex3f(xiF, y, ziF); };
+                    auto F4 = [&]() { glTexCoord2f(progressXiF,progressZi), glVertex3f(xi, y, ziF); };
+
+                    if (normal > 0) {
+                        F1(); F2(); F3(); F4();
+                    } else {
+                        F4(); F3(); F2(); F1();
+                    }
 
                     glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
                     
@@ -109,10 +122,17 @@ class Prisma: public Shape {
 
                     glBegin(GL_QUADS);
                     glNormal3f(0,0,normal);
-                    glTexCoord2f(progressXiF,progressYiF), glVertex3f(xiF, yiF, z);
-                    glTexCoord2f(progressXi,progressYiF), glVertex3f(xiF, yi, z);
-                    glTexCoord2f(progressXi,progressYi), glVertex3f(xi, yi, z);
-                    glTexCoord2f(progressXiF,progressYi), glVertex3f(xi, yiF, z);
+
+                    auto F1 = [&]() { glTexCoord2f(progressXiF,progressYi), glVertex3f(xi, yiF, z); };
+                    auto F2 = [&]() { glTexCoord2f(progressXi,progressYi), glVertex3f(xi, yi, z); };
+                    auto F3 = [&]() { glTexCoord2f(progressXi,progressYiF), glVertex3f(xiF, yi, z); };
+                    auto F4 = [&]() { glTexCoord2f(progressXiF,progressYiF), glVertex3f(xiF, yiF, z); };
+
+                    if (normal > 0) {
+                        F1(); F2(); F3(); F4();
+                    } else {
+                        F4(); F3(); F2(); F1();
+                    }
 
                     glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
                     
@@ -133,47 +153,18 @@ class Prisma: public Shape {
             float pz = mapper.YtoVisualFloat(p03D.getZ());
             int high = height + offset;
             
-            if (texture_index >= 0){
-                glBindTexture(GL_TEXTURE_2D, texture_index);
-            }
-            
+            glBindTexture(GL_TEXTURE_2D, texture_index);
 
             renderFaceY(x, px, high, z, pz, 1);
-
             renderFaceY(x, px, offset, z, pz, -1);
 
             renderFaceX(x, offset, high, z, pz, -1);
 
-            renderFaceX(x, offset, high, z, pz, 1);
+            renderFaceX(px, offset, high, z, pz, 1);
 
             renderFaceZ(x, px, offset, high, z, 1);
 
-            renderFaceZ(x, px, offset, high, z, -1);
-
-            if (texture_index == PACMAN_TEXTURE_INDEX) {
-                GLint position[4];
-                GLfloat color[4];
-                position[0]=(x + px) /2; position[1]=offset+(height/2); position[2]=(z + pz)/2; position[3]=1; 
-                glLightiv(GL_LIGHT1,GL_POSITION,position);
-                GLint direction[3];
-                direction[0] = 0; direction[1] = 0; direction[2] = 1; 
-                glLightiv(GL_LIGHT1, GL_SPOT_DIRECTION, direction);
-                
-                color[0]=0; color[1]=0.5; color[2]=0.5; color[3]=1;
-                glLightfv(GL_LIGHT1,GL_DIFFUSE,color);
-
-                glLightf(GL_LIGHT1,GL_CONSTANT_ATTENUATION,0.005);
-                // glLightf(GL_LIGHT1,GL_LINEAR_ATTENUATION,0.001);
-                // glLightf(GL_LIGHT1,GL_QUADRATIC_ATTENUATION,0.0000001);
-                glLightf(GL_LIGHT1,GL_LINEAR_ATTENUATION,0.0);
-                glLightf(GL_LIGHT1,GL_QUADRATIC_ATTENUATION,0.0);
-                glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,20.0);
-                glLightf (GL_LIGHT1, GL_SPOT_EXPONENT, 1);
-
-                glEnable(GL_LIGHT1);
-            }
-
-           
+            renderFaceZ(x, px, offset, high, pz, -1);         
 
         }
 

@@ -2,7 +2,7 @@
 #define PACMAN
 
 #include "framework/GameEntity.hpp"
-#include "framework/graphics/Prisma.hpp"
+#include "framework/graphics/Sphere.hpp"
 #include "framework/graphics/Color.hpp"
 #include "framework/TextureLoader.hpp"
 #include <GL/glut.h>
@@ -11,9 +11,9 @@
 
 class PacMan: public GameEntity {
     private:
-        Prisma prisma;
+        Sphere sphere;
     public:
-    PacMan(Engine& engine) : prisma(engine.getCoordinateMapper(), WHITE, PACMAN_TEXTURE_INDEX), GameEntity(engine, prisma) {
+    PacMan(Engine& engine) : sphere(engine.getCoordinateMapper(), WHITE, PACMAN_TEXTURE_INDEX), GameEntity(engine, sphere) {
         const float height = 0.65;
         const float width = 0.65;
         size = Vector2D(width, height);
@@ -46,11 +46,10 @@ class PacMan: public GameEntity {
     }
 
     void draw() {
-        prisma.draw(
+        sphere.draw(
             logicPosition,
-            size,
-            20, //mapper.XtoVisualFloat(x + size.getX()) - mapper.XtoVisualFloat(x),
-            10
+            size.getX() / 2,
+            20
         );
     }
 

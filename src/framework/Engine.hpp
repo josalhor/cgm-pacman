@@ -19,9 +19,15 @@ class Engine {
         Matrix<GameCell>* matrix = nullptr;
         PathFinder* pathFinder = nullptr;
         long last_t = 0.0;
+        /*--- Global variables that determine the viewpoint location ---*/
+        int anglealpha = 90;
+        int anglebeta = 30;
+        float smooth_alpha = anglealpha;
+        float smooth_beta = anglebeta;
         /*
         TODO: memory cleanup
         */
+       void PositionObserver(int radi);
     public:
         Engine();
         CellType getCellType(Cell cell);
