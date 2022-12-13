@@ -16,7 +16,7 @@ class Phantom: public GameEntity {
     Vector2D moveTo;
     Sphere sphere;
     public:
-    Phantom(Engine& engine) : sphere(engine.getCoordinateMapper(), RED, ENEMY_TEXTURE_INDEX), GameEntity(engine, sphere) {
+    Phantom(int entityIndex, Engine& engine) : sphere(engine.getCoordinateMapper(), RED, ENEMY_TEXTURE_INDEX), GameEntity(entityIndex, engine, sphere) {
         const float height = 0.65;
         const float width = 0.65;
         size = Vector2D(width, height);
@@ -71,7 +71,8 @@ class Phantom: public GameEntity {
         sphere.draw(
             logicPosition,
             size.getX() / 2,
-            20
+            20,
+            entityIndex
         );
     }
 

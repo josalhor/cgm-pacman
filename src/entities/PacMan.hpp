@@ -13,7 +13,7 @@ class PacMan: public GameEntity {
     private:
         Sphere sphere;
     public:
-    PacMan(Engine& engine) : sphere(engine.getCoordinateMapper(), WHITE, PACMAN_TEXTURE_INDEX), GameEntity(engine, sphere) {
+    PacMan(int entityIndex, Engine& engine) : sphere(engine.getCoordinateMapper(), WHITE, PACMAN_TEXTURE_INDEX), GameEntity(entityIndex, engine, sphere) {
         const float height = 0.65;
         const float width = 0.65;
         size = Vector2D(width, height);
@@ -49,7 +49,8 @@ class PacMan: public GameEntity {
         sphere.draw(
             logicPosition,
             size.getX() / 2,
-            20
+            20,
+            entityIndex
         );
     }
 

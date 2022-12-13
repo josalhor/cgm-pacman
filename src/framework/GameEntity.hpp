@@ -24,9 +24,10 @@ class GameEntity {
         Vector2D size;
         Shape& shape;
         CoordinateMapper& mapper;
+        int entityIndex;
         // map<string, void(*)()> collisionResolver;
     public:
-        GameEntity(Engine& engine, Shape& s);
+        GameEntity(int entityIndex, Engine& engine, Shape& s);
         void destroy();
         Vector2D getPosition() {
             return this->logicPosition;

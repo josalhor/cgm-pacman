@@ -1,6 +1,6 @@
 #include "GameEntity.hpp"
 
-GameEntity::GameEntity(Engine& engine, Shape& shape) : engine(engine), shape(shape), mapper(engine.getCoordinateMapper()) {
+GameEntity::GameEntity(int entityIndex, Engine& engine, Shape& shape) : entityIndex(entityIndex), engine(engine), shape(shape), mapper(engine.getCoordinateMapper()) {
 
 }
 
