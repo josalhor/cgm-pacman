@@ -17,7 +17,7 @@ class Sphere: public Shape {
             // geo_center = Vector3D(0.5*x, offset, -0.5*z);
         }
 
-        void draw(Vector2D logicPosition, float radius, float offset, int lightIndex, float flashAngle) {
+        void draw(Vector2D logicPosition, Vector3D normalDirection, float radius, float offset, int lightIndex, float flashAngle) {
             Vector2D centerOffset = Vector2D(0.5, 0.5);
             Vector2D renderOn = logicPosition.add(centerOffset);
             Vector3D renderOn3D = to3dSpace(renderOn);
@@ -48,7 +48,7 @@ class Sphere: public Shape {
                 position[0]=x; position[1]=offset; position[2]=z; position[3]=1; 
                 glLightiv(GL_LIGHT1 + lightIndex, GL_POSITION,position);
                 GLint direction[3];
-                direction[0] = 1; direction[1] = 0; direction[2] = 0; 
+                direction[0] = normalDirection.getX(); direction[1] = normalDirection.getY(); direction[2] = normalDirection.getZ(); 
                 glLightiv(GL_LIGHT1 + lightIndex, GL_SPOT_DIRECTION, direction);
                 
                 color[0]=0.0; color[1]=0.5; color[2]=0.5; color[3]=1;

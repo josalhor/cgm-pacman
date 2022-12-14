@@ -23,6 +23,7 @@ class Fruit: public GameEntity {
     void draw() {
         sphere.draw(
             logicPosition,
+            Vector3D(0.0, 0.0, 0.0),
             size.getX(),
             25,
             -1,
