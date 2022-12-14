@@ -50,14 +50,22 @@ class Sphere: public Shape {
                 GLint direction[3];
                 direction[0] = normalDirection.getX(); direction[1] = normalDirection.getY(); direction[2] = normalDirection.getZ(); 
                 glLightiv(GL_LIGHT1 + lightIndex, GL_SPOT_DIRECTION, direction);
+                float linearAtt;
                 
-                color[0]=0.0; color[1]=0.5; color[2]=0.5; color[3]=1;
+                if (lightIndex == 0) {
+                    color[0]=0.5; color[1]=0.5; color[2]=0.25; color[3]=1;
+                    linearAtt = 0.001;
+                } else {
+                    color[0]=0.5; color[1]=0; color[2]=0.1; color[3]=1;
+                    linearAtt = 0.002;
+                }
+                
                 glLightfv(GL_LIGHT1 + lightIndex,GL_DIFFUSE,color);
 
                 glLightf(GL_LIGHT1 + lightIndex,GL_CONSTANT_ATTENUATION,0.01);
                 // glLightf(GL_LIGHT1 + lightIndex,GL_LINEAR_ATTENUATION,0.001);
                 // glLightf(GL_LIGHT1 + lightIndex,GL_QUADRATIC_ATTENUATION,0.0000001);
-                glLightf(GL_LIGHT1 + lightIndex,GL_LINEAR_ATTENUATION,0.0001);
+                glLightf(GL_LIGHT1 + lightIndex,GL_LINEAR_ATTENUATION,linearAtt);
                 glLightf(GL_LIGHT1 + lightIndex,GL_QUADRATIC_ATTENUATION,0.0);
                 glLightf(GL_LIGHT1 + lightIndex,GL_SPOT_CUTOFF,flashAngle);
                 glLightf (GL_LIGHT1 + lightIndex, GL_SPOT_EXPONENT, 1);

@@ -85,7 +85,7 @@ class Phantom: public GameEntity {
             size.getX() / 2,
             20,
             entityIndex,
-            10.0
+            8.0
         );
     }
 

@@ -20,8 +20,8 @@ class Engine {
         PathFinder* pathFinder = nullptr;
         long last_t = 0.0;
         /*--- Global variables that determine the viewpoint location ---*/
-        int anglealpha = 90;
-        int anglebeta = 30;
+        int anglealpha = 78;
+        int anglebeta = 51;
         float smooth_alpha = anglealpha;
         float smooth_beta = anglebeta;
         /*

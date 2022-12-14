@@ -58,7 +58,7 @@ class PacMan: public GameEntity {
             size.getX() / 2,
             20,
             entityIndex,
-            20.0
+            15.0
         );
     }
 
