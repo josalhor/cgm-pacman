@@ -12,6 +12,12 @@ class PathFinder;
 #include "PathFinder.hpp"
 #include "utils/parser.hpp"
 
+enum EngineState {
+    PreGame,
+    InGame,
+    PostGame
+};
+
 class Engine {
     private:
         EngineSetup* settings = nullptr;
@@ -24,10 +30,15 @@ class Engine {
         int anglebeta = 51;
         float smooth_alpha = anglealpha;
         float smooth_beta = anglebeta;
+        EngineState state = EngineState::PreGame;
         /*
         TODO: memory cleanup
         */
        void PositionObserver(int radi);
+       void displayScenario();
+       void displayInGame();
+       void displayPreGame();
+       void displayPostGame();
     public:
         Engine();
         CellType getCellType(Cell cell);

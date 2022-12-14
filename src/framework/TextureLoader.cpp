@@ -15,8 +15,8 @@ TextureLoader::TextureLoader() {
 void TextureLoader::loadTextures() {
     vector<TextureMapping> toLoad;
     toLoad.push_back(TextureMapping {"textures/bunker_galvanized.jpg", PACMAN_TEXTURE_INDEX});
-    toLoad.push_back(TextureMapping {"textures/volcano_floor.jpg", FLOOR_TEXTURE_INDEX});
-    toLoad.push_back(TextureMapping {"textures/lava_texture2.jpg", WALL_TEXTURE_INDEX});
+    toLoad.push_back(TextureMapping {"textures/snow.jpg", FLOOR_TEXTURE_INDEX});
+    toLoad.push_back(TextureMapping {"textures/snow_00.jpg", WALL_TEXTURE_INDEX});
     toLoad.push_back(TextureMapping {"textures/lavafull.jpg", ENEMY_TEXTURE_INDEX});
     toLoad.push_back(TextureMapping {"textures/mineral.jpg", FOOD_TEXTURE_INDEX});
     for(int i = 0; i < toLoad.size(); i++){

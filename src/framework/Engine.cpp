@@ -7,6 +7,7 @@
 #include "framework/GameCell.hpp"
 #include "TextureLoader.hpp"
 #include <GL/glut.h>
+#include <cstring>
 #include <math.h>
 
 #define PI M_PI
@@ -15,6 +16,8 @@
 #define HEIGHT 1000
 #define CAMERA_DISTANCE 700
 #define SMOOTH_CAMERA_FACTOR 0.5
+#define TEXT_FONT GLUT_BITMAP_TIMES_ROMAN_24
+#define TEXT_FONT_HEIGHT 24
 
 /*
 This trick allows us to encapsulate all OpenGL
@@ -95,6 +98,8 @@ void Engine::run(){
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_LIGHTING);
     glEnable(GL_NORMALIZE);
+    // glEnable(GL_LINE_SMOOTH), glEnable(GL_POLYGON_SMOOTH), glEnable(GL_POINT_SMOOTH);
+    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
     glutDisplayFunc(displayOpenGL);
@@ -156,10 +161,66 @@ void Engine::PositionObserver(int radi)
     gluLookAt(x,y,z,    0.0, 0.0, 0.0,     upx,upy,upz);
 }
 
+void Engine::displayPreGame(){
+    // Set the raster position to the specified coordinates
+    const char text[100] = "Press SPACE to continue";
+    
+    int width = glutBitmapLength(TEXT_FONT, (char unsigned*) text);
+
+    int x = width / 2;
+    int y = (HEIGHT - 18) / 2;
+    // x = mapper->XtoVisualFloat(x);
+    // y = mapper->YtoVisualFloat(y);
+    glRasterPos3i(-x, 100, 0);
+
+    // Loop through each character in the string
+
+    for (int i = 0; i < strlen(text); i++) {
+    // Render the character at the current raster position
+        glutBitmapCharacter(TEXT_FONT, text[i]);
+    }
+}
+
+void Engine::displayPostGame(){
+    
+}
+
+void Engine::displayScenario(){
+    Matrix<GameCell>& matrix = *(this->matrix);
+    CoordinateMapper& mapper = *(this->mapper);
+
+    for (int y = 0; y < this->matrix->height; y++)
+    {
+        for (int x = 0; x < this->matrix->width; x++)
+        {
+            Cell current(x, y);
+            GameCell& gc = matrix[current];
+            gc.drawScenario();
+        }
+    }
+}
+
+void Engine::displayInGame(){
+    Matrix<GameCell>& matrix = *(this->matrix);
+    CoordinateMapper& mapper = *(this->mapper);
+
+    for (int y = 0; y < this->matrix->height; y++)
+    {
+        for (int x = 0; x < this->matrix->width; x++)
+        {
+            Cell current(x, y);
+            GameCell& gc = matrix[current];
+            gc.draw();
+        }
+    }
+
+}
+
 void Engine::display(){
     glClearColor(0.0, 0.0, 0.0, 0.0);
-    //glClearColor(1.0,1.0,1.0,0.0);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+    glEnable(GL_MULTISAMPLE);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -180,50 +241,26 @@ void Engine::display(){
     GLfloat color[4];
     position[0]=0; position[1]=8; position[2]=0; position[3]=1; 
     glLightiv(GL_LIGHT0,GL_POSITION,position);
-    color[0]=0.2; color[1]=0; color[2]=0; color[3]=0;
+    color[0]=0.5; color[1]=0.5; color[2]=0.5; color[3]=0;
     glLightfv(GL_LIGHT0, GL_AMBIENT, color);
     glEnable(GL_LIGHT0);
+    displayScenario();
 
-    // position[0]=100; position[1]=75; position[2]=50; position[3]=1; 
-    // glLightiv(GL_LIGHT1,GL_POSITION,position);
-    
-    // color[0]=0.3; color[1]=0.3; color[2]=0.3; color[3]=1;
-    // glLightfv(GL_LIGHT1,GL_DIFFUSE,color);
-
-    // glLightf(GL_LIGHT1,GL_CONSTANT_ATTENUATION,1.0);
-    // glLightf(GL_LIGHT1,GL_LINEAR_ATTENUATION,0.0);
-    // glLightf(GL_LIGHT1,GL_QUADRATIC_ATTENUATION,0.0);
-
-    // glEnable(GL_LIGHT1);
-    // Define the position of the light
-
-    Matrix<GameCell>& matrix = *(this->matrix);
-    CoordinateMapper& mapper = *(this->mapper);
-
-    for (int y = 0; y < this->matrix->height; y++)
-    {
-        for (int x = 0; x < this->matrix->width; x++)
-        {
-            Cell current(x, y);
-            GameCell& gc = matrix[current];
-            gc.drawScenario();
-        }
-    }
-
-    for (int y = 0; y < this->matrix->height; y++)
-    {
-        for (int x = 0; x < this->matrix->width; x++)
-        {
-            Cell current(x, y);
-            GameCell& gc = matrix[current];
-            gc.draw();
-        }
+    if (state == EngineState::InGame) {
+        displayInGame();
+    } else if(state == EngineState::PreGame) {
+        displayPreGame();
+    } else {
+        displayPostGame();
     }
 
     glutSwapBuffers();
 }
 
 void Engine::update(long t){
+    if (state != EngineState::InGame) {
+        return;
+    }
     Matrix<GameCell>& matrix = *(this->matrix);
 
     // update logic positions
