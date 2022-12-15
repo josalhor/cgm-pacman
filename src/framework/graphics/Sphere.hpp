@@ -55,7 +55,7 @@ class Sphere: public Shape {
                 if (lightIndex == 0) {
                     color[0]=0.5; color[1]=0.5; color[2]=0.25; color[3]=1;
                 } else {
-                    color[0]=0.5; color[1]=0; color[2]=0.1; color[3]=1;
+                    color[0]=0.7; color[1]=0; color[2]=0.1; color[3]=1;
                 }
                 
                 glLightfv(GL_LIGHT1 + lightIndex,GL_DIFFUSE,color);

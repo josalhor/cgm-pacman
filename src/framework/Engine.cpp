@@ -19,6 +19,8 @@
 #define TEXT_FONT GLUT_BITMAP_TIMES_ROMAN_24
 #define TEXT_FONT_HEIGHT 24
 
+
+
 /*
 This trick allows us to encapsulate all OpenGL
 code in a class and map C API class to C++ methods
@@ -241,10 +243,11 @@ void Engine::display(){
     GLfloat color[4];
     position[0]=0; position[1]=8; position[2]=0; position[3]=1; 
     glLightiv(GL_LIGHT0,GL_POSITION,position);
-    color[0]=0.5; color[1]=0.5; color[2]=0.5; color[3]=0;
+    color[0]=0.35; color[1]=0.35; color[2]=0.35; color[3]=0;
     glLightfv(GL_LIGHT0, GL_AMBIENT, color);
     glEnable(GL_LIGHT0);
     displayScenario();
+
 
     if (state == EngineState::InGame) {
         displayInGame();

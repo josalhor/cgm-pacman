@@ -33,6 +33,7 @@ class GameEntity {
             return this->logicPosition;
         }
         bool setPosition(Vector2D position);
+        bool canSetPosition(Vector2D position);
         virtual bool canMoveInto(CellType cellType);
         virtual void update(long t);
         virtual void draw();

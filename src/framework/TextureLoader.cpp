@@ -14,14 +14,14 @@ TextureLoader::TextureLoader() {
 
 void TextureLoader::loadTextures() {
     vector<TextureMapping> toLoad;
-    toLoad.push_back(TextureMapping {"textures/bunker_galvanized.jpg", PACMAN_TEXTURE_INDEX});
-    toLoad.push_back(TextureMapping {"textures/snow.jpg", FLOOR_TEXTURE_INDEX});
-    toLoad.push_back(TextureMapping {"textures/snow_00.jpg", WALL_TEXTURE_INDEX});
-    toLoad.push_back(TextureMapping {"textures/lavafull.jpg", ENEMY_TEXTURE_INDEX});
+    toLoad.push_back(TextureMapping {"textures/iloveimg-converted/TexturesCom_MarbleTiles0090_1_seamless_S.jpg", PACMAN_TEXTURE_INDEX});
+    toLoad.push_back(TextureMapping {"textures/iloveimg-converted/TexturesCom_SlatePavement3_512_albedo_1.jpg", FLOOR_TEXTURE_INDEX});
+    toLoad.push_back(TextureMapping {"textures/iloveimg-converted/TexturesCom_Wall_Stone3_2x2_512_albedo_1.jpg", WALL_TEXTURE_INDEX});
+    toLoad.push_back(TextureMapping {"textures/iloveimg-converted/TexturesCom_Marble_Checkerboard2_512_albedo.jpg", ENEMY_TEXTURE_INDEX});
     toLoad.push_back(TextureMapping {"textures/mineral.jpg", FOOD_TEXTURE_INDEX});
     for(int i = 0; i < toLoad.size(); i++){
         glBindTexture(GL_TEXTURE_2D,toLoad[i].index);
-        loadTexture(toLoad[i].path, 64);
+        loadTexture(toLoad[i].path, 128);
     }
 }
 

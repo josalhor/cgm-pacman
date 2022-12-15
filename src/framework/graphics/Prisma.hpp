@@ -7,7 +7,7 @@
 
 #define O(c,t,v) (c ? (t, v) : (v));
 
-#define PRISMA_SLICES 4
+#define PRISMA_SLICES 6
 
 class PointSquare {
     public:
