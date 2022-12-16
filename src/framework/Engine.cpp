@@ -324,28 +324,28 @@ void Engine::keyboard(Direction d){
 }
 
 void Engine::keyboard(unsigned char c){
-    Direction d = (Direction) -1;
-    if (c == 'w'){
-        d = Direction::Up;
-    } else if (c == 'd') {
-        d = Direction::Right;
-    } else if (c == 's') {
-        d = Direction::Down;  
-    } else if (c == 'a') {
-        d = Direction::Left;
-    }
-      int i,j;
-
-    if (c=='i' && anglebeta<=(90-4))
-        anglebeta=(anglebeta+3);
-    else if (c=='k' && anglebeta>=(-90+4))
-        anglebeta=anglebeta-3;
-    else if (c=='j')
-        anglealpha=(anglealpha+3)%360;
-    else if (c=='l')
-        anglealpha=(anglealpha-3+360)%360;
-    if (d != -1) {
-        this->keyboard(d);
+    if(this->state == EngineState::InGame) {
+        if (c == 'w'){
+            this->keyboard(Direction::Up);
+        } else if (c == 'd') {
+            this->keyboard(Direction::Right);
+        } else if (c == 's') {
+            this->keyboard(Direction::Down);  
+        } else if (c == 'a') {
+        this->keyboard(Direction::Left);
+        } else if (c=='i' && anglebeta<=(90-4)) {
+            anglebeta=(anglebeta+3);
+        } else if (c=='k' && anglebeta>=(-90+4)) {
+            anglebeta=anglebeta-3;
+        } else if (c=='j') {
+            anglealpha=(anglealpha+3)%360;
+        } else if (c=='l') {
+            anglealpha=(anglealpha-3+360)%360;
+        }
+    } else {
+        if (c==' ') {
+            this->state = EngineState::InGame;
+        }
     }
 }
 
