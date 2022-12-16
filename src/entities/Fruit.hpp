@@ -10,7 +10,7 @@
 class Fruit: public GameEntity {
     Sphere sphere;
     public:
-    Fruit(Engine& engine) : sphere(engine.getCoordinateMapper(), GREEN, FOOD_TEXTURE_INDEX), GameEntity(engine, sphere) {
+    Fruit(int entityIndex, Engine& engine) : sphere(engine.getCoordinateMapper(), GREEN, FOOD_TEXTURE_INDEX), GameEntity(entityIndex, engine, sphere) {
         const float height = 0.33;
         const float width = 0.33;
         size = Vector2D(width, height);
@@ -23,8 +23,11 @@ class Fruit: public GameEntity {
     void draw() {
         sphere.draw(
             logicPosition,
+            Vector3D(0.0, 0.0, 0.0),
             size.getX(),
-            25
+            25,
+            -1,
+            0
         );
     }
 
