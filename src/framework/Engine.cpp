@@ -175,14 +175,20 @@ void Engine::displayPreGame(){
     int y = (HEIGHT - 18) / 2;
     // x = mapper->XtoVisualFloat(x);
     // y = mapper->YtoVisualFloat(y);
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_LIGHTING);
     glColor3f(1, 0, 0);
-    glRasterPos3i(-x, 100, 0);
+    glRasterPos3i(-x, 400, 400);
     // Loop through each character in the string
+    glScalef(2.0, 2.0, 1.0);
 
     for (int i = 0; i < strlen(text); i++) {
     // Render the character at the current raster position
         glutBitmapCharacter(TEXT_FONT, text[i]);
     }
+
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_LIGHTING);
 }
 
 void Engine::displayPostGame(){
