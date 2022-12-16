@@ -2,6 +2,7 @@
 #define PHANTOM
 
 #include "framework/GameEntity.hpp"
+#include "framework/graphics/Color.hpp"
 #include "PacMan.hpp"
 #include <GL/glut.h>
 
@@ -12,8 +13,9 @@ using namespace std;
 
 class Phantom: public GameEntity {
     Vector2D moveTo;
+    Prisma prisma;
     public:
-    Phantom(Engine& engine) : GameEntity(engine) {
+    Phantom(Engine& engine) : prisma(engine.getCoordinateMapper(), RED, ENEMY_TEXTURE_INDEX), GameEntity(engine, prisma) {
         const float height = 0.65;
         const float width = 0.65;
         size = Vector2D(width, height);
@@ -64,38 +66,14 @@ class Phantom: public GameEntity {
         }
     }
 
-    void draw(CoordinateMapper& mapper) {
+    void draw() {
 
-        glColor3f(1, 0, 0);
-        glBegin(GL_QUADS);
-        Vector2D centerPoint = getCenter();
-        Vector2D renderOn = logicPosition.add(centerPoint);
-        float x = renderOn.getX();
-        float y = renderOn.getY();
-
-        glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y), 0);
-        glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y), 0);
-        glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y + size.getY()), 0);
-        glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y + size.getY()), 0);
-
-        glEnd();
-
-        /*
-        Debug position
-        glColor3f(1, 0, 1);
-        glBegin(GL_QUADS);
-        centerPoint = getCenter();
-        renderOn = moveTo.add(centerPoint);
-        x = renderOn.getX();
-        y = renderOn.getY();
-
-        glVertex2f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y));
-        glVertex2f(mapper.XtoVisualFloat(x + size.getX() / 2), mapper.YtoVisualFloat(y));
-        glVertex2f(mapper.XtoVisualFloat(x + size.getX() / 2), mapper.YtoVisualFloat(y + size.getY()));
-        glVertex2f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y + size.getY()));
-
-        glEnd();
-        */
+        prisma.draw(
+            logicPosition,
+            size,
+            20, //mapper.XtoVisualFloat(x + size.getX()) - mapper.XtoVisualFloat(x),
+            10
+        );
     }
 
     static string getTypeName(){

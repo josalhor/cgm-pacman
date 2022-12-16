@@ -13,3 +13,11 @@ bool isOddInput(int num)
 int roundToInt(float x){
     return (int) (x + 0.5);
 }
+
+Vector3D to3dSpace(Vector2D v) {
+    return Vector3D(
+        v.getX(),
+        0,
+        -v.getY()
+    );
+}

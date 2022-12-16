@@ -2,6 +2,10 @@
 #define SHAPE_H
 
 #include "utils/Vector3D.hpp"
+#include "framework/CoordinateMapper.hpp"
+#include <array>
+
+using namespace std;
 
 class Shape {
     protected:
@@ -12,10 +16,15 @@ class Shape {
          * in the x axis, used to compute a collision cube
          */
         Vector3D collision_boxing;
+        CoordinateMapper& mapper;
+        const int texture_index;
     public:
-        virtual void draw();
-        virtual void print();
-        bool intersects(Shape s)
+        Shape(CoordinateMapper& mapper, int texture_index) : mapper(mapper), texture_index(texture_index) {
+
+        }
+        // virtual void draw() = 0;
+        virtual void print() = 0;
+        bool intersects(Shape& s)
         {
             // compute shape's collision box
             array<Vector3D, 8> myBox = getCollisionBox();
@@ -23,18 +32,18 @@ class Shape {
 
             //detect if in the same height
             if(
-                myBox[0].y <= otherBox[4].y && myBox[0].y >= otherBox[0].y ||
-                myBox[4].y <= otherBox[4].y && myBox[4].y >= otherBox[0].y
+                myBox[0].getY() <= otherBox[4].getY() && myBox[0].getY() >= otherBox[0].getY() ||
+                myBox[4].getY() <= otherBox[4].getY() && myBox[4].getY() >= otherBox[0].getY()
             ) {
                 // detect if inside XZ region, X inside, Z inside
                 if(
                     (
-                        myBox[0].x >= otherBox[1].x && myBox[0].x <= otherBox[0].x ||
-                        myBox[1].x >= otherBox[1].x && myBox[1].x <= otherBox[0].x
+                        myBox[0].getX() >= otherBox[1].getX() && myBox[0].getX() <= otherBox[0].getX() ||
+                        myBox[1].getX() >= otherBox[1].getX() && myBox[1].getX() <= otherBox[0].getX()
                     ) &&
                     (
-                        myBox[0].z >= otherBox[2].z && myBox[0].z <= otherBox[0].z ||
-                        myBox[2].z >= otherBox[2].z && myBox[2].z <= otherBox[0].z
+                        myBox[0].getZ() >= otherBox[2].getZ() && myBox[0].getZ() <= otherBox[0].getZ() ||
+                        myBox[2].getZ() >= otherBox[2].getZ() && myBox[2].getZ() <= otherBox[0].getZ()
                     )
                 ) {
                     return true;
@@ -55,26 +64,31 @@ class Shape {
         array<Vector3D, 8> getCollisionBox() 
         {
             array<Vector3D, 8> box;
-            float posX = geo_center.x + collision_boxing.x;
-            float negX = geo_center.x - collision_boxing.x;
-            float posZ = geo_center.z + collision_boxing.z;
-            float negZ = geo_center.z - collision_boxing.z;
-            float posY = geo_center.y + collision_boxing.y;
-            float negY = geo_center.y - collision_boxing.y;
+            float posX = geo_center.getX() + collision_boxing.getX();
+            float negX = geo_center.getX() - collision_boxing.getX();
+            float posZ = geo_center.getZ() + collision_boxing.getZ();
+            float negZ = geo_center.getZ() - collision_boxing.getZ();
+            float posY = geo_center.getY() + collision_boxing.getY();
+            float negY = geo_center.getY() - collision_boxing.getY();
 
             // "-Y"
-            arr[0] = Vector3D(posX, negY, negZ)
-            arr[1] = Vector3D(negX, negY, negZ);
-            arr[2] = Vector3D(negX, negY, posZ);
-            arr[3] = Vector3D(posX, negY, posZ);
+            box[0] = Vector3D(posX, negY, negZ);
+            box[1] = Vector3D(negX, negY, negZ);
+            box[2] = Vector3D(negX, negY, posZ);
+            box[3] = Vector3D(posX, negY, posZ);
             // "+Y"
-            arr[4] = Vector3D(posX, posY, negZ);
-            arr[5] = Vector3D(negX, posY, negZ);
-            arr[6] = Vector3D(negX, posY, posZ);
-            arr[7] = Vector3D(posX, posY, posZ);
+            box[4] = Vector3D(posX, posY, negZ);
+            box[5] = Vector3D(negX, posY, negZ);
+            box[6] = Vector3D(negX, posY, posZ);
+            box[7] = Vector3D(posX, posY, posZ);
             return box;
         }
 
-}
+        Vector2D getP2(Vector2D size) {
+            const float centerY = 0.5 - size.getY() / 2.0;
+            const float centerX = 0.5 - size.getX() / 2.0;
+            return Vector2D(centerX, centerY);
+        }
+};
 
 #endif

@@ -1,13 +1,16 @@
 #ifndef FRUIT
 #define FRUIT
 
-#include "framework/GameEntity.hpp"
 #include "PacMan.hpp"
+#include "framework/graphics/Sphere.hpp"
+#include "framework/GameEntity.hpp"
+#include "framework/graphics/Color.hpp"
 #include <GL/glut.h>
 
 class Fruit: public GameEntity {
+    Sphere sphere;
     public:
-    Fruit(Engine& engine) : GameEntity(engine) {
+    Fruit(Engine& engine) : sphere(engine.getCoordinateMapper(), GREEN, FOOD_TEXTURE_INDEX), GameEntity(engine, sphere) {
         const float height = 0.33;
         const float width = 0.33;
         size = Vector2D(width, height);
@@ -17,21 +20,12 @@ class Fruit: public GameEntity {
         
     }
 
-    void draw(CoordinateMapper& mapper) {
-
-        glColor3f(0, 0.6, 0.6);
-        glBegin(GL_QUADS);
-        Vector2D centerPoint = getCenter();
-        Vector2D renderOn = logicPosition.add(centerPoint);
-        float x = renderOn.getX();
-        float y = renderOn.getY();
-
-        glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y), 0);
-        glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y), 0);
-        glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y + size.getY()), 0);
-        glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y + size.getY()), 0);
-
-        glEnd();
+    void draw() {
+        sphere.draw(
+            logicPosition,
+            size.getX(),
+            25
+        );
     }
 
     static string getTypeName(){

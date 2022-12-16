@@ -1,18 +1,23 @@
 #ifndef SHAPE_RECTANGLE
 #define SHAPE_RECTANGLE
 #include "framework/graphics/Shape.hpp"
+#include "framework/CoordinateMapper.hpp"
 #include "utils/Vector3D.hpp"
 
 class Rectangle: private Shape {
     public:
-        Rectangle(int x, int y) : Shape() {
+        Rectangle(CoordinateMapper& mapper, int x, int y, int texture_index) : Shape(mapper, texture_index) {
             this->collision_boxing = Vector3D(0.5*x, 0, 0.5*y);
             this->geo_center = Vector3D(0.5*x, 0, -0.5*y);
         }
 
-        draw() {
+        void draw() {
 
         }
-}
+
+        void print() {
+            
+        }
+};
 
 #endif

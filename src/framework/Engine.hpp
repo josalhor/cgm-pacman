@@ -34,6 +34,13 @@ class Engine {
         void keyboard(unsigned char c);
         void specialFunc(int c);
         void keyboard(Direction d);
+        CoordinateMapper& getCoordinateMapper() {
+            if (mapper == nullptr) {
+                printf("Empty mapper\n");
+                exit(-1);
+            }
+            return *mapper;
+        }
         vector<Cell> pathTo(Cell base, string name);
 };
 

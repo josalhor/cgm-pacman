@@ -1,41 +1,49 @@
 #include "GameCell.hpp"
+#include "framework/graphics/Prisma.hpp"
+#include "framework/graphics/Color.hpp"
+#include "framework/TextureLoader.hpp"
 #include <GL/glut.h>
 
 GameCell::GameCell() : type(CellType::Debug), logicPosition(Vector2D()){
 
 }
 
-GameCell::GameCell(CellType type, Vector2D logicPosition) : type(type), logicPosition(logicPosition){
+GameCell::GameCell(CoordinateMapper* mapper, CellType type, Vector2D logicPosition) : mapper(mapper), type(type), logicPosition(logicPosition){
 
 }
 
-void GameCell::drawScenario(CoordinateMapper& mapper)
+void GameCell::drawScenario()
 {
+    Color color = WHITE;
+    int texture_index;
     if (type == CellType::Wall || type == CellType::FixedWall){
-        glColor3f(0, 0, 1);
+        texture_index = WALL_TEXTURE_INDEX;
     } else if (type == CellType::Corridor || type == CellType::FixedCorridor){
-        glColor3f(1, 1, 1);
-
+        texture_index = FLOOR_TEXTURE_INDEX;
     }
-    glBegin(GL_QUADS);
-    int x = (int) logicPosition.getX();
-    int y = (int) logicPosition.getY();
-    int height = -1;
+    int height = 0;
     if (type == Wall){
-        height = -2;
+        height = 50;
     }
 
-    glVertex3i(mapper.XtoVisual(x), mapper.YtoVisual(y), height);
-    glVertex3i(mapper.XtoVisual(x + 1), mapper.YtoVisual(y), height);
-    glVertex3i(mapper.XtoVisual(x + 1), mapper.YtoVisual(y + 1), height);
-    glVertex3i(mapper.XtoVisual(x), mapper.YtoVisual(y + 1), height);
+    Prisma(*mapper, color, texture_index).draw(
+        logicPosition,
+        Vector2D(1, 1),
+        height,
+        0
+    );
+    // glBegin(GL_QUADS);
+    // glVertex3i(mapper.XtoVisual(x), mapper.YtoVisual(y), height);
+    // glVertex3i(mapper.XtoVisual(x + 1), mapper.YtoVisual(y), height);
+    // glVertex3i(mapper.XtoVisual(x + 1), mapper.YtoVisual(y + 1), height);
+    // glVertex3i(mapper.XtoVisual(x), mapper.YtoVisual(y + 1), height);
 
-    glEnd();
+    // glEnd();
 }
-void GameCell::draw(CoordinateMapper& mapper)
+void GameCell::draw()
 {
     for(int i = 0; i < this->entities.size(); i++){
-        this->entities[i]->draw(mapper);
+        this->entities[i]->draw();
     }
 }
 

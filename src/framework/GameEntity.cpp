@@ -1,6 +1,6 @@
 #include "GameEntity.hpp"
 
-GameEntity::GameEntity(Engine& engine) : engine(engine) {
+GameEntity::GameEntity(Engine& engine, Shape& shape) : engine(engine), shape(shape), mapper(engine.getCoordinateMapper()) {
 
 }
 
@@ -12,7 +12,7 @@ void GameEntity::destroy() {
     engine.destroy(this);
 }
 
-void GameEntity::draw(CoordinateMapper& mapper){
+void GameEntity::draw(){
     // empty by default
 }
 
@@ -51,6 +51,7 @@ bool GameEntity::canMoveInto(CellType cellType) {
     return true;
 }
 
+// TODO remove
 Vector2D GameEntity::getCenter() {
     const float centerY = 0.5 - this->size.getY() / 2.0;
     const float centerX = 0.5 - this->size.getX() / 2.0;

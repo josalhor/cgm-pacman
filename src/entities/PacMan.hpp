@@ -2,13 +2,18 @@
 #define PACMAN
 
 #include "framework/GameEntity.hpp"
+#include "framework/graphics/Prisma.hpp"
+#include "framework/graphics/Color.hpp"
+#include "framework/TextureLoader.hpp"
 #include <GL/glut.h>
 
 #define PACMAN_BASE_SPEED 0.004
 
 class PacMan: public GameEntity {
+    private:
+        Prisma prisma;
     public:
-    PacMan(Engine& engine) : GameEntity(engine) {
+    PacMan(Engine& engine) : prisma(engine.getCoordinateMapper(), WHITE, PACMAN_TEXTURE_INDEX), GameEntity(engine, prisma) {
         const float height = 0.65;
         const float width = 0.65;
         size = Vector2D(width, height);
@@ -40,54 +45,13 @@ class PacMan: public GameEntity {
         }
     }
 
-    void draw(CoordinateMapper& mapper) {
-
-        glColor3f(0, 1, 0);
-
-        glBegin(GL_QUADS);
-        glVertex3i(50,50,50);
-        glVertex3i(-50,50,50);
-        glVertex3i(-50,-50,50);
-        glVertex3i(50,-50,50);
-        glEnd();
-
-        glColor3f(1.0, 1.0, 0.0);
-        glBegin(GL_QUADS);
-        glVertex3i(50,-50,-50);
-        glVertex3i(-50,-50,-50);
-        glVertex3i(-50,50,-50);
-        glVertex3i(50,50,-50);
-        glEnd();
-
-        glColor3f(0.0, 0.0, 1.0);
-        glBegin(GL_QUADS);
-        glVertex3i(50,-50,50);
-        glVertex3i(50,-50,-50);
-        glVertex3i(50,50,-50);
-        glVertex3i(50,50,50);
-        glEnd();
-
-        glColor3f(0.0, 1.0, 0.0);
-        glBegin(GL_QUADS);
-        glVertex3i(-50,50,50);
-        glVertex3i(-50,50,-50);
-        glVertex3i(-50,-50,-50);
-        glVertex3i(-50,-50,50);
-        glEnd();
-
-
-        glBegin(GL_QUADS);
-        Vector2D centerPoint = getCenter();
-        Vector2D renderOn = logicPosition.add(centerPoint);
-        float x = renderOn.getX();
-        float y = renderOn.getY();
-
-        glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y), 0);
-        glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y), 0);
-        glVertex3f(mapper.XtoVisualFloat(x + size.getX()), mapper.YtoVisualFloat(y + size.getY()), 0);
-        glVertex3f(mapper.XtoVisualFloat(x), mapper.YtoVisualFloat(y + size.getY()), 0);
-
-        glEnd();
+    void draw() {
+        prisma.draw(
+            logicPosition,
+            size,
+            20, //mapper.XtoVisualFloat(x + size.getX()) - mapper.XtoVisualFloat(x),
+            10
+        );
     }
 
     static string getTypeName(){

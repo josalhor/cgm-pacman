@@ -5,6 +5,7 @@
 #include "utils/Matrix.hpp"
 #include "utils/utils.hpp"
 #include "framework/GameCell.hpp"
+#include "TextureLoader.hpp"
 #include <GL/glut.h>
 #include <math.h>
 
@@ -12,6 +13,7 @@
 #define SIZE_CELL 50
 #define WIDTH 1000
 #define HEIGHT 1000
+#define CAMERA_DISTANCE 700
 
 /*
 This trick allows us to encapsulate all OpenGL
@@ -72,7 +74,7 @@ void Engine::setup(EngineSetup* setup){
             if (m == CellType::FixedWall || m == CellType::Wall){
                 t = CellType::Wall;
             }
-            (*(this->matrix))[c] = GameCell(t, Vector2D(i, j));
+            (*(this->matrix))[c] = GameCell(mapper, t, Vector2D(i, j));
         }
     }
 
@@ -89,6 +91,7 @@ void Engine::run(){
     glutInitWindowSize(SIZE_CELL * this->matrix->width, SIZE_CELL * this->matrix->height);
     glutCreateWindow("Amazing Pacman Game v2");
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_TEXTURE_2D);
 
     glutDisplayFunc(displayOpenGL);
     glutIdleFunc(idleOpenGL);
@@ -97,6 +100,9 @@ void Engine::run(){
 
     glMatrixMode(GL_PROJECTION);
     gluOrtho2D(0, WIDTH - 1, 0, HEIGHT - 1);
+
+    TextureLoader loader = TextureLoader();
+    loader.loadTextures();
 
     glutMainLoop();
 }
@@ -170,7 +176,7 @@ void Engine::display(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    PositionObserver(anglealpha,anglebeta,450);
+    PositionObserver(anglealpha,anglebeta,CAMERA_DISTANCE);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -189,7 +195,7 @@ void Engine::display(){
         {
             Cell current(x, y);
             GameCell& gc = matrix[current];
-            gc.drawScenario(mapper);
+            gc.drawScenario();
         }
     }
 
@@ -199,7 +205,7 @@ void Engine::display(){
         {
             Cell current(x, y);
             GameCell& gc = matrix[current];
-            gc.draw(mapper);
+            gc.draw();
         }
     }
 
