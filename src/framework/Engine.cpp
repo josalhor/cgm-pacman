@@ -92,7 +92,7 @@ void Engine::setup(EngineSetup* setup){
 void Engine::run(){
     int argc = 0;
     glutInit(&argc, NULL);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE);
     glutInitWindowPosition(50, 50);
     glutInitWindowSize(SIZE_CELL * this->matrix->width, SIZE_CELL * this->matrix->height);
     glutCreateWindow("Amazing Pacman Game v2");
@@ -100,6 +100,8 @@ void Engine::run(){
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_LIGHTING);
     glEnable(GL_NORMALIZE);
+    glEnable(GL_MULTISAMPLE);  
+
     // glEnable(GL_LINE_SMOOTH), glEnable(GL_POLYGON_SMOOTH), glEnable(GL_POINT_SMOOTH);
     // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -173,8 +175,8 @@ void Engine::displayPreGame(){
     int y = (HEIGHT - 18) / 2;
     // x = mapper->XtoVisualFloat(x);
     // y = mapper->YtoVisualFloat(y);
+    glColor3f(1, 0, 0);
     glRasterPos3i(-x, 100, 0);
-
     // Loop through each character in the string
 
     for (int i = 0; i < strlen(text); i++) {

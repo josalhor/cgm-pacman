@@ -107,7 +107,6 @@ class PacMan: public GameEntity {
 
     void eatFruit(){
         leftToEat--;
-        cout << "left " << leftToEat << endl;
         if (leftToEat <= 0) {
             engine.setEngineState(EngineState::PostGame);
         }

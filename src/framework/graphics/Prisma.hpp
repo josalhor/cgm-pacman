@@ -7,7 +7,7 @@
 
 #define O(c,t,v) (c ? (t, v) : (v));
 
-#define PRISMA_SLICES 6
+#define PRISMA_SLICES 10
 
 class PointSquare {
     public:
@@ -169,7 +169,7 @@ class Prisma: public Shape {
         }
 
         void destroy() {
-            
+
         }
 
         void print() {
