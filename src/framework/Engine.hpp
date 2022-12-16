@@ -30,7 +30,7 @@ class Engine {
         int anglebeta = 51;
         float smooth_alpha = anglealpha;
         float smooth_beta = anglebeta;
-        EngineState state = EngineState::InGame;
+        EngineState state = EngineState::PreGame;
         /*
         TODO: memory cleanup
         */
