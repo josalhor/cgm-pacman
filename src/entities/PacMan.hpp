@@ -58,7 +58,7 @@ class PacMan: public GameEntity {
             }
             Vector2D _speed = trySpeed.multiply(t);
             Vector2D nextPos = this->logicPosition.add(_speed);
-            Vector2D _aheadSpeed = _speed.multiply(5);
+            Vector2D _aheadSpeed = trySpeed.multiply(0.35 / PACMAN_BASE_SPEED);
             Vector2D nextPosTry = this->logicPosition.add(_aheadSpeed);
             moved = canSetPosition(nextPosTry);
             if (!moved) {
