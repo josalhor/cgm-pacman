@@ -10,14 +10,15 @@
 class Sphere: public Shape {
     public:
         Color color;
-        Sphere(CoordinateMapper& mapper, Color color, int texture_index) : color(color), Shape(mapper, texture_index) {
+        int lightIndex;
+        Sphere(CoordinateMapper& mapper, Color color, int texture_index, int lightIndex) : lightIndex(lightIndex), color(color), Shape(mapper, texture_index) {
             // float x = 0;
             // float y = 0;
             // collision_boxing = Vector3D(0.5*x, offset, 0.5*z);
             // geo_center = Vector3D(0.5*x, offset, -0.5*z);
         }
 
-        void draw(Vector2D logicPosition, Vector3D normalDirection, float radius, float offset, int lightIndex, float flashAngle) {
+        void draw(Vector2D logicPosition, Vector3D normalDirection, float radius, float offset, float flashAngle) {
             Vector2D centerOffset = Vector2D(0.5, 0.5);
             Vector2D renderOn = logicPosition.add(centerOffset);
             Vector3D renderOn3D = to3dSpace(renderOn);
@@ -69,6 +70,12 @@ class Sphere: public Shape {
                 glLightf (GL_LIGHT1 + lightIndex, GL_SPOT_EXPONENT, 1);
 
                 glEnable(GL_LIGHT1 + lightIndex);
+            }
+        }
+
+        void destroy() {
+            if (lightIndex > -1) {
+                glDisable(GL_LIGHT1 + lightIndex);
             }
         }
 

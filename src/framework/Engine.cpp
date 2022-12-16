@@ -365,6 +365,27 @@ void Engine::specialFunc(int c){
     }
 }
 
+void Engine::destroyAll(){
+    Matrix<GameCell>& matrix = *(this->matrix);
+
+    for (int y = 0; y < this->matrix->height; y++)
+    {
+        for (int x = 0; x < this->matrix->width; x++)
+        {
+            Cell current(x, y);
+            GameCell& gc = matrix[current];
+            for(int z = gc.entities.size() - 1; z >= 0; z--){
+                GameEntity* e = gc.entities[z];
+                e->shapeClear();
+                // update matrix
+                gc.entities.erase(gc.entities.begin() + z);
+                delete e;
+            }
+        }
+    }
+
+}
+
 
 void Engine::destroy(GameEntity* entity){
     Matrix<GameCell>& matrix = *(this->matrix);
@@ -390,4 +411,11 @@ void Engine::destroy(GameEntity* entity){
 
 vector<Cell> Engine::pathTo(Cell base, string name){
     return pathFinder->searchOn(base, name);
+}
+
+void Engine::setEngineState(EngineState state){
+    this->state = state;
+    if (state == EngineState::PostGame){
+        destroyAll();
+    }
 }

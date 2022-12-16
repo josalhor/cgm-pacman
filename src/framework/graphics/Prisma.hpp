@@ -168,6 +168,10 @@ class Prisma: public Shape {
 
         }
 
+        void destroy() {
+            
+        }
+
         void print() {
 
         }

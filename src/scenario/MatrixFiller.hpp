@@ -60,6 +60,9 @@ int spawnPoints(int entityIndex, Engine& engine, Matrix<GameCell>& matrix)
                 p->setPosition(Vector2D(i, j));
                 gc.entities.push_back(p);
                 points++;
+                if (points == 5){
+                    return points;
+                }
             }
         }
     }
@@ -71,6 +74,6 @@ void fillMatrix(Engine& engine, Matrix<GameCell>& matrix, int phantoms){
     spawnEnemies(1, engine, matrix, phantoms);
     int fruits;
     fruits = spawnPoints(1 + phantoms, engine, matrix);
-    // p->setFruitsToEat(fruits);
+    p->setFruitsToEat(fruits);
 }
 #endif

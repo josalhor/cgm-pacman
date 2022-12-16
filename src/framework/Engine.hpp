@@ -47,10 +47,12 @@ class Engine {
         void display();
         void update(long t);
         void destroy(GameEntity* entity);
+        void destroyAll();
         void idle();
         void keyboard(unsigned char c);
         void specialFunc(int c);
         void keyboard(Direction d);
+        void setEngineState(EngineState state);
         CoordinateMapper& getCoordinateMapper() {
             if (mapper == nullptr) {
                 printf("Empty mapper\n");

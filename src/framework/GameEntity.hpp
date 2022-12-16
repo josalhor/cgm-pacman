@@ -29,6 +29,7 @@ class GameEntity {
     public:
         GameEntity(int entityIndex, Engine& engine, Shape& s);
         void destroy();
+        void shapeClear();
         Vector2D getPosition() {
             return this->logicPosition;
         }

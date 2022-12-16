@@ -16,6 +16,10 @@ void GameEntity::draw(){
     // empty by default
 }
 
+void GameEntity::shapeClear(){
+    shape.destroy();
+}
+
 void GameEntity::receiveCollision(GameEntity& entity) {
     // empty by default
 }

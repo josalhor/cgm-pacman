@@ -17,7 +17,7 @@ class Phantom: public GameEntity {
     Vector3D normalMovementDirection;
     Sphere sphere;
     public:
-    Phantom(int entityIndex, Engine& engine) : sphere(engine.getCoordinateMapper(), RED, ENEMY_TEXTURE_INDEX), GameEntity(entityIndex, engine, sphere) {
+    Phantom(int entityIndex, Engine& engine) : sphere(engine.getCoordinateMapper(), RED, ENEMY_TEXTURE_INDEX, entityIndex), GameEntity(entityIndex, engine, sphere) {
         const float height = 0.65;
         const float width = 0.65;
         normalMovementDirection = Vector3D(0.0, 0.0, 0.0);
@@ -84,7 +84,6 @@ class Phantom: public GameEntity {
             normalMovementDirection,
             size.getX() / 2,
             20,
-            entityIndex,
             8.0
         );
     }

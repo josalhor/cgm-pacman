@@ -15,6 +15,10 @@ class Rectangle: private Shape {
 
         }
 
+        void destroy() {
+            
+        }
+
         void print() {
             
         }
