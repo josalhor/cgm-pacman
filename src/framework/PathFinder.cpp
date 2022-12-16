@@ -57,5 +57,6 @@ vector<Cell> PathFinder::searchOn(Cell base, string searching){
         }
     }
     vector<Cell> cells;
+    cells.push_back(base);
     return cells;
 }
