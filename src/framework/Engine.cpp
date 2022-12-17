@@ -14,7 +14,11 @@
 #define SIZE_CELL 50
 #define WIDTH 1000
 #define HEIGHT 1000
+#ifdef PERSPECTIVE
+#define CAMERA_DISTANCE 1750
+#else
 #define CAMERA_DISTANCE 700
+#endif
 #define SMOOTH_CAMERA_FACTOR 0.5
 #define TEXT_FONT GLUT_BITMAP_TIMES_ROMAN_24
 #define TEXT_FONT_HEIGHT 24
@@ -234,7 +238,11 @@ void Engine::display(){
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
+#ifdef PERSPECTIVE
+    gluPerspective(45.0, (((float) WIDTH) / ((float) HEIGHT)), 10, 3000);
+#else
     glOrtho(-WIDTH*0.6,WIDTH*0.6,-HEIGHT*0.6,HEIGHT*0.6,10,2000);
+#endif
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();

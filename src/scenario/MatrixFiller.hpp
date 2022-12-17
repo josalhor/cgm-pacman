@@ -60,9 +60,6 @@ int spawnPoints(int entityIndex, Engine& engine, Matrix<GameCell>& matrix)
                 p->setPosition(Vector2D(i, j));
                 gc.entities.push_back(p);
                 points++;
-                if (points == 5){
-                    return points;
-                }
             }
         }
     }
