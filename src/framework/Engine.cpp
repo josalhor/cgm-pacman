@@ -154,7 +154,7 @@ void Engine::displayPreGame(){
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_LIGHTING);
     glColor3f(1, 0, 0);
-    glRasterPos3i(-x, 400, 400);
+    glRasterPos3i(-x, 250, 0);
     // Loop through each character in the string
     glScalef(2.0, 2.0, 1.0);
 
@@ -188,14 +188,14 @@ void Engine::displayEndGame()
     glColor3f(1, 0, 0);
     
     // Display first line:
-    glRasterPos3i(-rx, 460, 460);
+    glRasterPos3i(-rx, 250, 0);
     for (int i = 0; i < strlen(resultMsg); i++) {
     // Render the character at the current raster position
         glutBitmapCharacter(TEXT_FONT, resultMsg[i]);
     }
 
     // Display second line:
-    glRasterPos3i(-px, 430, 430);
+    glRasterPos3i(-px, 200, 0);
     for (int i = 0; i < strlen(replayMsg); i++) {
     // Render the character at the current raster position
         glutBitmapCharacter(TEXT_FONT, replayMsg[i]);
@@ -366,7 +366,9 @@ void Engine::keyboard(unsigned char c){
         }
     } else {
         if (c==' ') {
+            cout << "I arreive here";
             startGame();
+            
         }
     }
 }
@@ -476,8 +478,11 @@ void Engine::setupGame() {
 void Engine::startGame() {
     // spawn pacman, phantoms and fruits
     //set game to InGame
+    cout << "No problemo 3";
     fillMatrix(*this, *(this->matrix), settings->phantoms);
+    cout << "No problemo 2";
     setEngineState(EngineState::InGame);
+    cout << "No problemo";
 }
 
 void Engine::endGame(bool winner) {
