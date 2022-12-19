@@ -14,7 +14,11 @@
 #define SIZE_CELL 50
 #define WIDTH 1000
 #define HEIGHT 1000
+#ifdef PERSPECTIVE
+#define CAMERA_DISTANCE 1750
+#else
 #define CAMERA_DISTANCE 700
+#endif
 #define SMOOTH_CAMERA_FACTOR 0.5
 #define TEXT_FONT GLUT_BITMAP_TIMES_ROMAN_24
 #define TEXT_FONT_HEIGHT 24
@@ -57,49 +61,25 @@ CellType Engine::getCellType(Cell cell) {
 
 void Engine::setup(EngineSetup* setup){
     settings = setup;
-    int columns = settings->cols;
-    int rows = settings->rows;
-    MapBuilder map(columns, rows);
-
-    map.makeHouse();            // first insert the housing in the middle
-    map.generateRandomRec();    // then explore the map and open it up
-    map.postProcessGenerator(); // remove dead end parts in the map
-    map.print();                // print the map in the console
-
-    this->matrix = new Matrix<GameCell>(columns, rows);
-    this->pathFinder = new PathFinder(*matrix);
-    this->mapper = new CoordinateMapper(columns, rows, WIDTH, HEIGHT);
-        
-    for (int i = 0; i < columns; i++)
-    {
-        for (int j = 0; j < rows; j++)
-        {
-            Cell c = Cell(i, j);
-            CellType m = map.map[c];
-            CellType t = m;
-            if (m == CellType::FixedWall || m == CellType::Wall){
-                t = CellType::Wall;
-            }
-            (*(this->matrix))[c] = GameCell(mapper, t, Vector2D(i, j));
-        }
-    }
-
-    fillMatrix(*this, *(this->matrix), settings->phantoms);
-
     engine = this;
+    setupGame();
 }
 
 void Engine::run(){
     int argc = 0;
     glutInit(&argc, NULL);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE);
     glutInitWindowPosition(50, 50);
-    glutInitWindowSize(SIZE_CELL * this->matrix->width, SIZE_CELL * this->matrix->height);
+    int width = SIZE_CELL * this->matrix->width;
+    int height = SIZE_CELL * this->matrix->height;
+    glutInitWindowSize(width, height);
     glutCreateWindow("Amazing Pacman Game v2");
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_LIGHTING);
     glEnable(GL_NORMALIZE);
+    glEnable(GL_MULTISAMPLE);  
+
     // glEnable(GL_LINE_SMOOTH), glEnable(GL_POLYGON_SMOOTH), glEnable(GL_POINT_SMOOTH);
     // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -108,9 +88,6 @@ void Engine::run(){
     glutIdleFunc(idleOpenGL);
     glutKeyboardFunc(keyboardOpenGL);
     glutSpecialFunc(specialFuncOpenGL);
-
-    glMatrixMode(GL_PROJECTION);
-    gluOrtho2D(0, WIDTH - 1, 0, HEIGHT - 1);
 
     TextureLoader loader = TextureLoader();
     loader.loadTextures();
@@ -149,6 +126,7 @@ void Engine::PositionObserver(int radi)
     x = (float)radi*cos(alpha*2*PI/360.0)*cos(beta*2*PI/360.0);
     y = (float)radi*sin(beta*2*PI/360.0);
     z = (float)radi*sin(alpha*2*PI/360.0)*cos(beta*2*PI/360.0);
+    cameraPosition = Vector3D(x, y, z);
 
     if (beta>0) { upx=-x; upz=-z; upy=(x*x+z*z)/y; }
     else if(beta==0) {  upx=0; upy=1; upz=0; }
@@ -163,28 +141,41 @@ void Engine::PositionObserver(int radi)
     gluLookAt(x,y,z,    0.0, 0.0, 0.0,     upx,upy,upz);
 }
 
-void Engine::displayPreGame(){
-    // Set the raster position to the specified coordinates
-    const char text[100] = "Press SPACE to continue";
-    
+void renderText(Vector3D cameraPosition, const char* text, float extraHeight, float extraX, float extraZ) {
     int width = glutBitmapLength(TEXT_FONT, (char unsigned*) text);
 
-    int x = width / 2;
-    int y = (HEIGHT - 18) / 2;
+    int x = glutGet(GLUT_WINDOW_WIDTH) / 2;
+    int y = (glutGet(GLUT_WINDOW_HEIGHT) - 18) / 2;
     // x = mapper->XtoVisualFloat(x);
     // y = mapper->YtoVisualFloat(y);
-    glRasterPos3i(-x, 100, 0);
-
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_LIGHTING);
+    glColor3f(1, 0, 0);
+    // glRasterPos3f(cameraPosition.getX(), cameraPosition.getY(), cameraPosition.getZ());
+    // glRasterPos3f(0, 0, 0);
+    glRasterPos3f(((float) cameraPosition.getX() + extraX) / 1.5f, ((float) cameraPosition.getY() + extraHeight) / 1.5f, (float) (cameraPosition.getZ() + extraZ) / 1.5f);
     // Loop through each character in the string
-
     for (int i = 0; i < strlen(text); i++) {
     // Render the character at the current raster position
         glutBitmapCharacter(TEXT_FONT, text[i]);
     }
+
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_LIGHTING);
 }
 
-void Engine::displayPostGame(){
-    
+void Engine::displayPreGame(){
+    // Set the raster position to the specified coordinates
+    const char text[100] = "Press SPACE to continue";
+    renderText(cameraPosition, text, 0, -200, -200);
+}
+
+void Engine::displayEndGame()
+{
+    const char *result = (this->winner) ? "You WON\0" : "You Lost\0";
+    const char replayMsg[100] = "Press SPACE to PLAY Again\0";
+    renderText(cameraPosition, result, 60, -50, -200);
+    renderText(cameraPosition, replayMsg, -60, -200, -200);
 }
 
 void Engine::displayScenario(){
@@ -226,7 +217,11 @@ void Engine::display(){
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(-WIDTH*0.6,WIDTH*0.6,-HEIGHT*0.6,HEIGHT*0.6,10,2000);
+#ifdef PERSPECTIVE
+    gluPerspective(45.0, (((float) glutGet(GLUT_WINDOW_WIDTH)) / ((float) glutGet(GLUT_WINDOW_HEIGHT))), 10, 3000);
+#else
+    glOrtho(-glutGet(GLUT_WINDOW_WIDTH)*0.6,glutGet(GLUT_WINDOW_WIDTH)*0.6,-glutGet(GLUT_WINDOW_HEIGHT)*0.6,glutGet(GLUT_WINDOW_HEIGHT)*0.6,10,2000);
+#endif
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -253,8 +248,8 @@ void Engine::display(){
         displayInGame();
     } else if(state == EngineState::PreGame) {
         displayPreGame();
-    } else {
-        displayPostGame();
+    } else if(state == EngineState::PostGame){
+        displayEndGame();
     }
 
     glutSwapBuffers();
@@ -324,28 +319,31 @@ void Engine::keyboard(Direction d){
 }
 
 void Engine::keyboard(unsigned char c){
-    Direction d = (Direction) -1;
-    if (c == 'w'){
-        d = Direction::Up;
-    } else if (c == 'd') {
-        d = Direction::Right;
-    } else if (c == 's') {
-        d = Direction::Down;  
-    } else if (c == 'a') {
-        d = Direction::Left;
+    if(this->state == EngineState::InGame) {
+        if (c == 'w'){
+            this->keyboard(Direction::Up);
+        } else if (c == 'd') {
+            this->keyboard(Direction::Right);
+        } else if (c == 's') {
+            this->keyboard(Direction::Down);  
+        } else if (c == 'a') {
+        this->keyboard(Direction::Left);
+        } else if (c=='i' && anglebeta<=(90-4)) {
+            anglebeta=(anglebeta+3);
+        } else if (c=='k' && anglebeta>=(-90+4)) {
+            anglebeta=anglebeta-3;
+        } else if (c=='j') {
+            anglealpha=(anglealpha+3)%360;
+        } else if (c=='l') {
+            anglealpha=(anglealpha-3+360)%360;
+        }
     }
-      int i,j;
-
-    if (c=='i' && anglebeta<=(90-4))
-        anglebeta=(anglebeta+3);
-    else if (c=='k' && anglebeta>=(-90+4))
-        anglebeta=anglebeta-3;
-    else if (c=='j')
-        anglealpha=(anglealpha+3)%360;
-    else if (c=='l')
-        anglealpha=(anglealpha-3+360)%360;
-    if (d != -1) {
-        this->keyboard(d);
+    
+    if(this->state != EngineState::InGame) {
+        if (c==' ') {
+            startGame();
+            
+        }
     }
 }
 
@@ -363,6 +361,27 @@ void Engine::specialFunc(int c){
     if (d != -1) {
         this->keyboard(d);
     }
+}
+
+void Engine::destroyAll(){
+    Matrix<GameCell>& matrix = *(this->matrix);
+
+    for (int y = 0; y < this->matrix->height; y++)
+    {
+        for (int x = 0; x < this->matrix->width; x++)
+        {
+            Cell current(x, y);
+            GameCell& gc = matrix[current];
+            for(int z = gc.entities.size() - 1; z >= 0; z--){
+                GameEntity* e = gc.entities[z];
+                e->shapeClear();
+                // update matrix
+                gc.entities.erase(gc.entities.begin() + z);
+                delete e;
+            }
+        }
+    }
+
 }
 
 
@@ -390,4 +409,55 @@ void Engine::destroy(GameEntity* entity){
 
 vector<Cell> Engine::pathTo(Cell base, string name){
     return pathFinder->searchOn(base, name);
+}
+
+void Engine::setEngineState(EngineState state){
+    this->state = state;
+}
+
+void Engine::setupGame() {
+    int columns = settings->cols;
+    int rows = settings->rows;
+    MapBuilder map(columns, rows);
+
+    map.makeHouse();            // first insert the housing in the middle
+    map.generateRandomRec();    // then explore the map and open it up
+    map.postProcessGenerator(); // remove dead end parts in the map
+    map.print();                // print the map in the console
+
+    this->matrix = new Matrix<GameCell>(columns, rows);
+    this->pathFinder = new PathFinder(*matrix);
+    this->mapper = new CoordinateMapper(columns, rows, WIDTH, HEIGHT);
+        
+    for (int i = 0; i < columns; i++)
+    {
+        for (int j = 0; j < rows; j++)
+        {
+            Cell c = Cell(i, j);
+            CellType m = map.map[c];
+            CellType t = m;
+            if (m == CellType::FixedWall || m == CellType::Wall){
+                t = CellType::Wall;
+            }
+            (*(this->matrix))[c] = GameCell(mapper, t, Vector2D(i, j));
+        }
+    }
+
+    setEngineState(EngineState::PreGame);
+}
+
+void Engine::startGame() {
+    // spawn pacman, phantoms and fruits
+    //set game to InGame
+    fillMatrix(*this, *(this->matrix), settings->phantoms);
+    setEngineState(EngineState::InGame);
+}
+
+void Engine::endGame(bool winner) {
+    this->winner = winner;
+    anglealpha = 78;
+    anglebeta = 51;
+    destroyAll();
+    setupGame();
+    setEngineState(EngineState::PostGame);
 }

@@ -23,7 +23,7 @@ void GameCell::drawScenario()
     }
     int height = 0;
     if (type == Wall){
-        height = 12;
+        height = 15;
     }
 
     Prisma(*mapper, color, texture_index).draw(

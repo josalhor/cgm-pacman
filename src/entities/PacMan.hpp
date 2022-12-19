@@ -15,8 +15,9 @@ class PacMan: public GameEntity {
         Vector3D normalMovementDirection;
         Direction currentDirection = Direction::None;
         Direction nextDirection = Direction::None;
+        int leftToEat = 0;
     public:
-    PacMan(int entityIndex, Engine& engine) : sphere(engine.getCoordinateMapper(), WHITE, PACMAN_TEXTURE_INDEX), GameEntity(entityIndex, engine, sphere) {
+    PacMan(int entityIndex, Engine& engine) : sphere(engine.getCoordinateMapper(), WHITE, PACMAN_TEXTURE_INDEX, entityIndex), GameEntity(entityIndex, engine, sphere) {
         const float height = 0.65;
         const float width = 0.65;
         normalMovementDirection = Vector3D(0.0, 0.0, 0.0);
@@ -58,7 +59,7 @@ class PacMan: public GameEntity {
             }
             Vector2D _speed = trySpeed.multiply(t);
             Vector2D nextPos = this->logicPosition.add(_speed);
-            Vector2D _aheadSpeed = _speed.multiply(5);
+            Vector2D _aheadSpeed = trySpeed.multiply(0.35 / PACMAN_BASE_SPEED);
             Vector2D nextPosTry = this->logicPosition.add(_aheadSpeed);
             moved = canSetPosition(nextPosTry);
             if (!moved) {
@@ -88,7 +89,6 @@ class PacMan: public GameEntity {
             normalMovementDirection,
             size.getX() / 2,
             20,
-            entityIndex,
             15.0
         );
     }
@@ -99,6 +99,17 @@ class PacMan: public GameEntity {
     
     string getName() {
         return this->getTypeName();
+    }
+
+    void setFruitsToEat(int fruits) {
+        leftToEat = fruits;
+    }
+
+    void eatFruit(){
+        leftToEat--;
+        if (leftToEat <= 0) {
+            engine.endGame(true);
+        }
     }
 };
 #endif

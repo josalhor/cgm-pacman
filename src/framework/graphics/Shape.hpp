@@ -24,6 +24,7 @@ class Shape {
         }
         // virtual void draw() = 0;
         virtual void print() = 0;
+        virtual void destroy() = 0;
         bool intersects(Shape& s)
         {
             // compute shape's collision box

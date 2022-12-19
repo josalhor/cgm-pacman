@@ -71,6 +71,6 @@ void fillMatrix(Engine& engine, Matrix<GameCell>& matrix, int phantoms){
     spawnEnemies(1, engine, matrix, phantoms);
     int fruits;
     fruits = spawnPoints(1 + phantoms, engine, matrix);
-    // p->setFruitsToEat(fruits);
+    p->setFruitsToEat(fruits);
 }
 #endif
