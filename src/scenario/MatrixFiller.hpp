@@ -61,9 +61,6 @@ int spawnPoints(int entityIndex, Engine& engine, Matrix<GameCell>& matrix)
                 gc.entities.push_back(p);
                 points++;
             }
-            if (points == 4) {
-                return points;
-            }
         }
     }
     return points;

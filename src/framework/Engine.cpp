@@ -413,9 +413,6 @@ vector<Cell> Engine::pathTo(Cell base, string name){
 
 void Engine::setEngineState(EngineState state){
     this->state = state;
-    if (state == EngineState::PostGame){
-        destroyAll();
-    }
 }
 
 void Engine::setupGame() {
@@ -458,7 +455,9 @@ void Engine::startGame() {
 
 void Engine::endGame(bool winner) {
     this->winner = winner;
-    setEngineState(EngineState::PostGame);
     anglealpha = 78;
     anglebeta = 51;
+    destroyAll();
+    setupGame();
+    setEngineState(EngineState::PostGame);
 }
