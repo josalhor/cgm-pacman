@@ -6,7 +6,7 @@
 #include "entities/PacMan.hpp"
 #include "entities/Fruit.hpp"
 
-void spawnEnemies(Engine& engine, Matrix<GameCell>& matrix, int n)
+void spawnEnemies(int entityIndex, Engine& engine, Matrix<GameCell>& matrix, int n)
 {
     for (int i = 0; i < matrix.width; i++)
     {
@@ -16,7 +16,7 @@ void spawnEnemies(Engine& engine, Matrix<GameCell>& matrix, int n)
             GameCell& gc = matrix[c];
             bool empty = gc.entities.size() == 0 && gc.getCellType() == CellType::FixedCorridor;
             if (n > 0 && empty){
-                Phantom* p = new Phantom(engine);
+                Phantom* p = new Phantom(entityIndex + n - 1, engine);
                 p->setPosition(Vector2D(i, j));
                 gc.entities.push_back(p);
                 n--;
@@ -25,7 +25,7 @@ void spawnEnemies(Engine& engine, Matrix<GameCell>& matrix, int n)
     }
 }
 
-PacMan* spawnPlayer(Engine& engine, Matrix<GameCell>& matrix)
+PacMan* spawnPlayer(int entityIndex, Engine& engine, Matrix<GameCell>& matrix)
 {
     for (int i = 1; i < matrix.width-1; i++)
     {
@@ -35,7 +35,7 @@ PacMan* spawnPlayer(Engine& engine, Matrix<GameCell>& matrix)
             GameCell& gc = matrix[c];
             bool empty = gc.entities.size() == 0 && gc.getCellType() != CellType::Wall;
             if (empty){
-                PacMan* p = new PacMan(engine);
+                PacMan* p = new PacMan(entityIndex, engine);
                 p->setPosition(Vector2D(i, j));
                 gc.entities.push_back(p);
                 return p;
@@ -45,7 +45,7 @@ PacMan* spawnPlayer(Engine& engine, Matrix<GameCell>& matrix)
     return nullptr;
 }
 
-int spawnPoints(Engine& engine, Matrix<GameCell>& matrix)
+int spawnPoints(int entityIndex, Engine& engine, Matrix<GameCell>& matrix)
 {
     int points = 0;
     for (int i = 1; i < matrix.width-1; i++)
@@ -56,7 +56,7 @@ int spawnPoints(Engine& engine, Matrix<GameCell>& matrix)
             GameCell& gc = matrix[c];
             bool valid = gc.entities.size() == 0 && gc.getCellType() == CellType::Corridor;
             if (valid){
-                Fruit* p = new Fruit(engine);
+                Fruit* p = new Fruit(points + entityIndex, engine);
                 p->setPosition(Vector2D(i, j));
                 gc.entities.push_back(p);
                 points++;
@@ -67,10 +67,10 @@ int spawnPoints(Engine& engine, Matrix<GameCell>& matrix)
 }
 
 void fillMatrix(Engine& engine, Matrix<GameCell>& matrix, int phantoms){
+    PacMan* p = spawnPlayer(0, engine, matrix);
+    spawnEnemies(1, engine, matrix, phantoms);
     int fruits;
-    spawnEnemies(engine, matrix, phantoms);
-    PacMan* p = spawnPlayer(engine, matrix);
-    fruits = spawnPoints(engine, matrix);
-    // p->setFruitsToEat(fruits);
+    fruits = spawnPoints(1 + phantoms, engine, matrix);
+    p->setFruitsToEat(fruits);
 }
 #endif

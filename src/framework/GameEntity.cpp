@@ -1,6 +1,6 @@
 #include "GameEntity.hpp"
 
-GameEntity::GameEntity(Engine& engine, Shape& shape) : engine(engine), shape(shape), mapper(engine.getCoordinateMapper()) {
+GameEntity::GameEntity(int entityIndex, Engine& engine, Shape& shape) : entityIndex(entityIndex), engine(engine), shape(shape), mapper(engine.getCoordinateMapper()) {
 
 }
 
@@ -16,6 +16,10 @@ void GameEntity::draw(){
     // empty by default
 }
 
+void GameEntity::shapeClear(){
+    shape.destroy();
+}
+
 void GameEntity::receiveCollision(GameEntity& entity) {
     // empty by default
 }
@@ -26,7 +30,7 @@ void GameEntity::receiveKeyboard(Direction d) {
 
 #include <iostream>
 
-bool GameEntity::setPosition(Vector2D position) {
+bool GameEntity::canSetPosition(Vector2D position){
     bool canMove = true;
     Vector2D halfSize = size.multiply(0.5);
     Vector2D centerCell = Vector2D(0.5, 0.5);
@@ -38,6 +42,12 @@ bool GameEntity::setPosition(Vector2D position) {
         CellType tp = this->engine.getCellType(c);
         canMove &= canMoveInto(tp);
     }
+
+    return canMove;
+}
+
+bool GameEntity::setPosition(Vector2D position) {
+    bool canMove = canSetPosition(position);
     if(canMove){
         this->logicPosition = position;
         return true;

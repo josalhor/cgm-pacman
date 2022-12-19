@@ -3,6 +3,7 @@
 
 #include "framework/GameEntity.hpp"
 #include "framework/graphics/Color.hpp"
+#include "framework/graphics/Sphere.hpp"
 #include "PacMan.hpp"
 #include <GL/glut.h>
 
@@ -13,11 +14,13 @@ using namespace std;
 
 class Phantom: public GameEntity {
     Vector2D moveTo;
-    Prisma prisma;
+    Vector3D normalMovementDirection;
+    Sphere sphere;
     public:
-    Phantom(Engine& engine) : prisma(engine.getCoordinateMapper(), RED, ENEMY_TEXTURE_INDEX), GameEntity(engine, prisma) {
+    Phantom(int entityIndex, Engine& engine) : sphere(engine.getCoordinateMapper(), RED, ENEMY_TEXTURE_INDEX, entityIndex), GameEntity(entityIndex, engine, sphere) {
         const float height = 0.65;
         const float width = 0.65;
+        normalMovementDirection = Vector3D(0.0, 0.0, 0.0);
         size = Vector2D(width, height);
         speed = Vector2D(0.01, 0.0);
     }
@@ -45,6 +48,15 @@ class Phantom: public GameEntity {
             }
             float abs_val = abs(direction.getX()) + abs(direction.getY());
             Vector2D _speed = direction.multiply(t * PHANTOM_SPEED / abs_val);
+            Vector3D direction3d = to3dSpace(_speed);
+            //cout << direction3d.getX() << ", " << direction3d.getY() << ", " << direction3d.getZ() << "\n"; 
+            //cout << _speed.getX() << ", " << _speed.getY() << "\n";
+            normalMovementDirection = Vector3D( 
+                direction3d.getX() != 0 ? direction3d.getX() / abs(direction3d.getX()) : 0.0, 
+                direction3d.getY() != 0 ? direction3d.getY() / abs(direction3d.getY()) : 0.0, 
+                direction3d.getZ() != 0 ? direction3d.getZ() / abs(direction3d.getZ()) : 0.0
+            );
+            //cout << normalMovementDirection.getX() << ", " << normalMovementDirection.getY() << ", " << normalMovementDirection.getZ() << "\n"; 
             Vector2D nextPos = this->logicPosition.add(_speed);
             moved = setPosition(nextPos);
             forceOtherMove = !moved;
@@ -67,12 +79,12 @@ class Phantom: public GameEntity {
     }
 
     void draw() {
-
-        prisma.draw(
+        sphere.draw(
             logicPosition,
-            size,
-            20, //mapper.XtoVisualFloat(x + size.getX()) - mapper.XtoVisualFloat(x),
-            10
+            normalMovementDirection,
+            size.getX() / 2,
+            20,
+            8.0
         );
     }
 

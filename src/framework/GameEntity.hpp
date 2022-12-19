@@ -24,14 +24,17 @@ class GameEntity {
         Vector2D size;
         Shape& shape;
         CoordinateMapper& mapper;
+        int entityIndex;
         // map<string, void(*)()> collisionResolver;
     public:
-        GameEntity(Engine& engine, Shape& s);
+        GameEntity(int entityIndex, Engine& engine, Shape& s);
         void destroy();
+        void shapeClear();
         Vector2D getPosition() {
             return this->logicPosition;
         }
         bool setPosition(Vector2D position);
+        bool canSetPosition(Vector2D position);
         virtual bool canMoveInto(CellType cellType);
         virtual void update(long t);
         virtual void draw();
