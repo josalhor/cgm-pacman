@@ -30,7 +30,9 @@ class Engine {
         int anglebeta = 51;
         float smooth_alpha = anglealpha;
         float smooth_beta = anglebeta;
+        Vector3D cameraPosition;
         EngineState state = EngineState::PreGame;
+        bool winner = false;
         /*
         TODO: memory cleanup
         */
@@ -38,7 +40,9 @@ class Engine {
        void displayScenario();
        void displayInGame();
        void displayPreGame();
-       void displayPostGame();
+       void displayEndGame();
+       void setupGame();
+       void startGame();
     public:
         Engine();
         CellType getCellType(Cell cell);
@@ -53,6 +57,7 @@ class Engine {
         void specialFunc(int c);
         void keyboard(Direction d);
         void setEngineState(EngineState state);
+        void endGame(bool winner);
         CoordinateMapper& getCoordinateMapper() {
             if (mapper == nullptr) {
                 printf("Empty mapper\n");

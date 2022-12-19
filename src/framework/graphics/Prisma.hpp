@@ -64,9 +64,6 @@ class Prisma: public Shape {
                         F4(); F3(); F2(); F1();
                     }
 
-
-                    glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
-                    
                     glEnd();
                 }
             }
@@ -98,8 +95,6 @@ class Prisma: public Shape {
                     } else {
                         F4(); F3(); F2(); F1();
                     }
-
-                    glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
                     
                     glEnd();
                 }
@@ -133,8 +128,6 @@ class Prisma: public Shape {
                     } else {
                         F4(); F3(); F2(); F1();
                     }
-
-                    glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
                     
                     glEnd();
                 }
@@ -154,6 +147,7 @@ class Prisma: public Shape {
             int high = height + offset;
             
             glBindTexture(GL_TEXTURE_2D, texture_index);
+            glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,material);
 
             renderFaceY(x, px, high, z, pz, 1);
             renderFaceY(x, px, offset, z, pz, -1);
