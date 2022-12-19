@@ -366,7 +366,6 @@ void Engine::keyboard(unsigned char c){
         }
     } else {
         if (c==' ') {
-            cout << "I arreive here";
             startGame();
             
         }
@@ -478,11 +477,8 @@ void Engine::setupGame() {
 void Engine::startGame() {
     // spawn pacman, phantoms and fruits
     //set game to InGame
-    cout << "No problemo 3";
     fillMatrix(*this, *(this->matrix), settings->phantoms);
-    cout << "No problemo 2";
     setEngineState(EngineState::InGame);
-    cout << "No problemo";
 }
 
 void Engine::endGame(bool winner) {
