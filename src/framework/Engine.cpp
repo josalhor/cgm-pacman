@@ -70,7 +70,9 @@ void Engine::run(){
     glutInit(&argc, NULL);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE);
     glutInitWindowPosition(50, 50);
-    glutInitWindowSize(SIZE_CELL * this->matrix->width, SIZE_CELL * this->matrix->height);
+    int width = SIZE_CELL * this->matrix->width;
+    int height = SIZE_CELL * this->matrix->height;
+    glutInitWindowSize(width, height);
     glutCreateWindow("Amazing Pacman Game v2");
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
@@ -86,9 +88,6 @@ void Engine::run(){
     glutIdleFunc(idleOpenGL);
     glutKeyboardFunc(keyboardOpenGL);
     glutSpecialFunc(specialFuncOpenGL);
-
-    glMatrixMode(GL_PROJECTION);
-    gluOrtho2D(0, WIDTH - 1, 0, HEIGHT - 1);
 
     TextureLoader loader = TextureLoader();
     loader.loadTextures();
@@ -127,6 +126,7 @@ void Engine::PositionObserver(int radi)
     x = (float)radi*cos(alpha*2*PI/360.0)*cos(beta*2*PI/360.0);
     y = (float)radi*sin(beta*2*PI/360.0);
     z = (float)radi*sin(alpha*2*PI/360.0)*cos(beta*2*PI/360.0);
+    cameraPosition = Vector3D(x, y, z);
 
     if (beta>0) { upx=-x; upz=-z; upy=(x*x+z*z)/y; }
     else if(beta==0) {  upx=0; upy=1; upz=0; }
@@ -141,23 +141,20 @@ void Engine::PositionObserver(int radi)
     gluLookAt(x,y,z,    0.0, 0.0, 0.0,     upx,upy,upz);
 }
 
-void Engine::displayPreGame(){
-    // Set the raster position to the specified coordinates
-    const char text[100] = "Press SPACE to continue";
-    
+void renderText(Vector3D cameraPosition, const char* text, float extraHeight, float extraX, float extraZ) {
     int width = glutBitmapLength(TEXT_FONT, (char unsigned*) text);
 
-    int x = width / 2;
-    int y = (HEIGHT - 18) / 2;
+    int x = glutGet(GLUT_WINDOW_WIDTH) / 2;
+    int y = (glutGet(GLUT_WINDOW_HEIGHT) - 18) / 2;
     // x = mapper->XtoVisualFloat(x);
     // y = mapper->YtoVisualFloat(y);
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_LIGHTING);
     glColor3f(1, 0, 0);
-    glRasterPos3i(-x, 250, 0);
+    // glRasterPos3f(cameraPosition.getX(), cameraPosition.getY(), cameraPosition.getZ());
+    // glRasterPos3f(0, 0, 0);
+    glRasterPos3f(((float) cameraPosition.getX() + extraX) / 1.5f, ((float) cameraPosition.getY() + extraHeight) / 1.5f, (float) (cameraPosition.getZ() + extraZ) / 1.5f);
     // Loop through each character in the string
-    glScalef(2.0, 2.0, 1.0);
-
     for (int i = 0; i < strlen(text); i++) {
     // Render the character at the current raster position
         glutBitmapCharacter(TEXT_FONT, text[i]);
@@ -167,42 +164,18 @@ void Engine::displayPreGame(){
     glEnable(GL_LIGHTING);
 }
 
+void Engine::displayPreGame(){
+    // Set the raster position to the specified coordinates
+    const char text[100] = "Press SPACE to continue";
+    renderText(cameraPosition, text, 0, -200, -200);
+}
+
 void Engine::displayEndGame()
 {
-    // Set the raster position to the specified coordinates
-    char resultMsg[10];
-    const char *result;
-    result = (this->winner) ? "You WON\0" : "You Lost\0";
-    strcpy(resultMsg, result);
-
-    int rwidth = glutBitmapLength(TEXT_FONT, (char unsigned*) resultMsg);
-
+    const char *result = (this->winner) ? "You WON\0" : "You Lost\0";
     const char replayMsg[100] = "Press SPACE to PLAY Again\0";
-    int pwidth = glutBitmapLength(TEXT_FONT, (char unsigned*) replayMsg);
-
-    int rx = rwidth / 2;
-    int px = pwidth / 2;
-
-    glDisable(GL_TEXTURE_2D);
-    glDisable(GL_LIGHTING);
-    glColor3f(1, 0, 0);
-    
-    // Display first line:
-    glRasterPos3i(-rx, 250, 0);
-    for (int i = 0; i < strlen(resultMsg); i++) {
-    // Render the character at the current raster position
-        glutBitmapCharacter(TEXT_FONT, resultMsg[i]);
-    }
-
-    // Display second line:
-    glRasterPos3i(-px, 200, 0);
-    for (int i = 0; i < strlen(replayMsg); i++) {
-    // Render the character at the current raster position
-        glutBitmapCharacter(TEXT_FONT, replayMsg[i]);
-    }
-    
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_LIGHTING);
+    renderText(cameraPosition, result, 60, -50, -200);
+    renderText(cameraPosition, replayMsg, -60, -200, -200);
 }
 
 void Engine::displayScenario(){
@@ -245,9 +218,9 @@ void Engine::display(){
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 #ifdef PERSPECTIVE
-    gluPerspective(45.0, (((float) WIDTH) / ((float) HEIGHT)), 10, 3000);
+    gluPerspective(45.0, (((float) glutGet(GLUT_WINDOW_WIDTH)) / ((float) glutGet(GLUT_WINDOW_HEIGHT))), 10, 3000);
 #else
-    glOrtho(-WIDTH*0.6,WIDTH*0.6,-HEIGHT*0.6,HEIGHT*0.6,10,2000);
+    glOrtho(-glutGet(GLUT_WINDOW_WIDTH)*0.6,glutGet(GLUT_WINDOW_WIDTH)*0.6,-glutGet(GLUT_WINDOW_HEIGHT)*0.6,glutGet(GLUT_WINDOW_HEIGHT)*0.6,10,2000);
 #endif
 
     glMatrixMode(GL_MODELVIEW);
@@ -364,7 +337,9 @@ void Engine::keyboard(unsigned char c){
         } else if (c=='l') {
             anglealpha=(anglealpha-3+360)%360;
         }
-    } else {
+    }
+    
+    if(this->state != EngineState::InGame) {
         if (c==' ') {
             startGame();
             
@@ -484,4 +459,6 @@ void Engine::startGame() {
 void Engine::endGame(bool winner) {
     this->winner = winner;
     setEngineState(EngineState::PostGame);
+    anglealpha = 78;
+    anglebeta = 51;
 }

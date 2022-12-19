@@ -30,6 +30,7 @@ class Engine {
         int anglebeta = 51;
         float smooth_alpha = anglealpha;
         float smooth_beta = anglebeta;
+        Vector3D cameraPosition;
         EngineState state = EngineState::PreGame;
         bool winner = false;
         /*
