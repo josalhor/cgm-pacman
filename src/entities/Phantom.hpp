@@ -72,8 +72,7 @@ class Phantom: public GameEntity {
             Vector2D delta = entity.getPosition().add(entityCenter).subsctract(center);
             float sqrLength = delta.getX() + delta.getY();
             if (delta.getX() < 0.5 && delta.getY() < 0.5){
-                cout << "End Game" << endl;
-                exit(0);
+                engine.endGame(false);
             }
         }
     }

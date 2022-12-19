@@ -108,7 +108,7 @@ class PacMan: public GameEntity {
     void eatFruit(){
         leftToEat--;
         if (leftToEat <= 0) {
-            engine.setEngineState(EngineState::PostGame);
+            engine.endGame(true);
         }
     }
 };

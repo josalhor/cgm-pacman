@@ -61,36 +61,8 @@ CellType Engine::getCellType(Cell cell) {
 
 void Engine::setup(EngineSetup* setup){
     settings = setup;
-    int columns = settings->cols;
-    int rows = settings->rows;
-    MapBuilder map(columns, rows);
-
-    map.makeHouse();            // first insert the housing in the middle
-    map.generateRandomRec();    // then explore the map and open it up
-    map.postProcessGenerator(); // remove dead end parts in the map
-    map.print();                // print the map in the console
-
-    this->matrix = new Matrix<GameCell>(columns, rows);
-    this->pathFinder = new PathFinder(*matrix);
-    this->mapper = new CoordinateMapper(columns, rows, WIDTH, HEIGHT);
-        
-    for (int i = 0; i < columns; i++)
-    {
-        for (int j = 0; j < rows; j++)
-        {
-            Cell c = Cell(i, j);
-            CellType m = map.map[c];
-            CellType t = m;
-            if (m == CellType::FixedWall || m == CellType::Wall){
-                t = CellType::Wall;
-            }
-            (*(this->matrix))[c] = GameCell(mapper, t, Vector2D(i, j));
-        }
-    }
-
-    fillMatrix(*this, *(this->matrix), settings->phantoms);
-
     engine = this;
+    setupGame();
 }
 
 void Engine::run(){
@@ -195,8 +167,42 @@ void Engine::displayPreGame(){
     glEnable(GL_LIGHTING);
 }
 
-void Engine::displayPostGame(){
+void Engine::displayEndGame()
+{
+    // Set the raster position to the specified coordinates
+    char resultMsg[10];
+    const char *result;
+    result = (this->winner) ? "You WON\0" : "You Lost\0";
+    strcpy(resultMsg, result);
+
+    int rwidth = glutBitmapLength(TEXT_FONT, (char unsigned*) resultMsg);
+
+    const char replayMsg[100] = "Press SPACE to PLAY Again\0";
+    int pwidth = glutBitmapLength(TEXT_FONT, (char unsigned*) replayMsg);
+
+    int rx = rwidth / 2;
+    int px = pwidth / 2;
+
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_LIGHTING);
+    glColor3f(1, 0, 0);
     
+    // Display first line:
+    glRasterPos3i(-rx, 460, 460);
+    for (int i = 0; i < strlen(resultMsg); i++) {
+    // Render the character at the current raster position
+        glutBitmapCharacter(TEXT_FONT, resultMsg[i]);
+    }
+
+    // Display second line:
+    glRasterPos3i(-px, 430, 430);
+    for (int i = 0; i < strlen(replayMsg); i++) {
+    // Render the character at the current raster position
+        glutBitmapCharacter(TEXT_FONT, replayMsg[i]);
+    }
+    
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_LIGHTING);
 }
 
 void Engine::displayScenario(){
@@ -269,8 +275,8 @@ void Engine::display(){
         displayInGame();
     } else if(state == EngineState::PreGame) {
         displayPreGame();
-    } else {
-        displayPostGame();
+    } else if(state == EngineState::PostGame){
+        displayEndGame();
     }
 
     glutSwapBuffers();
@@ -360,7 +366,7 @@ void Engine::keyboard(unsigned char c){
         }
     } else {
         if (c==' ') {
-            this->state = EngineState::InGame;
+            startGame();
         }
     }
 }
@@ -434,4 +440,47 @@ void Engine::setEngineState(EngineState state){
     if (state == EngineState::PostGame){
         destroyAll();
     }
+}
+
+void Engine::setupGame() {
+    int columns = settings->cols;
+    int rows = settings->rows;
+    MapBuilder map(columns, rows);
+
+    map.makeHouse();            // first insert the housing in the middle
+    map.generateRandomRec();    // then explore the map and open it up
+    map.postProcessGenerator(); // remove dead end parts in the map
+    map.print();                // print the map in the console
+
+    this->matrix = new Matrix<GameCell>(columns, rows);
+    this->pathFinder = new PathFinder(*matrix);
+    this->mapper = new CoordinateMapper(columns, rows, WIDTH, HEIGHT);
+        
+    for (int i = 0; i < columns; i++)
+    {
+        for (int j = 0; j < rows; j++)
+        {
+            Cell c = Cell(i, j);
+            CellType m = map.map[c];
+            CellType t = m;
+            if (m == CellType::FixedWall || m == CellType::Wall){
+                t = CellType::Wall;
+            }
+            (*(this->matrix))[c] = GameCell(mapper, t, Vector2D(i, j));
+        }
+    }
+
+    setEngineState(EngineState::PreGame);
+}
+
+void Engine::startGame() {
+    // spawn pacman, phantoms and fruits
+    //set game to InGame
+    fillMatrix(*this, *(this->matrix), settings->phantoms);
+    setEngineState(EngineState::InGame);
+}
+
+void Engine::endGame(bool winner) {
+    this->winner = winner;
+    setEngineState(EngineState::PostGame);
 }
